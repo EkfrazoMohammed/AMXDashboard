@@ -1,0 +1,321 @@
+
+
+
+.dashboard-header {
+    background: rgb(246, 248, 254);
+    height: 70px;
+    margin-top: -8px;
+  
+    border-radius: 5px;
+  }
+
+  .profile-icon {
+    font-size: xx-large;
+    display: flex;
+    justify-content: end;
+    color: rgb(0, 0, 0);
+    margin-right: 20px;
+  } 
+  .col-lg-3 {
+      /* background-color: red; */
+  }
+  .projects-text{
+      position: absolute;
+  width: 162px;
+  height: 16px;
+  left: 309px;
+  top: 81px;
+  
+  font-family:'Poppins';
+  font-style: normal;
+  font-weight: 700;
+  font-size: 14px;
+  line-height: 16px;
+  /* identical to box height */
+  
+  text-transform: uppercase;
+  
+  color: #000000;
+  
+  }
+  .card-one{
+      border-radius: 16px;
+      /* margin-right: 29px;
+      margin-right: 18px;
+      margin-left: 15px; */
+      font-size: 10px;
+      width: 136px;
+      /* min-height: 129px; */
+      min-height: 108px;
+      /* display: inline-block; */
+      background: rgb(218,92,72);
+  }
+
+  .file-cards {
+	display: flex;
+	/* justify-content: space-between; */
+	/* margin-top: 89px; */
+  
+	/* margin-top: 30px; */
+  }
+
+
+  /* Folder */
+.folder-name {
+	/* display: flex; */
+    /* justify-content: space-between; */
+    color: rgb(7, 110, 151);
+    font-weight: 500;
+    font-family: 'Poppins';
+	margin-top: 15px;
+}
+
+/* this is for the back flap of the folder */
+
+/* this is for the back flap of the folder */
+
+/* this is for the back flap of the folder */
+/* color gradian */
+
+/* green */
+.folder[data="green"], .folder[data="green"]::before, 
+.off-canvas-folder[data="green"] {
+  background: -webkit-linear-gradient(90deg, rgb(249, 148, 66) 30%, rgb(243, 141, 78) 82%);
+  background: -o-linear-gradient(90deg, rgba(255,140,49,1) 30%, rgba(255,99,0,1) 82%);
+  background: -moz-linear-gradient(90deg, rgba(255,140,49,1) 30%, rgba(255,99,0,1) 82%);
+  background: linear-gradient(90deg, #ff916f 0%, #ff916f 100%);
+}
+.folder[data="green"]::after, 
+.off-canvas-folder[data="green"] {
+  background: -webkit-linear-gradient(90deg, rgba(255,140,49,1) 30%, rgba(255,99,0,1) 82%);
+  background: -o-linear-gradient(90deg, rgba(255,140,49,1) 30%, rgba(255,99,0,1) 82%);
+  background: -moz-linear-gradient(90deg, rgba(255,140,49,1) 30%, rgba(255,99,0,1) 82%);
+  background: linear-gradient(90deg, #ff916f 0%, #ff916f 100%);
+}
+
+/* blue */
+.folder[data="blue"], .folder[data="blue"]::before, 
+.off-canvas-folder[data="blue"] {
+  background: -webkit-linear-gradient(90deg, #6dd9dd 30%, #6dd9dd 82%);
+  background: -o-linear-gradient(90deg, #6dd9dd 30%, #6dd9dd 82%);
+  background: -moz-linear-gradient(90deg, #6dd9dd 30%, #6dd9dd 82%);
+  background: linear-gradient(90deg, #8aa2e8 0%, #8aa2e8 100%);
+}
+.folder[data="blue"]::after, 
+.off-canvas-folder[data="blue"] {
+	background: -webkit-linear-gradient(90deg, #6dd9dd 30%, #6dd9dd 82%);
+	background: -o-linear-gradient(90deg, #6dd9dd 30%, #6dd9dd 82%);
+	background: -moz-linear-gradient(90deg, #6dd9dd 30%, #6dd9dd 82%);
+	background: linear-gradient(90deg, #8aa2e8 0%, #8aa2e8 100%);
+}
+
+/* primary */
+.folder[data="primary"], .folder[data="primary"]::before, 
+.off-canvas-folder[data="primary"] {
+  background: -webkit-linear-gradient(90deg, #6dd9dd 30%, #6dd9dd 82%);
+  background: -o-linear-gradient(90deg, #6dd9dd 30%, #6dd9dd 82%);
+  background: -moz-linear-gradient(90deg, #6dd9dd 30%, #6dd9dd 82%);
+  background: linear-gradient(90deg, #ff8ea5 0%, #ff8ea5 100%);
+}
+.folder[data="primary"]::after, 
+.off-canvas-folder[data="primary"] {
+	background: -webkit-linear-gradient(90deg, #6dd9dd 30%, #6dd9dd 82%);
+	background: -o-linear-gradient(90deg, #6dd9dd 30%, #6dd9dd 82%);
+	background: -moz-linear-gradient(90deg, #6dd9dd 30%, #6dd9dd 82%);
+	background: linear-gradient(90deg, #ff8ea5 0%, #ff8ea5 100%);
+}
+
+
+
+
+.folder{
+	-webkit-perspective: 500px;
+	perspective: 500px;
+	width: 91px;
+	height: 60px;
+	background: #ffd480;
+	/* position: absolute; */
+	/* top: 210px; */
+    /* left: 390px; */
+	/* -webkit-transform: translate(-20%, -20%);
+	transform: translate(-20%, -20%); */
+	border-top-right-radius: 5px;
+	cursor: pointer;
+	-webkit-transition: all 300ms ease;
+	transition: all 300ms ease;
+  /* background-color:#aed0c3 */
+}
+/* this is for the folder's tab */
+.folder::before{
+	width: 35px;
+	height: 24px;
+	content: '';
+	background: #ffd480;
+	position: absolute;
+	top: -11px;
+	border-top-left-radius: 5px;
+	border-top-right-radius: 5px;
+  background-color:#aed0c3
+}
+/* this is for the folder's front flap */
+.folder::after{
+	width: 92px;
+	height: 60px;
+	position: absolute;
+	content: '';
+	background: #ffcb66;
+	top: 21px;
+	box-shadow: 0 0 40px 2px rgba(0, 0, 0, 0.3);
+	border-top-left-radius: 5px;
+	border-top-right-radius: 5px;
+	/* the transform property rotates the front flap of the folder a bit t0 make it look 3D */
+	-webkit-transform: rotateX(-10deg);
+	transform: rotateX(-10deg);
+	-webkit-transition: all 900ms ease;
+	transition: all 800ms ease;
+  background-color:#aed0c3
+}
+/* this is for the piece of paper inside the folder */
+.folder-inside{
+	width: 80px;
+	height: 51px;
+	position: absolute;
+	background: white;
+	top: 14px;
+	left: 7px;
+	box-shadow: 0 0 5px 5px rgba(0, 0, 0, 0.1);
+	-webkit-transform: rotate(-1deg);
+	transform: rotate(-1deg);
+	border: 2px solid white;
+	-webkit-transition: all 200ms ease;
+	transition: all 200ms ease;
+ 
+}
+/* this is for the lines on the paper */
+.folder-inside::before{
+	content: '';
+	/* we're going to use linear gradients to create the lines */
+	background: -webkit-repeating-linear-gradient(145deg, #ffffff, #ffffff 10px, #333333 7px, #333333 20px);
+	background: repeating-linear-gradient(0deg, #ffffff, #ffffff 10px, #333333 10px, #333333 20px);
+	position: absolute;
+	top: -30px;
+	left: 25px;
+	width: 25px;
+	height: 85px;
+	color: #343434;
+	font-size: 40px;
+	line-height: 10px;
+	-webkit-transform: rotate(-90deg);
+	transform: rotate(-90deg);
+	opacity: 0.15;
+}
+/* finally let's get this folder to rotate when we hover on it */
+.folder:hover{
+	-webkit-transform: translate(-10%, -12%);
+	transform: translate(-10%, -12%);
+}
+.folder:hover::after{
+	-webkit-transform: rotateX(-15deg);
+	transform: rotateX(-15deg);
+}
+.folder:hover .folder-inside{
+	-webkit-transform: rotate(-7deg) translateY(-15%);
+	transform: rotate(-7deg) translateY(-15%);
+}
+/* hover over the folder to see the effect in action */
+
+
+
+
+/* Process data form */
+
+/* Dashboard popup */
+.wraper-dashboard-process {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	min-height: 30vh;
+	/* min-width: 50vh; */
+	/* background: rgba(18, 212, 255, 0.1);
+	color: rgb(0, 0, 0); */
+  }
+  .wraper-card-content-process {
+	width: 630px;
+	  padding: 37px;
+	  border-radius: 1rem;
+	  height: auto;
+	  background-color: #dee2e6;
+  }
+  
+  .wraper-dashboard-process header {
+	/* color: rgb(53, 118, 148);
+	font-size: 20px;
+	font-weight: 700;
+	text-align: center; */
+	color:rgb(61, 107, 190);
+	font-size: 0.6875rem; ;
+	font-weight: 700;
+	text-align: center;
+	/* font-family: 'Poppins'; */
+	padding-bottom: 20px;
+  }
+  
+  .wraper-dashboard-process form {
+	height: 165px;
+	display: flex;
+	margin: 30px 0;
+	align-items: center;
+	justify-content: center;
+	flex-direction: column;
+	border: 2px dashed #6990f2;
+	border-radius: 1rem;
+  }
+
+  /* Inside popup */
+
+  /* Dashboard popup */
+.wraper-inside-project {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	min-height: 30vh;
+	/* min-width: 50vh; */
+	/* background: rgba(18, 212, 255, 0.1);
+	color: rgb(0, 0, 0); */
+  }
+  .wraper-card-content-inside-project {
+	width: 630px;
+	  padding: 37px;
+	  border-radius: 1rem;
+	  height: auto;
+	  /* background-color: #dee2e6; */
+  }
+  
+  .wraper-inside-project header {
+	/* color: rgb(53, 118, 148);
+	font-size: 20px;
+	font-weight: 700;
+	text-align: center; */
+	color:rgb(61, 107, 190);
+	font-size: 0.6875rem; ;
+	font-weight: 700;
+	text-align: center;
+	/* font-family: 'Poppins'; */
+	padding-bottom: 20px;
+  }
+  
+  .wraper-inside-project form {
+	height: 165px;
+	display: flex;
+	margin: 30px 0;
+	align-items: center;
+	justify-content: center;
+	flex-direction: column;
+	border: 2px dashed #6990f2;
+	border-radius: 1rem;
+  }
+  
+  
+
+
+  

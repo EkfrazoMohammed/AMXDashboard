@@ -1,0 +1,459 @@
+.header-content-btn {
+  border-radius: 7.5rem;
+    margin: 2rem;
+    width: 120px;
+    height: 27px;
+    font-weight: 900;
+    color: rgb(28, 66, 116);
+    font-family: 'Poppins';
+
+}
+.pop-up-employee-file-gd {
+  height: auto;
+  width: 65%;
+  background-color: #bad6e3;
+  position: absolute;
+  top: 35%;
+  justify-content: center;
+  right: 10%;
+
+  border-radius: 0.5rem;
+}
+.form-group {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 27px;
+  
+}
+.Add-drone-form-lable {
+  /* font-weight: 800; */
+  /* font-family: 'Poppins'; */
+  color: #222a42;
+}
+.col-sm-4{
+  font-family: 'Poppins';
+}
+.text-center-add{
+  font-size: larger;
+    margin-top: 10px;
+    font-weight: 500;
+    /* border: #cac6c6 solid 0.5px; */
+    border-radius: 0.5rem;
+    font-family: 'Courier New', Courier, monospace;
+    margin-left: 500px;
+}
+
+.butt-add{
+  display: inline-block;
+      padding: 12px 24px;
+      font-size: 16px;
+      font-weight: bold;
+      text-align: center;
+      text-decoration: none;
+      background-color: #4CAF50;
+      color: #fff;
+      border-radius: 50px;
+      transition: background-color 0.3s;
+}
+
+.butt-add:hover {
+  background-color: #45a049;
+}
+
+@media screen and (max-width: 480px) {
+  .butt-add {
+    padding: 8px 16px;
+    font-size: 14px;
+  }
+}
+
+.label{
+      border-radius: 15px;
+    -webkit-box-shadow: 0 5px 10px 0 rgba(0, 0, 0, 0.2);
+    box-shadow: 0 5px 10px 0 rgba(0, 0, 0, 0.2);
+    width: 100px;
+}
+
+.label {
+  padding:  4px 46px;
+  min-height: auto;
+  position: relative;
+  margin-right: 5px;
+  /* margin-bottom: 5px; */
+  top: 20px;
+ 
+}
+.f-12 {
+  font-size: 12px;
+}
+.theme-bg2 {
+  background: linear-gradient(-135deg, #899FD4 0%, #A389D4 100%);
+}
+.text-white {
+  color: #fff!important;
+}
+
+a {
+  color: #007bff;
+  text-decoration: none;
+  background-color: transparent;
+  -webkit-text-decoration-skip: objects;
+}
+
+
+
+
+/* Extra */
+
+
+
+
+
+
+/* Modle popup  */
+
+
+/* Modal styles ==============*/
+
+
+/* Modal styles */
+.modal-box {
+   display: none;
+  position: fixed;
+  z-index: 9999;
+  top: 0;
+  left: 0;
+  width: 701px;
+  height: 100%;
+  overflow: auto;
+  align-items: center;
+  margin: 6% auto; 
+  /* display: none;
+      position: fixed;
+      z-index: 9999;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      overflow: auto;
+      background-color: rgba(0, 0, 0, 0.5); */
+
+}
+
+.modalcontent {
+  /* margin: 10% auto;
+  border-radius: 10px;
+  background: linear-gradient(to right, #e6e6ff, #cc99ff);  *//* align-items: center; */
+
+  display: flex;
+  flex-direction: column;
+  
+  justify-content: center;
+  position: relative;
+  margin: 10% auto;
+  padding: 20px;
+  width: 600px; 
+  background-color: #fff;
+  border-radius: 10px;
+  animation: modalFadeIn 0.5s ease-in-out;
+  animation: modalFadeIn 0.5s ease-in-out;
+}
+
+@keyframes modalFadeIn {
+  from { opacity: 0; transform: translateY(-50%); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Cross button styles */
+.modal-close {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  width: 30px;
+  height: 30px;
+  cursor: pointer;
+  background: none;
+  border: none;
+  font-size: 24px;
+  color: linear-gradient(to right, #000000, #333333);
+}
+
+/* Overlay styles */
+.modal-backdrop {
+  position: fixed;
+  z-index: 9998;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  animation: overlayFadeIn 0.3s ease-in-out;
+}
+
+@keyframes overlayFadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+
+
+/* .label {
+  padding: 3px 41px;
+  min-height: auto;
+  position: relative;
+  margin-right: 5px;
+  margin-bottom: 5px;
+}
+.f-12 {
+  font-size: 12px;
+}
+.theme-bg2 {
+  background: linear-gradient(-135deg, #899FD4 0%, #A389D4 100%);
+}
+.text-white {
+  color: #fff!important;
+}
+a {
+  color: #007bff;
+  text-decoration: none;
+  background-color: transparent;
+  -webkit-text-decoration-skip: objects;
+} */
+
+
+/* pop up box styling  process*/
+
+.overlay .popup-outer-process {
+  /* position: absolute; */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  width: 100%;
+  background: rgba(0, 0, 0, 0.4);
+  opacity: 0;
+  pointer-events: none;
+  box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+  transform: scale(1.2);
+  transition: all 0.3s ease-in-out;
+}
+.overlay.show .popup-outer-process {
+  opacity: 1;
+  pointer-events: auto;
+  transform: scale(1);
+}
+.overlay .popup-outer-process {
+  position: relative;
+    padding: 30px;
+    height: 300px;
+    /* max-width: 734px; */
+    width: 571px;
+    background: #fff;
+    border-radius: 12px;
+}
+.popup-outer-process .close {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  font-size: 30px;
+  color: #b4b4b4;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+.popup-outer-process .close:hover {
+  color: #333;
+}
+.overlay .popup-outer-process .profile-text {
+  display: flex;
+  /* flex-direction: column; */
+  align-items: center;
+  justify-content: center;
+  color: #222a42;
+  /* position: relative; */
+
+}
+.overlay .popup-outer-process img {
+  height: 70px;
+  width: 70px;
+  object-fit: cover;
+  border-radius: 50%;
+}
+.profile-text-process .text-process {
+  display: flex;
+  flex-direction: column;
+  margin-left: 15px;
+}
+.profile-text-process .text-process .name {
+  font-size: 20px;
+  font-weight: 400;
+}
+.profile-text-process .text-process .profession {
+  font-size: 20px;
+  font-weight: 500;
+}
+.overlay .popup-outer-process textarea {
+  min-height: 200px;
+  width: 100%;
+  margin-top: 20px;
+  outline: none;
+  border: 1px solid #ddd;
+  padding: 12px;
+  border-radius: 6px;
+  resize: none;
+  font-size: 18px;
+  font-weight: 400;
+  background: #f3f3f3;
+}
+.overlay .popup-outer-process .button {
+  display: flex;
+  justify-content: center;
+  margin-top: 15px;
+}
+.popup-outer-process .button button {
+  outline: none;
+  border: none;
+  padding: 8px 14px;
+  border-radius: 6px;
+  background: #f6b96f;
+  margin-left: 12px;
+  color: #fff;
+  font-size: 14px;
+  width: 129px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+.button button.cancel {
+  background: #f082ac;
+}
+.button button.cancel:hover {
+  background: #ec5f95;
+}
+.button button.send:hover {
+  background: #275df1;
+}
+
+/* ends here */
+
+
+
+
+
+
+
+
+
+
+
+/* pop up box adddrone styling */
+
+.overlay .popup-outer-adddrone {
+  /* position: absolute; */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  width: 100%;
+  background: rgba(0, 0, 0, 0.4);
+  opacity: 0;
+  pointer-events: none;
+  box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+  transform: scale(1.2);
+  transition: all 0.3s ease-in-out;
+}
+.overlay.show .popup-outer-adddrone {
+  opacity: 1;
+  pointer-events: auto;
+  transform: scale(1);
+}
+.overlay .popup-outer-adddrone {
+  position: relative;
+    padding: 30px;
+    height: auto;
+    /* max-width: 734px; */
+    width: auto;
+    background: #fff;
+    border-radius: 12px;
+}
+.popup-outer-adddrone .close {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  font-size: 30px;
+  color: #b4b4b4;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+.popup-outer-adddrone .close:hover {
+  color: #333;
+}
+.overlay .popup-outer-adddrone  {
+  display: flex;
+  /* flex-direction: column; */
+  align-items: center;
+  justify-content: center;
+  color: #222a42;
+  /* position: relative; */
+
+}
+.overlay .popup-outer-adddrone img {
+  height: 70px;
+  width: 70px;
+  object-fit: cover;
+  border-radius: 50%;
+}
+.profile-text-adddrone .text-adddrone {
+  display: flex;
+  flex-direction: column;
+  margin-left: 15px;
+}
+.profile-text-adddrone .text-adddrone .name {
+  font-size: 20px;
+  font-weight: 400;
+}
+.profile-text-adddrone .text-adddrone .profession {
+  font-size: 20px;
+  font-weight: 500;
+}
+.overlay .popup-outer-adddrone textarea {
+  min-height: 200px;
+  width: 100%;
+  margin-top: 20px;
+  outline: none;
+  border: 1px solid #ddd;
+  padding: 12px;
+  border-radius: 6px;
+  resize: none;
+  font-size: 18px;
+  font-weight: 400;
+  background: #f3f3f3;
+}
+.overlay .popup-outer-adddrone .button {
+  display: flex;
+  justify-content: center;
+  margin-top: 15px;
+}
+.popup-outer-adddrone .button button {
+  outline: none;
+  border: none;
+  padding: 8px 14px;
+  border-radius: 6px;
+  background: #f6b96f;
+  margin-left: 12px;
+  color: #fff;
+  font-size: 14px;
+  width: 129px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+.button button.cancel {
+  background: #f082ac;
+}
+.button button.cancel:hover {
+  background: #ec5f95;
+}
+.button button.send:hover {
+  background: #275df1;
+}
+
+
+

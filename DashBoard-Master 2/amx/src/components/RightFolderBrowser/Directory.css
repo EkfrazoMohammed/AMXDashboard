@@ -1,0 +1,17 @@
+.folder1 {
+   
+    margin-left: 14px;
+  }
+  .wrap {
+    display: flex;
+    align-items: center;
+  }
+  .folder-title {
+    cursor: pointer;
+  }
+  
+  .file-name {
+    margin: 0;
+    padding: 0;
+    margin-left: 14px;
+  }

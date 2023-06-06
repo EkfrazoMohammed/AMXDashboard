@@ -1,0 +1,88 @@
+.skills{
+    width: 100%;
+    max-width: 600px;
+    padding: 0 20px 30px;
+    
+  }
+  
+  .skill-name{
+    font-size: 18px;
+    font-weight: 700;
+    color: #000;
+    text-transform: uppercase;
+    margin: 20px 0;
+    padding-bottom: 25px;
+  }
+  
+  .skill-bar{
+    height: 14px;
+    background: rgba(225,185,112,0.2);
+    border-radius:5px;
+  }
+  
+  .skill-per{
+    height: 14px;
+    /* background: linear-gradient(90deg, rgba(255,140,49,1) 30%, rgba(255,99,0,1) 82%); */
+    border-radius: 5px;
+    position: relative;
+    animation: fillBars 2.5s 1;
+  }
+  
+  .skill-per::before{
+    content: attr(per);
+    position: absolute;
+    padding: 4px 6px;
+    background: #3c3630;
+    border-radius: 4px;
+    font-size: 12px;
+    top: -35px;
+    right: 0;
+    transform: translateX(50%);
+  }
+  
+  .skill-per::after{
+    content: "";
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    background: #3c3630;
+    top: -15px;
+    right: 0;
+    transform: translateX(50%) rotate(45deg);
+    border-radius: 2px;
+  }
+  
+.skill-per[data="green"],
+.off-canvas-skill-per[data="green"] {
+  background: -webkit-linear-gradient(90deg, rgba(255,140,49,1) 30%, rgba(255,99,0,1) 82%);
+  background: -o-linear-gradient(90deg, rgba(255,140,49,1) 30%, rgba(255,99,0,1) 82%);
+  background: -moz-linear-gradient(90deg, rgba(255,140,49,1) 30%, rgba(255,99,0,1) 82%);
+  background: linear-gradient(90deg, rgba(255,140,49,1) 30%, rgba(255,99,0,1) 82%);
+}
+
+.skill-per[data="primary"],
+.off-canvas-skill-per[data="primary"] {
+  background: rgb(244,130,68);
+  background: -webkit-linear-gradient(90deg, rgba(244,130,68,1) 24%, rgba(253,101,133,1) 82%);
+  background: -o-linear-gradient(90deg, rgba(244,130,68,1) 24%, rgba(253,101,133,1) 82%);
+  background: -moz-linear-gradient(90deg, rgba(244,130,68,1) 24%, rgba(253,101,133,1) 82%);
+  background: linear-gradient(90deg, rgba(244,130,68,1) 24%, rgba(253,101,133,1) 82%);
+}
+
+.skill-per[data="blue"],
+.off-canvas-skill-per[data="blue"] {
+  background: rgba(90,90,229,1);
+  background: -webkit-linear-gradient(90deg, rgba(90,90,229,1) 5%, rgba(92,219,223,1) 61%);
+  background: -o-linear-gradient(90deg, rgba(90,90,229,1) 5%, rgba(92,219,223,1) 61%);
+  background: -moz-linear-gradient(90deg, rgba(90,90,229,1) 5%, rgba(92,219,223,1) 61%);
+  background: linear-gradient(90deg, rgba(90,90,229,1) 5%, rgba(92,219,223,1) 61%);
+}
+
+  @keyframes fillBars{
+    from{
+      width: 0;
+    }
+    to{
+      width: 100%;
+    }
+  }

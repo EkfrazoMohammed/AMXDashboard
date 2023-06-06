@@ -1,0 +1,7 @@
+ <div className="content">
+          <div class="right-card">
+    <h2>Right Card</h2>
+    <p>This is a static right card.</p>
+  </div>
+
+          </div>
