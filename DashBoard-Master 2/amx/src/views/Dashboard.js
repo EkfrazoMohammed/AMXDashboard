@@ -1,16 +1,15 @@
-
 import NotificationAlert from "react-notification-alert";
-
 
 import React, { useEffect, useState } from "react";
 // nodejs library that concatenates classes
 import classNames from "classnames";
 // react plugin used to create charts
 import { Line, Bar } from "react-chartjs-2";
-import './styles/dashboard.css'
-import { ToastContainer, toast } from 'react-toastify';
+import "./styles/dashboard.css";
+import { ToastContainer, toast } from "react-toastify";
+import { CircularProgressbar } from "react-circular-progressbar";
 import axios from "axios";
-
+import { useHistory } from "react-router-dom";
 
 import { Link } from "react-router-dom/cjs/react-router-dom.min";
 // reactstrap components
@@ -34,39 +33,55 @@ import {
   UncontrolledTooltip,
   Alert,
   UncontrolledAlert,
-
-
 } from "reactstrap";
-
-
-
 
 import { PieChart, Pie } from "recharts";
 // import { faCheckSquare, faCoffee } from '@fortawesome/fontawesome-free-solid'
 
+import {
+  faBoxArchive,
+  faBriefcase,
+  faCamera,
+  faClose,
+  faDrum,
+  faDrumstickBite,
+  faEllipsis,
+  faFileAudio,
+  faFileInvoice,
+  faGraduationCap,
+  faMicrophone,
+  faPlug,
+  faPlus,
+  faShareNodes,
+  faUser,
+  faVideo,
+} from "@fortawesome/free-solid-svg-icons";
 
-import { faBoxArchive, faBriefcase, faCamera, faClose, faDrum, faDrumstickBite, faEllipsis, faFileAudio, faFileInvoice, faGraduationCap, faMicrophone, faPlug, faPlus, faShareNodes, faUser, faVideo } from '@fortawesome/free-solid-svg-icons'
+// import dronelogo from "/Users/apple/Documents/DashBoard-Master/black-dashboard-react-master/src/views/assets/images/drone-icon.png"
+import "./assets/images/drone-icon.png";
+// import projectfolder from "/Users/apple/Documents/DashBoard-Master/black-dashboard-react-master/src/views/assets/images/project-folder-black.png"
+import "./assets/images/project-folder-black.png";
+// import projectblue from "/Users/apple/Documents/DashBoard-Master/black-dashboard-react-master/src/views/assets/images/project-folder-blue.png"
+import projectblue from "./assets/images/project-folder-blue.png";
 
-import dronelogo from "/Users/apple/Documents/DashBoard-Master/black-dashboard-react-master/src/views/assets/images/drone-icon.png"
-import projectfolder from "/Users/apple/Documents/DashBoard-Master/black-dashboard-react-master/src/views/assets/images/project-folder-black.png"
-import projectblue from "/Users/apple/Documents/DashBoard-Master/black-dashboard-react-master/src/views/assets/images/project-folder-blue.png"
-import drone from "../assets/drone.png"
-import dronecamera from "../assets/camera-drone.png"
+import drone from "../assets/drone.png";
+import dronecamera from "../assets/camera-drone.png";
 
 // core components
 import {
   chartExample1,
   chartExample2,
   chartExample3,
-  chartExample4
+  chartExample4,
 } from "variables/charts.js";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { BackgroundColorContext, backgroundColors } from "contexts/BackgroundColorContext";
+import {
+  BackgroundColorContext,
+  backgroundColors,
+} from "contexts/BackgroundColorContext";
 import ProgressBar from "components/ProgressBar/progress_bar";
 import DropFileInput from "./DropFileInput/DropFileInput";
 // import {icon1} from "../../src/assets/img/anime3.png"
-
-
 
 function Dashboard(props) {
   // Notification starts
@@ -108,15 +123,12 @@ function Dashboard(props) {
       ),
       type: type,
       icon: "tim-icons icon-bell-55",
-      autoDismiss: 7
+      autoDismiss: 7,
     };
     notificationAlertRef.current.notificationAlert(options);
   };
 
   // notifications ends
-
-
-
 
   const [imageData, setImageData] = useState(null);
 
@@ -130,38 +142,32 @@ function Dashboard(props) {
     };
   }
 
-
   const onFileChange = (files) => {
     console.log(files);
-  }
+  };
 
   const drone_list = [
     {
-      'drone_name': 'DJI Mavic Pro1',
-      'folder_color': '#e66037',
-      'link': '/'
+      drone_name: "DJI Mavic Pro1",
+      folder_color: "#e66037",
+      link: "/",
     },
     {
-      'drone_name': 'DJI Mavic Pro2',
-      'folder_color': '#55a6bd',
-      'link': '/amx/processdata'
-
+      drone_name: "DJI Mavic Pro2",
+      folder_color: "#55a6bd",
+      link: "/amx/processdata",
     },
     {
-      'drone_name': 'DJI Mavic Pro3',
-      'folder_color': '#de9646',
-      'link': '/amx/processdata'
-
-
+      drone_name: "DJI Mavic Pro3",
+      folder_color: "#de9646",
+      link: "/amx/processdata",
     },
     {
-      'drone_name': 'DJI Mavic Pro4',
-      'folder_color': 'rgb(55,109,236)',
-      'link': '/amx/processdata'
-
+      drone_name: "DJI Mavic Pro4",
+      folder_color: "rgb(55,109,236)",
+      link: "/amx/processdata",
     },
-
-  ]
+  ];
 
   // const project_list = [
   //   {
@@ -183,7 +189,6 @@ function Dashboard(props) {
   //     'numberoffile': "75 files",
   //     'link': '/amx/processdata'
 
-
   //   },
   //   {
   //     'project_name': 'Project 4',
@@ -193,89 +198,68 @@ function Dashboard(props) {
 
   //   },
 
-
   // ]
 
   const recent_project_list = [
     {
-      'project_name': 'Project 1',
-      'folder_color': '#D65A47',
-      'numberoffile': "340 files",
-      'size': '30 MB',
-      'link': '/'
+      project_name: "Project 1",
+      folder_color: "#D65A47",
+      numberoffile: "340 files",
+      size: "30 MB",
+      link: "/",
     },
     {
-      'project_name': 'Project 2',
-      'folder_color': 'rgb(64,153,173',
-      'numberoffile': "215 files",
-      'size': '30 MB',
-      'link': '/amx/processdata'
-
+      project_name: "Project 2",
+      folder_color: "rgb(64,153,173",
+      numberoffile: "215 files",
+      size: "30 MB",
+      link: "/amx/processdata",
     },
     {
-      'project_name': 'Project 3',
-      'folder_color': 'rgb(239,185,93)',
-      'numberoffile': "75 files",
-      'size': '30 MB',
-      'link': '/amx/processdata'
-
-
+      project_name: "Project 3",
+      folder_color: "rgb(239,185,93)",
+      numberoffile: "75 files",
+      size: "30 MB",
+      link: "/amx/processdata",
     },
     {
-      'project_name': 'Project 4',
-      'folder_color': 'rgb(55,109,236)',
-      'numberoffile': "51 files",
-      'size': '30 MB',
-      'link': '/amx/processdata'
-
-    },
-
-
-  ]
-
-
-
-  const data01 = [
-    {
-      name: "Group A",
-      value: 400,
-    },
-    {
-      name: "Group B",
-      value: 300,
+      project_name: "Project 4",
+      folder_color: "rgb(55,109,236)",
+      numberoffile: "51 files",
+      size: "30 MB",
+      link: "/amx/processdata",
     },
   ];
-  const data02 = [
+
+  let data02 = [
     {
       name: "Group A",
-      value: 200,
+      value: 90,
     },
     {
       name: "Group B",
-      value: 90,
-    }
+      value: 10,
+    },
   ];
   const [bigChartData, setbigChartData] = React.useState("data1");
 
   const [addprojectopen, setaddprojectopen] = React.useState(false);
-
-
 
   const setBgChartData = (name) => {
     setbigChartData(name);
   };
 
   const AddProject = (name) => {
-    console.log("AddProject======")
-    setaddprojectopen(true)
+    console.log("AddProject======");
+    setaddprojectopen(true);
   };
   const CloseProject = (name) => {
-    setaddprojectopen(false)
+    setaddprojectopen(false);
   };
 
   const SendProject = () => {
-    setaddprojectopen(false)
-    toast.info('This feature in dashboad is under development !', {
+    setaddprojectopen(false);
+    toast.info("This feature in dashboad is under development !", {
       position: "top-right",
       autoClose: 5000,
       hideProgressBar: false,
@@ -284,13 +268,13 @@ function Dashboard(props) {
       draggable: true,
       progress: undefined,
       theme: "light",
-      icon: <img src={drone} />
+      icon: <img src={drone} />,
     });
   };
 
   const BuyNow = () => {
-    setaddprojectopen(false)
-    toast.info('Buy functionality is under development!', {
+    setaddprojectopen(false);
+    toast.info("Buy functionality is under development!", {
       position: "top-right",
       autoClose: 5000,
       hideProgressBar: false,
@@ -299,23 +283,23 @@ function Dashboard(props) {
       draggable: true,
       progress: undefined,
       theme: "light",
-      icon: <img src={drone} />
+      icon: <img src={drone} />,
     });
   };
 
   const OKProject = (name) => {
-    setaddprojectopen(false)
+    setaddprojectopen(false);
   };
+  const Maxstorage = 16106127360;
 
   let GetAllProjects = async () => {
-    
     try {
       let data = await axios.get(
         "https://fibregrid.amxdrones.com/dronecount/projects/"
       );
-      console.log(data,"projectdata====>");
-      setfolder_list(data.data)
-      toast.success('Your project folder updated !', {
+      console.log(data, "projectdata====>");
+      setfolder_list(data.data);
+      toast.success("Your project folder updated !", {
         position: "top-right",
         autoClose: 5000,
         hideProgressBar: false,
@@ -324,8 +308,8 @@ function Dashboard(props) {
         draggable: true,
         progress: undefined,
         theme: "light",
-        icon: <img src={drone}/>
-        });
+        icon: <img src={drone} />,
+      });
       // toast(`Successfully ${project_name}  project data was created`);
       // navigate("/");
       // CloseProject()
@@ -333,21 +317,53 @@ function Dashboard(props) {
       console.log(error);
     }
   };
+  const [storagedata, setstoragedata] = useState();
+  const GetstorageData = async () => {
+    //   let resss = 8589934592
 
+    //   data02[0]['value'] = 700
+    //   data02[0]['name'] = "Group A"
+
+    //   console.log(data02)
+
+    try {
+      const response = await fetch(
+        "https://fibregrid.amxdrones.com//dronecount/storage/"
+      );
+      console.log("response==>", response);
+
+      const jsonData = await response.json();
+      console.log("json data=====>", jsonData[0]["total_bytes"]);
+
+      const gb_convertsion =
+        Number(jsonData[0]["total_bytes"]) / (1024 * 1024 * 1024);
+
+      setstoragedata(gb_convertsion.toFixed(2));
+
+      console.log("gb_convertsion==>", gb_convertsion);
+      // setData(jsonData);
+
+      // dataArr = jsonData
+      // setLoading(false);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
   useEffect(() => {
-    GetAllProjects()
-    toast.success('Wellcome to dasboad ADMIN !', {
-      position: "top-right",
-      autoClose: 5000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-      theme: "light",
-      icon: <img src={drone} />
-    });
-  },[])
+    GetAllProjects();
+    GetstorageData();
+    // toast.success('Wellcome to dashboad ADMIN !', {
+    //   position: "top-right",
+    //   autoClose: 5000,
+    //   hideProgressBar: false,
+    //   closeOnClick: true,
+    //   pauseOnHover: true,
+    //   draggable: true,
+    //   progress: undefined,
+    //   theme: "light",
+    //   icon: <img src={drone} alt="drone_image-error" />
+    // });
+  }, []);
 
   let [state, setState] = useState({
     name: "",
@@ -363,62 +379,59 @@ function Dashboard(props) {
 
     try {
       let payload = state;
-      console.log(payload,'payload=====>');
-      let data = await axios.post(
-        "https://fibregrid.amxdrones.com/dronecount/projects/",
-        payload
-      ).then(res => {
-        // const data2 = res.data;
-        toast.success('New project added !', {
-          position: "top-right",
-          autoClose: 5000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "light",
-          icon: <img src={drone}/>
+      console.log(payload, "payload=====>");
+      let data = await axios
+        .post("https://fibregrid.amxdrones.com/dronecount/projects/", payload)
+        .then((res) => {
+          // const data2 = res.data;
+          toast.success("New project added !", {
+            position: "top-right",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "light",
+            icon: <img src={drone} />,
           });
-     
-      CloseProject()
-      GetAllProjects()
-      })
-      .catch(err => {
-        if (err.response) {
-            toast.error('Server down, Please try agin later !', {
-                position: "top-right",
-                autoClose: 5000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-                theme: "light",
-                icon: <img src={drone}/>
-                });
-                GetAllProjects()
-                CloseProject()
-          console.log(err.response.status);
-          console.log(err.response.statusText);
-          console.log(err.message);
-          console.log(err.response.headers); // 👉️ {... response headers here}
-          console.log(err.response.data); // 👉️ {... response data here}
-        }
-      });
-      
+
+          CloseProject();
+          GetAllProjects();
+        })
+        .catch((err) => {
+          if (err.response) {
+            toast.error("Server down, Please try agin later !", {
+              position: "top-right",
+              autoClose: 5000,
+              hideProgressBar: false,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true,
+              progress: undefined,
+              theme: "light",
+              icon: <img src={drone} />,
+            });
+            GetAllProjects();
+            CloseProject();
+            console.log(err.response.status);
+            console.log(err.response.statusText);
+            console.log(err.message);
+            console.log(err.response.headers); // 👉️ {... response headers here}
+            console.log(err.response.data); // 👉️ {... response data here}
+          }
+        });
     } catch (error) {
       console.log(error);
     }
   };
 
+  const history = useHistory();
 
-  console.log(addprojectopen, 'addprojectopen====>')
+  console.log(addprojectopen, "addprojectopen====>");
   return (
     <BackgroundColorContext.Consumer>
       {({ color }) => (
-
-
         <>
           <ToastContainer />
 
@@ -426,15 +439,17 @@ function Dashboard(props) {
             <NotificationAlert ref={notificationAlertRef} />
           </div>
 
-
           <div className={addprojectopen == true ? "overlay show" : "overlay"}>
-
             {/* <!-- popup box start --> */}
-            <div className="popup-outer" >
+            <div className="popup-outer">
               <div className="popup-box">
                 {/* <i id="close" className="bx bx-x close"></i> */}
-                <FontAwesomeIcon onClick={CloseProject} className="close" icon={faClose} />
-                <div className="profile-text" >
+                <FontAwesomeIcon
+                  onClick={CloseProject}
+                  className="close"
+                  icon={faClose}
+                />
+                <div className="profile-text">
                   {/* <img src="profile.jpg" alt="" />  */}
                   <div className="text">
                     <span className="name">Create Projects</span>
@@ -464,20 +479,31 @@ function Dashboard(props) {
                 />
                 {/* <textarea spellcheck="false" placeholder="Enter your message"></textarea> */}
                 <div className="button">
-                  <button id="close" onClick={CloseProject} className="cancel">Cancel</button>
-                  <button className="send" onClick={handleSubmit}>Create</button>
+                  <button id="close" onClick={CloseProject} className="cancel">
+                    Cancel
+                  </button>
+                  <button className="send" onClick={handleSubmit}>
+                    Create
+                  </button>
                 </div>
                 {/* </form> */}
               </div>
             </div>
           </div>
 
-
           {/* Dashboard */}
 
-          <div className="content" style={{ backgroundColor: color == 'green' ? 'rgba(255,140,49,.05)' : color == 'primary' ? 'rgba(253,101,113,.05)' : "rgba(65, 195, 199,.03)" }} >
-
-
+          <div
+            className="content"
+            style={{
+              backgroundColor:
+                color == "green"
+                  ? "rgba(255,140,49,.05)"
+                  : color == "primary"
+                  ? "rgba(253,101,113,.05)"
+                  : "rgba(65, 195, 199,.03)",
+            }}
+          >
             {/* <div className={addprojectopen == true ? "overlay show" : "overlay"} id="overlay">
   <div data={color} className="popup show" id="popup">
     <h2>Create Projects</h2>
@@ -488,13 +514,7 @@ function Dashboard(props) {
   </div>
 </div> */}
 
-
-
-
-
             <div className="container-fluid">
-
-
               <div className="row">
                 {/* Left section */}
 
@@ -541,38 +561,62 @@ function Dashboard(props) {
       </div>
     </Col> */}
 
-
-
                     {/* </Row> */}
 
                     <Row>
                       <Col className="text-left" md="6">
                         <CardTitle tag="h4" style={{}}>
                           Active Projects
-
                         </CardTitle>
                       </Col>
-
                     </Row>
 
-
                     <Row>
-                      {project_list.map((item) =>
+                      {project_list.map((item) => (
                         <Col md="3">
-                          <div className="card2">
-                            <div className="content" style={{ backgroundColor: 'white', marginLeft: "10px" }}>
+                          <div
+                            className="card2"
+                            onClick={() =>
+                              history.push("/amx/folders?project_id=" + item.id)
+                            }
+                          >
+                            <div
+                              className="content"
+                              style={{
+                                backgroundColor: "white",
+                                marginLeft: "10px",
+                              }}
+                            >
                               {/* <FontAwesomeIcon icon={faBriefcase} style={{ color: "#ffffff", width: "20px", height: "20px" }} /> */}
-                              <img src={projectblue} style={{ width: "20px", height: "20px", }} />
+                              <img
+                                src={projectblue}
+                                style={{ width: "20px", height: "20px" }}
+                              />
 
-                              <h4 style={{ marginBottom: "5px", fontSize: "13px", fontWeight: "400" }}>{item.name}</h4>
-                              <h5 style={{ marginBottom: "5px", fontSize: "13px", fontWeight: "200" }}>-</h5>
+                              <h4
+                                style={{
+                                  marginBottom: "5px",
+                                  fontSize: "13px",
+                                  fontWeight: "400",
+                                }}
+                              >
+                                {item.name}
+                              </h4>
+                              <h5
+                                style={{
+                                  marginBottom: "5px",
+                                  fontSize: "13px",
+                                  fontWeight: "200",
+                                }}
+                              >
+                                -
+                              </h5>
 
                               {/* <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p> */}
                             </div>
                           </div>
                         </Col>
-                      )}
-
+                      ))}
 
                       {/* <Col md="2">
       <div className="card2">
@@ -611,15 +655,13 @@ function Dashboard(props) {
       </div>
     </Col> */}
 
-
-
                       <Col md="3">
-                        <div onClick={AddProject} className=""  >
-                          <div className="content mt-3" >
+                        <div onClick={AddProject} className="">
+                          <div className="content mt-3">
                             <button
                               type="file"
                               className="header-content-btn2"
-                            // onClick={handleClickOpen}
+                              // onClick={handleClickOpen}
                             >
                               +
                             </button>
@@ -634,22 +676,16 @@ function Dashboard(props) {
                       </Col>
                     </Row>
 
-
                     <Row>
                       <Col className="text-left" md="6">
                         <CardTitle tag="h4" style={{ marginTop: "20px" }}>
                           Recent Projects
-
                         </CardTitle>
                       </Col>
-
                     </Row>
 
                     <Row>
-
-
                       <Col md="12" style={{ marginTop: "20px" }}>
-
                         {/* <Card>
               <CardHeader>
                 <CardTitle tag="h4">Recent Projects</CardTitle>
@@ -657,14 +693,19 @@ function Dashboard(props) {
                         {/* <CardBody> */}
 
                         {/* <UncontrolledAlert > */}
-                        {project_list.map((item) =>
-                          <div className="card4">
-
-                            <div className="icon-container1" style={{ backgroundColor: 'rgb(239,185,93)' }}>
-
+                        {project_list.map((item) => (
+                          <div
+                            className="card4"
+                            onClick={() =>
+                              history.push("/amx/folders?project_id=" + item.id)
+                            }
+                          >
+                            <div
+                              className="icon-container1"
+                              style={{ backgroundColor: "rgb(239,185,93)" }}
+                            >
                               <i className="fa-solid icon1 fa-sheet-plastic"></i>
                             </div>
-
 
                             {/* <p>{item.project_name}</p>
                             <p>{item.numberoffile}</p>
@@ -674,7 +715,7 @@ function Dashboard(props) {
                             {/* <p>-</p>
                             <p>-</p> */}
                           </div>
-                        )}
+                        ))}
 
                         {/* <div className="card5" >
                   <FontAwesomeIcon icon={faUser} style={{ color: "white", width: "25px", height: "25px", marginLeft: "10px" }} />
@@ -697,11 +738,7 @@ function Dashboard(props) {
                   <p>5 MB</p>
                 </div> */}
 
-
                         {/* </UncontrolledAlert> */}
-
-
-
 
                         {/* <UncontrolledAlert className="alert-with-icon" color="info">
         <span className="tim-icons icon-bell-55" data-notify="icon" />
@@ -717,46 +754,58 @@ function Dashboard(props) {
                         {/* </Card> */}
                       </Col>
                     </Row>
-
-
                   </>
-
                 </div>
-
 
                 {/* Right Section */}
                 <div className=" col-md-4 ">
                   {/* <h2>Right Section</h2> */}
                   <>
-                    <div style={{
-                      // background: "red",
-                      // borderRadius: "1rem",
-                      justifyContent: 'center',
-                      alignItems: 'center',
-                      paddingLeft: "25px",
-                      paddingRight: "25px"
-
-                    }}>
+                    <div
+                      style={{
+                        // background: "red",
+                        // borderRadius: "1rem",
+                        justifyContent: "center",
+                        alignItems: "center",
+                        paddingLeft: "25px",
+                        paddingRight: "25px",
+                      }}
+                    >
                       <div
-
                         className="container"
                         style={{
                           background: "white",
                           borderRadius: "1rem",
-                          justifyContent: 'center',
-                          alignItems: 'center',
+                          justifyContent: "center",
+                          alignItems: "center",
                           padding: "10px",
-                          width: "300px"
-
-
+                          // width: "300px",
                         }}
                       >
-                        <h3 style={{ textAlign: "center", }} className="Storage-chart">Storage</h3>
-                        <div style={{ textAlign: "center", marginBottom: 'auto' }}>
-                          <PieChart width={240} height={270} >
-                            {/* <Pie
-      <h1></h1>
-        /> */}
+                        <h3
+                          style={{ textAlign: "center" }}
+                          className="Storage-chart"
+                        >
+                          Storage
+                        </h3>
+                        <div
+                          style={{ textAlign: "center", marginBottom: "auto" }}
+                        >
+                          <div
+                            className="row"
+                            // style={{ height: "500px", width: "500px" }}
+                          >
+                            <div className="col-12">
+                            <CircularProgressbar className="w-75"
+                              value={storagedata}
+                              maxValue={15}
+                              text={`${storagedata}`}
+                            />
+                            </div>
+                            
+                          </div>
+                          {/* <PieChart width={240} height={270} >
+                           
 
                             <Pie
                               data={data02}
@@ -770,11 +819,10 @@ function Dashboard(props) {
                               label
 
                             />
-                          </PieChart>
+                          </PieChart> */}
                         </div>
 
                         <div style={{ textAlign: "center" }} className="center">
-
                           {/* <div style={{textAlign:"center"}}className="">
           <div className="">
             <div
@@ -808,16 +856,25 @@ function Dashboard(props) {
             </div>
           </div>
         </div> */}
-                          <div >
+                          {/* <div>
                             <ProgressBar color={color} />
-                          </div>
+                          </div> */}
 
                           <div onClick={BuyNow} className="container-storage">
-                            <a  data={color} className="buynow" title="Buy storage"><i style={{color:'white'}} className="tim-icons icon-key-25"></i>
-                              <span style={{ marginLeft: '10px',color:'white' }}>
+                            <a
+                              data={color}
+                              className="buynow"
+                              title="Buy storage"
+                            >
+                              <i
+                                style={{ color: "white" }}
+                                className="tim-icons icon-key-25"
+                              ></i>
+                              <span
+                                style={{ marginLeft: "10px", color: "white" }}
+                              >
                                 Buy now
                               </span>
-
                             </a>
                             {/* <button style={{textAlign:"center"}} className="Storage-btn">BUY STORAGE</button> */}
                           </div>
@@ -834,22 +891,15 @@ function Dashboard(props) {
             <span style={{textAlign:"center"}} className="project-lists-file"> project 2</span>
           </i>{" "}
         </div> */}
-
                         </div>
                       </div>
                     </div>
-
                   </>
-
                 </div>
               </div>
             </div>
-
-
           </div>
-
         </>
-
       )}
     </BackgroundColorContext.Consumer>
   );
@@ -857,12 +907,12 @@ function Dashboard(props) {
 
 export default Dashboard;
 
+{
+  /* </Col> */
+}
 
-
-
-{/* </Col> */ }
-
-{/* <Col  lg="2">
+{
+  /* <Col  lg="2">
             <Card className="card-chart">
               <CardHeader>
                 <h5 className="card-category">Daily Sales</h5>
@@ -916,4 +966,5 @@ export default Dashboard;
                 </div>
               </CardBody>
             </Card>
-          </Col> */}
+          </Col> */
+}

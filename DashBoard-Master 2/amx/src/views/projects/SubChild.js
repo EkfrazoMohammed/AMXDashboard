@@ -14,6 +14,16 @@ import { ImageConfig } from "views/DropFileInput/config/ImageConfig";
 // import "/Users/apple/Documents/DashBoard-Master/black-dashboard-react-master/src/views/projects/TwoDview.css"
 import { ToastContainer, toast } from 'react-toastify';
 import drone from "../../assets/drone.png"
+// import React, { useState } from 'react';
+// import { storage } from '../../../src/firebaseConfig'
+import storage from "../../../src/firebaseConfig.js"
+import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
+
+import { CircularProgressbar } from 'react-circular-progressbar';
+import 'react-circular-progressbar/dist/styles.css';
+
+
+
 
 const folder_list = [
   {
@@ -127,6 +137,8 @@ const UploadFile = async() => {
 };
 
 
+const [is_true_progress, setProgessState] = useState(false);
+
 
 
 
@@ -166,10 +178,10 @@ const UploadFile = async() => {
   // pop up endd=====
 
   let { project_name } = state;
-  let handleChange = (e) => {
-    let { name, value } = e.target;
-    setState({ ...state, [name]: value });
-  };
+  // let handleChange = (e) => {
+  //   let { name, value } = e.target;
+  //   setState({ ...state, [name]: value });
+  // };
 
   let handleSubmit = async (e) => {
     e.preventDefault();
@@ -188,6 +200,10 @@ const UploadFile = async() => {
       console.log(error);
     }
   };
+
+  const [percentage, setPercentage] = useState(0);
+
+
   const [popup, setPopup] = useState(false);
   const handleClickOpen = () => {
     setPopup(!popup);
@@ -195,6 +211,82 @@ const UploadFile = async() => {
   const ClosePopup = () => {
     setPopup(false);
   };
+
+  // const [file, setFile] = useState(null);
+
+  const handleFileChange = (event) => {
+    setFile(event.target.files[0]);
+  };
+
+  const [file, setFile] = useState("");
+ 
+    // Handles input change event and updates state
+    function handleChange(event) {
+        setFile(event.target.files[0]);
+    }
+
+    const [percent, setPercent] = useState(0);
+
+    const handleUpload = () => {
+      setProgessState(true)
+      if (!file) {
+          alert("Please upload an image first!");
+      }
+
+      const storageRef = ref(storage, `/amx/${file.name}`);
+
+      // progress can be paused and resumed. It also exposes progress updates.
+      // Receives the storage reference and the file to upload.
+      const uploadTask = uploadBytesResumable(storageRef, file);
+
+      uploadTask.on(
+          "state_changed",
+          (snapshot) => {
+              
+              let percent = Math.round(
+                  (snapshot.bytesTransferred / snapshot.totalBytes) * 100
+              );
+
+              console.log("percent==>>",percent)
+
+              // percentage = percent
+              setPercentage(percent)
+
+              
+
+
+
+              // update progress
+              setPercent(percent);
+          },
+          (err) => console.log(err),
+          () => {
+              // download url
+              getDownloadURL(uploadTask.snapshot.ref).then((url) => {
+                  console.log(url);
+                  alert(url)
+
+                  const postData = async () => {
+                    try {
+                      const response = await axios.post('API_URL', { data: 'example' }); // Replace with the data you want to send
+                      const data = response.data;
+                      // Process the response data
+                      console.log(data);
+                    } catch (error) {
+                      // Handle the error
+                      console.error(error);
+                    }
+                  };
+                  
+
+
+
+              });
+          }
+      );
+  };
+
+
   return (
     <BackgroundColorContext.Consumer>
       {({ color }) => (
@@ -278,6 +370,7 @@ const UploadFile = async() => {
 
           {/* POP UP 2 */}
           <div className={addprojectopen == true ? "overlay show" : "overlay"}>
+         
 
             {/* <!-- popup box start --> */}
             <div className="popup-outer" >
@@ -297,7 +390,7 @@ const UploadFile = async() => {
                 {/* <form > */}
 
                 <div className="wraper-dashboard"  >
-                  <div className="wraper-card-content-dashboard" >
+                  <div className="wraper-card-content-dashboard text-center" >
                     {/* <header>Upload files </header> */}
                     {/* <textarea spellcheck="false" placeholder="Enter your message"></textarea> */}
                     {/* <input
@@ -309,9 +402,19 @@ const UploadFile = async() => {
                                   value={project_name}
                                   onChange={handleChange}
                                 /> */}
-                    <DropFileInput
-                      onFileChange={(files) => onFileChange(files)}
-                    />
+                 <input type="file" onChange={handleChange} />
+                 {
+                  is_true_progress ? 
+                  <CircularProgressbar value={percentage} text={`${percentage}%`} />
+                  : ""
+                 }
+
+                
+                 {/* <CircularProgressbar value={percentage} text={`${percentage}%`} /> */}
+                    {/* <DropFileInput
+                      // onFileChange={(files) => onFileChange(files)}
+                      
+                    /> */}
 
                   </div>
 
@@ -320,7 +423,8 @@ const UploadFile = async() => {
                 {/* <textarea spellcheck="false" placeholder="Enter your message"></textarea> */}
                 <div className="button">
                   <button id="close" onClick={CloseProject} className="cancel">Cancel</button>
-                  <button className="send" onClick={UploadFile} >Upload</button>
+                  {/* <button className="send" onClick={UploadFile} >Upload</button> */}
+                  <button className="send" onClick={handleUpload} >Upload</button>
 
                 </div>
                 {/* </form> */}
@@ -410,6 +514,15 @@ const UploadFile = async() => {
             {/* PLUS BUTTON START */}
 
             <div data={color} className="row gx-0 row-datas-cards col-lg-12 col-md-12 col-sm-6">
+              {/* <button
+                data={color}
+                type="file"
+                className="header-content-btn1"
+                onClick={AddProject}
+              >
+                +
+              </button> */}
+
               <button
                 data={color}
                 type="file"

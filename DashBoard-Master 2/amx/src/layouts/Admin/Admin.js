@@ -28,8 +28,11 @@ import FixedPlugin from "components/FixedPlugin/FixedPlugin.js";
 
 import routes from "routes.js";
 
-import amx from "/Users/apple/Documents/DashBoard-Master/black-dashboard-react-master/src/views/assets/images/amx.png";
-import amx_white from "/Users/apple/Documents/DashBoard-Master/black-dashboard-react-master/src/views/assets/images/amx_white.png";
+// import amx from "/Users/apple/Documents/DashBoard-Master/black-dashboard-react-master/src/views/assets/images/amx.png";
+import '../../../src/views/assets/images/amx.png'
+import amx_white from '../../../src/views/assets/images/amx_white.png'
+// import amx_white from "/Users/apple/Documents/DashBoard-Master/black-dashboard-react-master/src/views/assets/images/amx_white.png";
+
 import { BackgroundColorContext } from "contexts/BackgroundColorContext";
 import ProcessData from "views/projects/ProcessData";
 import ThreeDViewer from "views/projects/ThreeDview";
@@ -163,7 +166,7 @@ function Admin(props) {
               }
             </div>
           </div>
-          <FixedPlugin bgColor={color} handleBgClick={changeColor} />
+          {/* <FixedPlugin bgColor={color} handleBgClick={changeColor} /> */}
         </React.Fragment>
       )}
     </BackgroundColorContext.Consumer>

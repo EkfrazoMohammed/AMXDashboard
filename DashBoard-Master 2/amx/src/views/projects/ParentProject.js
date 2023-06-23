@@ -6,6 +6,7 @@ import { BackgroundColorContext } from 'contexts/BackgroundColorContext';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faClapperboard, faClose } from '@fortawesome/free-solid-svg-icons';
 
+
 import axios from "axios";
 // import { toast } from "react-toastify";
 import {ToastContainer, toast} from 'react-toastify';
@@ -186,7 +187,7 @@ const ParentProject = () => {
                 //  <div  className="row">
                 <>
                   {/* <Link to={item.link}> */}
-                  <div onClick={()=> PushToCreateProject(item)}>
+                  <div onClick={()=> history.push('/amx/folders?project_id='+item.id)}>
 
                     <div className="file-cards" >
                       <div style={{}} className="col-lg-2 col-sm-2 col-md-2 mb-5 mt-5">

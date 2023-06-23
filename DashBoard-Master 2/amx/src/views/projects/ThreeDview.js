@@ -3,7 +3,8 @@ import React, { useRef, useEffect, useState } from "react";
 import * as THREE from "three";
 // import "./TwoDview.css";
 
-import "/Users/apple/Documents/DashBoard-Master/black-dashboard-react-master/src/views/projects/TwoDview.css"
+// import "/Users/apple/Documents/DashBoard-Master/black-dashboard-react-master/src/views/projects/TwoDview.css"
+import "../../../src/views/projects/TwoDview.css"
 function ThreeDViewer(props) {
   const [imageData, setImageData] = useState(null);
 

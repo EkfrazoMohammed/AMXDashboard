@@ -59,6 +59,10 @@
 	/* margin-top: 30px; */
   }
 
+  .CircularProgressbar {
+	width: 15% !important;
+  }
+
 
   /* Folder */
 .folder-name {
@@ -125,6 +129,23 @@
 	background: linear-gradient(90deg, #ff8ea5 0%, #ff8ea5 100%);
 }
 
+
+.file{
+	-webkit-perspective: 500px;
+	perspective: 500px;
+	width: 91px;
+	height: 60px;
+	/* position: absolute; */
+	/* top: 210px; */
+    /* left: 390px; */
+	/* -webkit-transform: translate(-20%, -20%);
+	transform: translate(-20%, -20%); */
+	border-top-right-radius: 5px;
+	cursor: pointer;
+	-webkit-transition: all 300ms ease;
+	transition: all 300ms ease;
+  /* background-color:#aed0c3 */
+}
 
 
 

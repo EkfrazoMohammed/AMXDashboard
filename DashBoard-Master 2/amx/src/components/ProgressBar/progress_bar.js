@@ -1,5 +1,6 @@
 import React from 'react'
-import '/Users/apple/Documents/DashBoard-Master/black-dashboard-react-master/src/components/ProgressBar/progress_bar.css';
+// import '/Users/apple/Documents/DashBoard-Master/black-dashboard-react-master/src/components/ProgressBar/progress_bar.css';
+import './../../components/ProgressBar/progress_bar.css'
 
 const progress_bar = (props) => {
   console.log(props.color,'colorrrr_progress_bar')

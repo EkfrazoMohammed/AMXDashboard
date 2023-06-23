@@ -109,36 +109,36 @@ function AdminNavbar(props) {
           </NavbarToggler>
           <Collapse navbar isOpen={collapseOpen}>
             <Nav className="ml-auto" navbar>
-              <InputGroup className="search-bar">
+              {/* <InputGroup className="search-bar">
                 <Button color="link" onClick={toggleModalSearch}>
                   <i className="tim-icons icon-zoom-split" />
                   <span className="d-lg-none d-md-block">Search</span>
                 </Button>
-              </InputGroup>
-              <UncontrolledDropdown nav>
-                <DropdownToggle
+              </InputGroup> */}
+              {/* <UncontrolledDropdown nav> */}
+                {/* <DropdownToggle
                   caret
                   color="default"
                   data-toggle="dropdown"
                   nav
-                >
-                  <div className="notification d-none d-lg-block d-xl-block" />
+                > */}
+                  {/* <div className="notification d-none d-lg-block d-xl-block" /> */}
                   {/* <i className="tim-icons icon-sound-wave" /> */}
-                  <i className="tim-icons icon-bell-55" /> 
+                  {/* <i className="tim-icons icon-bell-55" />  */}
                   
-                  <p className="d-lg-none">Notifications</p>
-                </DropdownToggle>
-                <DropdownMenu className="dropdown-navbar" right tag="ul">
-                  <NavLink tag="li">
+                  {/* <p className="d-lg-none">Notifications</p> */}
+                {/* </DropdownToggle> */}
+                {/* <DropdownMenu className="dropdown-navbar" right tag="ul"> */}
+                  {/* <NavLink tag="li">
                     <DropdownItem className="nav-item">
                       New drone is added
                     </DropdownItem>
-                  </NavLink>
-                  <NavLink tag="li">
+                  </NavLink> */}
+                  {/* <NavLink tag="li">
                     <DropdownItem className="nav-item">
                       New project is created
                     </DropdownItem>
-                  </NavLink>
+                  </NavLink> */}
                   {/* <NavLink tag="li">
                     <DropdownItem className="nav-item">
                       Your friend Michael is in town
@@ -154,8 +154,8 @@ function AdminNavbar(props) {
                       Another one
                     </DropdownItem>
                   </NavLink> */}
-                </DropdownMenu>
-              </UncontrolledDropdown>
+                {/* </DropdownMenu> */}
+              {/* </UncontrolledDropdown> */}
               <UncontrolledDropdown nav>
                 <DropdownToggle
                   caret
@@ -166,23 +166,17 @@ function AdminNavbar(props) {
                   <div className="photo">
                     <img alt="..." src={require("assets/img/anime3.png")} />
                   </div>
-                  <b className="caret d-none d-lg-block d-xl-block" />
+                  {/* <b className="caret d-none d-lg-block d-xl-block" /> */}
                   <p onClick={LogOutClick} className="d-lg-none">Log out</p>
                 </DropdownToggle>
                 <DropdownMenu className="dropdown-navbar" right tag="ul">
+          
+                
+                  {/* <DropdownItem divider tag="li" /> */}
                   <NavLink tag="li">
-                    {/* <DropdownItem className="nav-item" onClick={UserProfileClick}>Profile</DropdownItem> */}
-                    <DropdownItem className="nav-item">Profile</DropdownItem>
-
+                    <DropdownItem onClick={LogOutClick} className="nav-item text-danger">Log out</DropdownItem>
                   </NavLink>
-                  <NavLink tag="li">
-                    <DropdownItem className="nav-item">Settings</DropdownItem>
-                  </NavLink>
-                  <DropdownItem divider tag="li" />
-                  <NavLink tag="li">
-                    <DropdownItem onClick={LogOutClick} className="nav-item">Log out</DropdownItem>
-                  </NavLink>
-                </DropdownMenu>
+                 </DropdownMenu> 
               </UncontrolledDropdown>
               <li className="separator d-lg-none" />
             </Nav>

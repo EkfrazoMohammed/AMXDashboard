@@ -2,7 +2,8 @@ import React, { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCloudArrowUp } from "@fortawesome/free-solid-svg-icons";
 import DropFileInput from "../DropFileInput/DropFileInput";
-import '/Users/apple/Documents/DashBoard-Master/black-dashboard-react-master/src/views/projects/TwoDview.css'
+// import '/Users/apple/Documents/DashBoard-Master/black-dashboard-react-master/src/views/projects/TwoDview.css'
+import "../../../src/views/projects/TwoDview.css"
 import { BackgroundColorContext } from "contexts/BackgroundColorContext";
 
 function TwoDview() {

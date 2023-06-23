@@ -8,6 +8,7 @@ import AddDrone from "views/AddDrone/AddDrone";
 import Mission from "views/Mission/Mission";
 import ParentProject from "views/projects/ParentProject";
 import ViewerWrapper from "views/Viewer";
+import Folder from "views/Home/Folders";
 
 var routes = [
   {
@@ -52,6 +53,16 @@ var routes = [
     icon: "tim-icons icon-square-pin",
     
     component: Map,
+    layout: "/amx"
+  },
+  {
+    path: "/folders",
+    name: "Video Viewer",
+    // rtlName: "خرائط",
+    // icon: "tim-icons icon-pin",
+    icon: "tim-icons icon-support-17",
+    
+    component: Folder,
     layout: "/amx"
   },
   // {
@@ -133,7 +144,7 @@ var routes = [
       path: "/viewer",
       name: "Viewer",
       // rtlName: "إخطارات",
-      icon: "tim-icons icon-tag",
+      icon: "tim-icons icon-world",
       component: ViewerWrapper,
       layout: "/amx"
     },

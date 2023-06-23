@@ -1,11 +1,18 @@
+
 import React from 'react'
-import '/Users/apple/Documents/DashBoard-Master/black-dashboard-react-master/src/views/assets/images/favicon.ico'
-import '/Users/apple/Documents/DashBoard-Master/black-dashboard-react-master/src/views/assets/fonts/fontawesome/css/fontawesome-all.min.css'
-import '/Users/apple/Documents/DashBoard-Master/black-dashboard-react-master/src/views/assets/plugins/animation/css/animate.min.css'
-import '/Users/apple/Documents/DashBoard-Master/black-dashboard-react-master/src/views/assets/css/style.css'
+// import '/Users/apple/Documents/DashBoard-Master/black-dashboard-react-master/src/views/assets/images/favicon.ico'
+import '../../src/assets/img/favicon.png'
+// import '/Users/apple/Documents/DashBoard-Master/black-dashboard-react-master/src/views/assets/fonts/fontawesome/css/fontawesome-all.min.css'
+import '../views/assets/fonts/fontawesome/css/fontawesome-all.min.css'
+
+// import '/Users/apple/Documents/DashBoard-Master/black-dashboard-react-master/src/views/assets/plugins/animation/css/animate.min.css'
+import "../views/assets/plugins/animation/css/animate.min.css"
+// import '/Users/apple/Documents/DashBoard-Master/black-dashboard-react-master/src/views/assets/css/style.css'
+import '../../src/views/assets/css/style.css'
 import { useHistory } from "react-router-dom";
 
-import amxregister from "/Users/apple/Documents/DashBoard-Master/black-dashboard-react-master/src/assets/img/amx_login_icon.png"
+// import amxregister from "/Users/apple/Documents/DashBoard-Master/black-dashboard-react-master/src/assets/img/amx_login_icon.png"
+import amxregister from "../../src/assets/img/amx_login_icon.png"
 
 const Register = () => {
     const history = useHistory();

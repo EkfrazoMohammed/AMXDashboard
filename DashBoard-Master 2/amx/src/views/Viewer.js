@@ -15,7 +15,7 @@
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
 */
-import React from "react";
+import React, { useEffect ,useRef} from "react";
 
 // reactstrap components
 import { Card, CardHeader, CardBody, Row, Col } from "reactstrap";
@@ -299,20 +299,7 @@ import { Card, CardHeader, CardBody, Row, Col } from "reactstrap";
 // };
 
 function ViewerWrapper() {
-  const videos = [
-    {
-      id: 1,
-      src: 'https://www.youtube.com/embed/dQw4w9WgXcQ', // Replace with your dummy video URL
-    },
-    {
-      id: 2,
-      src: 'https://www.youtube.com/embed/6Dh-RL__uN4', // Replace with your dummy video URL
-    },
-    {
-      id: 3,
-      src: 'https://www.youtube.com/embed/2Vv-BfVoq4g', // Replace with your dummy video URL
-    },
-  ];
+
   return (
     <>
       <div className="content">
@@ -323,11 +310,11 @@ function ViewerWrapper() {
                   className="map"
                   style={{ position: "relative", overflow: "hidden",width:'100%',height: "calc(88vh)" }}
                 >
-          
+      
                   <iframe
                       style={{width:'100%', height:'100%'}}
 
-                      src={'https://plas-io.netlify.app/'}
+                      src={'https://64.227.154.198'}
                       
                     ></iframe>
                 </div>

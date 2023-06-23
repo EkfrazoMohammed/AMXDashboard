@@ -1,11 +1,17 @@
 import React, { useState } from 'react'
 // import './styles/Login.css'
 
-import '/Users/apple/Documents/DashBoard-Master/black-dashboard-react-master/src/views/assets/images/favicon.ico'
-import '/Users/apple/Documents/DashBoard-Master/black-dashboard-react-master/src/views/assets/fonts/fontawesome/css/fontawesome-all.min.css'
-import '/Users/apple/Documents/DashBoard-Master/black-dashboard-react-master/src/views/assets/plugins/animation/css/animate.min.css'
-import '/Users/apple/Documents/DashBoard-Master/black-dashboard-react-master/src/views/assets/css/style.css'
-import amxlogin from "/Users/apple/Documents/DashBoard-Master/black-dashboard-react-master/src/assets/img/amx_login_icon.png";
+// import '/Users/apple/Documents/DashBoard-Master/black-dashboard-react-master/src/views/assets/images/favicon.ico'
+import '../../../amx/src/assets/img/favicon.png'
+
+// import '/Users/apple/Documents/DashBoard-Master/black-dashboard-react-master/src/views/assets/fonts/fontawesome/css/fontawesome-all.min.css'
+import './../../src/views/assets/fonts/fontawesome/css/fontawesome-all.min.css'
+
+// import '/Users/apple/Documents/DashBoard-Master/black-dashboard-react-master/src/views/assets/plugins/animation/css/animate.min.css'
+
+// import '/Users/apple/Documents/DashBoard-Master/black-dashboard-react-master/src/views/assets/css/style.css'
+// import amxlogin from "/Users/apple/Documents/DashBoard-Master/black-dashboard-react-master/src/assets/img/amx_login_icon.png";
+import amxlogin from '../assets/img/amx_login_icon.png'
 import { useHistory } from "react-router-dom";
 import axios from "axios";
 import {ToastContainer, toast} from 'react-toastify';
@@ -52,6 +58,8 @@ const changeHandler = (e) => {
         "https://fibregrid.amxdrones.com/dronecount/login/",
         payload
       ).then(res => {
+        console.log("999999999999====",res)
+        localStorage.setItem('user_id',res.data.user_id)
         const data2 = res.data;
         history.push('/amx');
       })
@@ -129,13 +137,13 @@ const changeHandler = (e) => {
                                   className="form-control" placeholder="password" />
                 </div>
                
-
+{/* 
                 <div className="form-group text-left">
                     <div className="checkbox checkbox-fill d-inline">
                         <input type="checkbox" name="checkbox1-fill-2" id="checkbox-fill-2" />
                         <label for="checkbox-fill-2" className="cr">&nbsp;  Save Details</label>
                     </div>
-                </div>
+                </div> */}
 
 
 
@@ -146,8 +154,8 @@ const changeHandler = (e) => {
                     </div>
                 </div> */}
                 <button onClick={LoginClick} className="btn btn-primary shadow-2 mb-4">Login</button>
-                <p className="mb-2 text-muted">Forgot password? <a href="auth-reset-password.html">Reset</a></p>
-                <p className="mb-0 text-muted">Don’t have an account? <b  onClick={SignUpClick}>Signup</b></p>
+                {/* <p className="mb-2 text-muted">Forgot password? <a href="auth-reset-password.html">Reset</a></p> */}
+                {/* <p className="mb-0 text-muted">Don’t have an account? <b  onClick={SignUpClick}>Signup</b></p> */}
             </div>
         </div>
     </div>

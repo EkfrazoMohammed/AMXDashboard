@@ -15,336 +15,149 @@
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
 */
-import React from "react";
+import React,{useState,useEffect,useMemo} from "react";
 
 // reactstrap components
 import { Card, CardHeader, CardBody, Row, Col } from "reactstrap";
+import { GoogleMap, useJsApiLoader, Marker,useLoadScript } from "@react-google-maps/api";
 
-const MapWrapper = () => {
-  const mapRef = React.useRef(null);
-  React.useEffect(() => {
-    let google = window.google;
-    let map = mapRef.current;
-    let lat = "40.748817";
-    let lng = "-73.985428";
-    const myLatlng = new google.maps.LatLng(lat, lng);
-    const mapOptions = {
-      scrollwheel: false, //we disable de scroll over the map, it is a really annoing when you scroll through page
-      styles: [
-        {
-          elementType: "geometry",
-          stylers: [
-            {
-              color: "#1d2c4d"
-            }
-          ]
-        },
-        {
-          elementType: "labels.text.fill",
-          stylers: [
-            {
-              color: "#8ec3b9"
-            }
-          ]
-        },
-        {
-          elementType: "labels.text.stroke",
-          stylers: [
-            {
-              color: "#1a3646"
-            }
-          ]
-        },
-        {
-          featureType: "administrative.country",
-          elementType: "geometry.stroke",
-          stylers: [
-            {
-              color: "#4b6878"
-            }
-          ]
-        },
-        {
-          featureType: "administrative.land_parcel",
-          elementType: "labels.text.fill",
-          stylers: [
-            {
-              color: "#64779e"
-            }
-          ]
-        },
-        {
-          featureType: "administrative.province",
-          elementType: "geometry.stroke",
-          stylers: [
-            {
-              color: "#4b6878"
-            }
-          ]
-        },
-        {
-          featureType: "landscape.man_made",
-          elementType: "geometry.stroke",
-          stylers: [
-            {
-              color: "#334e87"
-            }
-          ]
-        },
-        {
-          featureType: "landscape.natural",
-          elementType: "geometry",
-          stylers: [
-            {
-              color: "#023e58"
-            }
-          ]
-        },
-        {
-          featureType: "poi",
-          elementType: "geometry",
-          stylers: [
-            {
-              color: "#283d6a"
-            }
-          ]
-        },
-        {
-          featureType: "poi",
-          elementType: "labels.text.fill",
-          stylers: [
-            {
-              color: "#6f9ba5"
-            }
-          ]
-        },
-        {
-          featureType: "poi",
-          elementType: "labels.text.stroke",
-          stylers: [
-            {
-              color: "#1d2c4d"
-            }
-          ]
-        },
-        {
-          featureType: "poi.park",
-          elementType: "geometry.fill",
-          stylers: [
-            {
-              color: "#023e58"
-            }
-          ]
-        },
-        {
-          featureType: "poi.park",
-          elementType: "labels.text.fill",
-          stylers: [
-            {
-              color: "#3C7680"
-            }
-          ]
-        },
-        {
-          featureType: "road",
-          elementType: "geometry",
-          stylers: [
-            {
-              color: "#304a7d"
-            }
-          ]
-        },
-        {
-          featureType: "road",
-          elementType: "labels.text.fill",
-          stylers: [
-            {
-              color: "#98a5be"
-            }
-          ]
-        },
-        {
-          featureType: "road",
-          elementType: "labels.text.stroke",
-          stylers: [
-            {
-              color: "#1d2c4d"
-            }
-          ]
-        },
-        {
-          featureType: "road.highway",
-          elementType: "geometry",
-          stylers: [
-            {
-              color: "#2c6675"
-            }
-          ]
-        },
-        {
-          featureType: "road.highway",
-          elementType: "geometry.fill",
-          stylers: [
-            {
-              color: "#9d2a80"
-            }
-          ]
-        },
-        {
-          featureType: "road.highway",
-          elementType: "geometry.stroke",
-          stylers: [
-            {
-              color: "#9d2a80"
-            }
-          ]
-        },
-        {
-          featureType: "road.highway",
-          elementType: "labels.text.fill",
-          stylers: [
-            {
-              color: "#b0d5ce"
-            }
-          ]
-        },
-        {
-          featureType: "road.highway",
-          elementType: "labels.text.stroke",
-          stylers: [
-            {
-              color: "#023e58"
-            }
-          ]
-        },
-        {
-          featureType: "transit",
-          elementType: "labels.text.fill",
-          stylers: [
-            {
-              color: "#98a5be"
-            }
-          ]
-        },
-        {
-          featureType: "transit",
-          elementType: "labels.text.stroke",
-          stylers: [
-            {
-              color: "#1d2c4d"
-            }
-          ]
-        },
-        {
-          featureType: "transit.line",
-          elementType: "geometry.fill",
-          stylers: [
-            {
-              color: "#283d6a"
-            }
-          ]
-        },
-        {
-          featureType: "transit.station",
-          elementType: "geometry",
-          stylers: [
-            {
-              color: "#3a4762"
-            }
-          ]
-        },
-        {
-          featureType: "water",
-          elementType: "geometry",
-          stylers: [
-            {
-              color: "#0e1626"
-            }
-          ]
-        },
-        {
-          featureType: "water",
-          elementType: "labels.text.fill",
-          stylers: [
-            {
-              color: "#4e6d70"
-            }
-          ]
-        }
-      ]
+
+const map_data = [
+    {
+      id: 1,
+      modelId: "qq123",
+      lat: 12.972442,
+      lng: 77.580643,
+      isActive: true
+    },
+    {
+      id: 2,
+      modelId: "qq456",
+      lat: 12.772442,
+      lng: 77.540643,
+      isActive: false
+    }
+  ];
+  
+  const center = {
+    lat: 12.772442,
+    lng: 77.540643
+  };
+
+  
+
+  function DroneMap(props) {
+    const { isLoaded } = useLoadScript({
+      googleMapsApiKey: "AIzaSyD-ww6ewKJkrhAZNRQRwITZRpSMnziHdc0"
+    });
+
+    const [mapStatus, setMapStatus] = useState([]);
+    const url = "https://fibregrid.amxdrones.com/dronecount/drone/";
+    const getAllDroneStatus = async () => {
+      const response = await fetch(url);
+      response.json().then((res) => {
+        setMapStatus(res);
+     
+       
+        
+      });
     };
+  
+    useEffect(() => {
+  
+        getAllDroneStatus();
+     
+    }, []);
+  
+    const dron_state_icon = {
+      red: "https://img.icons8.com/color/48/marker--v1.png",
+      green: "https://img.icons8.com/color/48/000000/marker--v1.png",
+    };
+  
+   
+    const handleMarkerClick = (prop) => {
+      alert(prop);
+    };
+  
+    const renderMap = () => {
+      return (
+        <div style={{ width: "100%", height: "80vh" }}>
+        <GoogleMap
+          center={center}
+          zoom={10}
+          mapContainerStyle={{ width: "100%", height: "100%" }}
+        >
+          {/* <Marker
+            position={{
+              lat: mapStatus.latitude,
+              lng: mapStatus.longitude
+            }}
+            // icon={data.isActive ? dron_state_icon.green : dron_state_icon.red}
+            // icon={dron_state_icon.red}
+            // onClick={() => handleMarkerClick(data.modelId)}
+          /> */}
+          {map_data.map((data, i) => {
+            return (
+              <Marker
+                key={i}
+                position={{
+                  lat: data.lat,
+                  lng: data.lng
+                }}
+                icon={data.isActive ? dron_state_icon.green : dron_state_icon.red}
+                // icon={dron_state_icon.green}
+                onClick={() => handleMarkerClick(data.modelId)}
+              />
+            );
+          })}
+        </GoogleMap>
+        </div>
+      );
+    };
+  
+    const renderedMap = useMemo(() => {
+      return isLoaded ? renderMap() : <div>Map loading...</div>;
+    }, [isLoaded]);
+  
+    return renderedMap;
+  }
 
-    map = new google.maps.Map(map, mapOptions);
 
-    const marker = new google.maps.Marker({
-      position: myLatlng,
-      map: map,
-      animation: google.maps.Animation.DROP,
-      title: "BLK Design System PRO React!"
-    });
+  const defaultProps = {
+    center: {
+      lat: 10.99835602,
+      lng: 77.01502627
+    },
+    zoom: 11
+  };
 
-    const contentString =
-      '<div className="info-window-content"><h2>BLK Dashboard React</h2>' +
-      "<p>A freebie Admin for ReactStrap, Bootstrap, React, and React Hooks.</p></div>";
+  
 
-    const infowindow = new google.maps.InfoWindow({
-      content: contentString
-    });
 
-    google.maps.event.addListener(marker, "click", function () {
-      infowindow.open(map, marker);
-    });
-  }, []);
-  return <div ref={mapRef} />;
-};
-
-function Map() {
+function Maps() {
   return (
     <>
-   <div className="content">
+      <div className="content">
         <Row>
-          {/* <Col md="12"> */}
-          <div
-                  id="map"
-                  className="map"
-                  style={{ position: "relative", overflow: "hidden",width:'100%',height: "calc(88vh)"}}
-                >
-          
-          {/* <div class="gmap_canvas"> */}
-            <iframe
-              style={{width:'100%', height:'100%'}}
-              id="gmap_canvas"
-              src="https://maps.google.com/maps?q=banglore&t=&z=10&ie=UTF8&iwloc=&output=embed"
-              frameborder="0"
-              scrolling="no"
-              marginheight="0"
-              marginwidth="0"
-            ></iframe>
-          {/* </div> */}
-                </div>
-            {/* <Card className="card-plain">
-              <CardHeader>Viewer</CardHeader>
+          <Col md="12">
+            <Card className="card-plain">
+            
               <CardBody>
-                <div
+              <div
                   id="map"
                   className="map"
                   style={{ position: "relative", overflow: "hidden" }}
                 >
-          
-                  <iframe
-                      width="100%"
-                      height="100%"
-                      src={'https://plasio.netlify.app/'}
-                      
-                    ></iframe>
-                </div>
+    <DroneMap />
+    </div>
+    
               </CardBody>
-            </Card> */}
-          {/* </Col> */}
+            </Card>
+          </Col>
         </Row>
       </div>
     </>
   );
 }
 
-export default Map;
+export default Maps;
