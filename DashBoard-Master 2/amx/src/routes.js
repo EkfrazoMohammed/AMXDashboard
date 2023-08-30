@@ -1,14 +1,28 @@
-
 import Dashboard from "views/Dashboard.js";
+
+// import Dashboard2 from "views/Dashboard2.js";
+
+// import Dashboard3 from "views/Dashboard3.js";
 import Icons from "views/Icons.js";
 import Login from "views/Login";
+
 import Map from "views/Map.js";
 import Notifications from "views/Notifications.js";
 import AddDrone from "views/AddDrone/AddDrone";
 import Mission from "views/Mission/Mission";
 import ParentProject from "views/projects/ParentProject";
+import Parent from "views/projects/Parent";
 import ViewerWrapper from "views/Viewer";
 import Folder from "views/Home/Folders";
+import VideoViewer from "views/VideoViewer/VideoViewer";
+import NewMap from "views/NewMap";
+import MapWithSearch from "views/MapWithSearch";
+import UserProfile from "views/UserProfile";
+import FolderModal from "views/FolderModal";
+import NM2 from "views/NM2";
+import LatestNewMap from "views/LatestNewMap";
+import NewViewer from "views/NewViewer";
+import DemoVideoViewer from "views/VideoViewer/DemoVideoViewer";
 
 var routes = [
   {
@@ -17,25 +31,41 @@ var routes = [
     // rtlName: "لوحة القيادة",
     icon: "tim-icons icon-chart-pie-36",
     component: Dashboard,
-    layout: "/amx"
+    layout: "/amx",
   },
-
   {
     path: "/parentproject",
     name: "Project List",
     // rtlName: "طباعة",
     icon: "tim-icons icon-support-17",
-    component: ParentProject,
-    layout: "/amx"
+    component: Parent,
+    layout: "/amx",
   },
-  {
-    path: "/adddrone",
-    name: "Add Drone",
-    // rtlName: "طباعة",
-    icon: "tim-icons icon-spaceship",
-    component: AddDrone,
-    layout: "/amx"
-  },
+
+  // {
+  //   path: "/parentproject",
+  //   name: "Project List",
+  //   // rtlName: "طباعة",
+  //   icon: "tim-icons icon-support-17",
+  //   component: ParentProject,
+  //   layout: "/amx"
+  // },
+  // {
+  //   path: "/parentproject",
+  //   name: "Project List",
+  //   // rtlName: "طباعة",
+  //   icon: "tim-icons icon-support-17",
+  //   component: ParentProject,
+  //   layout: "/amx",
+  // },
+  // {
+  //   path: "/adddrone",
+  //   name: "Add Drone",
+  //   // rtlName: "طباعة",
+  //   icon: "tim-icons icon-spaceship",
+  //   component: AddDrone,
+  //   layout: "/amx",
+  // },
 
   {
     path: "/dronelist",
@@ -43,7 +73,7 @@ var routes = [
     // rtlName: "الرموز",
     icon: "tim-icons icon-controller",
     component: Icons,
-    layout: "/amx"
+    layout: "/amx",
   },
   {
     path: "/map",
@@ -51,20 +81,46 @@ var routes = [
     // rtlName: "خرائط",
     // icon: "tim-icons icon-pin",
     icon: "tim-icons icon-square-pin",
-    
+
     component: Map,
-    layout: "/amx"
+    layout: "/amx",
   },
+  
+  // {
+  //   path: "/folders",
+  //   name: "Folders",
+  //   // rtlName: "خرائط",
+  //   // icon: "tim-icons icon-pin",
+  //   icon: "tim-icons icon-support-17",
+    
+  //   component: Folder,
+  //   layout: "/amx",
+  //   hidden:true,
+  // },
+  ,
+  //  {
+  //   path: "/VideoViewer",
+  //   name: "Analytics",
+  //   // rtlName: "خرائط",
+  //   // icon: "tim-icons icon-pin",
+  //   icon: "tim-icons icon-support-17",
+    
+  //   component: VideoViewer,
+  //   layout: "/amx"
+  // },
+
   {
-    path: "/folders",
-    name: "Video Viewer",
+    path: "/VideoViewer",
+    name: "Analytics",
     // rtlName: "خرائط",
     // icon: "tim-icons icon-pin",
     icon: "tim-icons icon-support-17",
     
-    component: Folder,
+    component: DemoVideoViewer,
     layout: "/amx"
   },
+
+  
   // {
   //   path: "/notifications",
   //   name: "Notifications",
@@ -97,7 +153,7 @@ var routes = [
   //   component: Typography,
   //   layout: "/amx"
   // },
- 
+
   // {
   //   path: "/login",
   //   name: "Login",
@@ -115,22 +171,46 @@ var routes = [
   //   layout: "/amx"
   // },
 
-
-
-
-
-
-
+  // {
+  //   path: "/mission",
+  //   name: "Mission",
+  //   // rtlName: "طباعة",
+  //   icon: "tim-icons icon-planet",
+  //   component: Mission,
+  //   layout: "/amx",
+  // },
   {
     path: "/mission",
     name: "Mission",
     // rtlName: "طباعة",
     icon: "tim-icons icon-planet",
-    component: Mission,
-    layout: "/amx"
+    component:LatestNewMap,
+    layout: "/amx",
   },
-
-  
+  // {
+  //   path: "/mission",
+  //   name: "Mission",
+  //   // rtlName: "طباعة",
+  //   icon: "tim-icons icon-planet",
+  //   component:NewMap,
+  //   layout: "/amx",
+  // },
+  // {
+  //   path: "/mission1",
+  //   name: "Mission1",
+  //   // rtlName: "طباعة",
+  //   icon: "tim-icons icon-planet",
+  //   component:MapWithSearch,
+  //   layout: "/amx",
+  // },
+  // {
+  //   path: "/userprofile",
+  //   name: "user profile",
+  //   // rtlName: "طباعة",
+  //   icon: "tim-icons icon-single-02",
+  //   component:UserProfile,
+  //   layout: "/amx",
+  // },
   // {
   //     path: "/notifications",
   //     name: "Notifications",
@@ -140,17 +220,23 @@ var routes = [
   //     layout: "/amx"
   //   },
 
-   {
-      path: "/viewer",
-      name: "Viewer",
-      // rtlName: "إخطارات",
-      icon: "tim-icons icon-world",
-      component: ViewerWrapper,
-      layout: "/amx"
-    },
-
-
-
+  {
+    path: "/viewer",
+    name: "Viewer",
+    // rtlName: "إخطارات",
+    icon: "tim-icons icon-world",
+    component: NewViewer,
+    layout: "/amx",
+  },
+  // component: ViewerWrapper,
+  // {
+  //   path: "/newviewer",
+  //   name: "NewViewer",
+  //   // rtlName: "إخطارات",
+  //   icon: "tim-icons icon-world",
+  //   component: NewViewer,
+  //   layout: "/amx",
+  // },
 
   // {
   //   path: "/processdata",
@@ -170,7 +256,6 @@ var routes = [
   //   layout: "/twodview"
   // },
 
-
   // {
   //   path: "/twodview",
   //   // name: "TwoDview",
@@ -187,5 +272,22 @@ var routes = [
   //   component: Rtl,
   //   layout: "/rtl"
   // }
+
+  // {
+  //   path: "/foldermodal",
+  //   name: "foldermodal",
+  //   // rtlName: "طباعة",
+  //   icon: "tim-icons icon-support-17",
+  //   component: NM2,
+  //   layout: "/amx",
+  // },
+  // {
+  //   path: "/latestmission",
+  //   name: "latestmission",
+  //   // rtlName: "طباعة",
+  //   icon: "tim-icons icon-support-17",
+  //   component: LatestNewMap,
+  //   layout: "/amx",
+  // },
 ];
 export default routes;

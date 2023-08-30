@@ -1,13 +1,23 @@
 import NotificationAlert from "react-notification-alert";
+import {
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  Legend,
+  ResponsiveContainer
+} from "recharts";
+
 
 import React, { useEffect, useState } from "react";
 // nodejs library that concatenates classes
 import classNames from "classnames";
 // react plugin used to create charts
-import { Line, Bar } from "react-chartjs-2";
 import "./styles/dashboard.css";
 import { ToastContainer, toast } from "react-toastify";
-import { CircularProgressbar } from "react-circular-progressbar";
+import { CircularProgressbar, buildStyles , CircularProgressbarWithChildren } from "react-circular-progressbar";
 import axios from "axios";
 import { useHistory } from "react-router-dom";
 
@@ -55,6 +65,8 @@ import {
   faShareNodes,
   faUser,
   faVideo,
+  faFolder,
+  faDroneAlt,faDatabase,
 } from "@fortawesome/free-solid-svg-icons";
 
 // import dronelogo from "/Users/apple/Documents/DashBoard-Master/black-dashboard-react-master/src/views/assets/images/drone-icon.png"
@@ -83,10 +95,166 @@ import ProgressBar from "components/ProgressBar/progress_bar";
 import DropFileInput from "./DropFileInput/DropFileInput";
 // import {icon1} from "../../src/assets/img/anime3.png"
 
+
+function RoundProgressBar(props) {
+  const size = props.size;
+  const radius = (props.size - props.strokeWidth) / 2;
+  const viewBox = `0 0 ${size} ${size}`;
+  const dashArray = radius * Math.PI * 2;
+  const dashOffset = dashArray - (dashArray * props.value) / props.max;
+  const percentage = ((props.value / props.max) * 100).toFixed();
+  return (
+    <svg width={props.size} height={props.size} viewBox={viewBox}>
+      <circle
+        fill={'none'}
+        stroke={'#ddd'}
+        cx={props.size / 2}
+        cy={props.size / 2}
+        r={radius}
+        strokeWidth={`${props.strokeWidth}px`}
+      />
+      <circle
+        fill={'none'}
+        stroke={props.stroke}
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeDasharray={dashArray}
+        strokeDashoffset={dashOffset}
+        cx={props.size / 2}
+        cy={props.size / 2}
+        r={radius}
+        strokeWidth={`${props.strokeWidth}px`}
+        transform={`rotate(-90 ${props.size / 2} ${props.size / 2})`}
+      />
+      <text
+        x="75%"
+        y="48%"
+        dy="0.4rem"
+        textAnchor="end"
+        fill={props.stroke}
+        style={{
+          fontSize: '2rem',
+         
+        }}
+      >
+        {`${(props.value).toFixed(2)}GB`}
+      
+      </text>
+     
+      <text
+        x="50%"
+        y="50%"
+        dy="1.5rem"
+        textAnchor="middle"
+        fill={props.stroke}
+        style={{
+          fontSize: '1rem',
+          fontWeight: 'bold',
+        }}
+      >
+        {props.text}
+      </text>
+      {/* <text
+        x="50%"
+        y="50%"
+        dy="2.7rem"
+        textAnchor="middle"
+        fill={props.stroke}
+        style={{
+          fontSize: '1rem',
+        }}
+      >
+        {`${percentage}%`}
+      </text> */}
+    </svg>
+  );
+}
+RoundProgressBar.defaultProps = {
+  size: 210,
+  value: 25,
+  max: 100,
+  strokeWidth: 20,
+  stroke: '#3e98c7',
+  text: ""
+}
 function Dashboard(props) {
+
+  
+  const [hovered, setHovered] = useState(false);
+  const percentage = hovered ? 75 : 0; // Change the percentage as needed
+
+  const userIdO = localStorage.getItem("user_id");
+  
+
+  const amxtokenO = localStorage.getItem("amxtoken").replace(/"/g, "");
+  
+  const consumed_data = localStorage.getItem("consumed_data").replace(/"/g, "");
+ 
+
+  const Maxstorage=5 //15 GB
+
+  const totalGBused = (consumed_data / (1024 * 1024 * 1024)).toFixed(2);
+  // console.log('Total Gigabytes Used:', totalGBused);
+  
+  const config = {
+    params: {
+      user_id: userIdO,
+    },
+    headers: {
+      Authorization: amxtokenO,
+    },
+  };
+
+  const config2 = {
+    params: {
+      user_id: userIdO,
+      latest:true,
+    },
+    headers: {
+      Authorization: amxtokenO,
+    },
+  };
+
+  const [barChartData,setBarChartData]=useState([ {
+    name: "August",
+    Drones_Added: 0,
+    Projects_Added:0,
+    amt: 2400
+  },
+  {
+    name: "September",
+    Drones_Added: 0,
+    Projects_Added: 0,
+    amt: 2400
+  },{
+    name: "October",
+    Drones_Added: 0,
+    Projects_Added: 0,
+    amt: 2400
+  },{
+    name: "November",
+    Drones_Added: 0,
+    Projects_Added: 0,
+    amt: 2400
+  },{
+    name: "December",
+    Drones_Added: 0,
+    Projects_Added:0,
+    amt: 2400
+  },{
+    name: "January",
+    Drones_Added: 0,
+    Projects_Added: 0,
+    amt: 2400
+  },])
+  const [remainingStorage,setRemainingStorage]=useState(15.00)
+  const [userid, setUserid] = useState("");
+  const [usertoken, setUsertoken] = useState("");
+  const [gbData,setGbData]=useState('')
   // Notification starts
   const notificationAlertRef = React.useRef(null);
-  const [project_list, setfolder_list] = React.useState([]);
+  const [project_list, setProject_list] = React.useState([]);
+  const [recent_project_list, recent_setProject_list] = React.useState([]);
 
   const notify = (place) => {
     var color = Math.floor(Math.random() * 5 + 1);
@@ -128,6 +296,7 @@ function Dashboard(props) {
     notificationAlertRef.current.notificationAlert(options);
   };
 
+
   // notifications ends
 
   const [imageData, setImageData] = useState(null);
@@ -146,111 +315,11 @@ function Dashboard(props) {
     console.log(files);
   };
 
-  const drone_list = [
-    {
-      drone_name: "DJI Mavic Pro1",
-      folder_color: "#e66037",
-      link: "/",
-    },
-    {
-      drone_name: "DJI Mavic Pro2",
-      folder_color: "#55a6bd",
-      link: "/amx/processdata",
-    },
-    {
-      drone_name: "DJI Mavic Pro3",
-      folder_color: "#de9646",
-      link: "/amx/processdata",
-    },
-    {
-      drone_name: "DJI Mavic Pro4",
-      folder_color: "rgb(55,109,236)",
-      link: "/amx/processdata",
-    },
-  ];
-
-  // const project_list = [
-  //   {
-  //     'project_name': 'Project 1',
-  //     'project_folder_color': 'rgb(255,255,255)',
-  //     'numberoffile': "340 files",
-  //     'link': '/'
-  //   },
-  //   {
-  //     'project_name': 'Project 2',
-  //     'project_folder_color': 'rgb(255,255,255)',
-  //     'numberoffile': "215 files",
-  //     'link': '/amx/processdata'
-
-  //   },
-  //   {
-  //     'project_name': 'Project 3',
-  //     'project_folder_color': 'rgb(255,255,255)',
-  //     'numberoffile': "75 files",
-  //     'link': '/amx/processdata'
-
-  //   },
-  //   {
-  //     'project_name': 'Project 4',
-  //     'project_folder_color': 'rgb(255,255,255)',
-  //     'numberoffile': "51 files",
-  //     'link': '/amx/processdata'
-
-  //   },
-
-  // ]
-
-  const recent_project_list = [
-    {
-      project_name: "Project 1",
-      folder_color: "#D65A47",
-      numberoffile: "340 files",
-      size: "30 MB",
-      link: "/",
-    },
-    {
-      project_name: "Project 2",
-      folder_color: "rgb(64,153,173",
-      numberoffile: "215 files",
-      size: "30 MB",
-      link: "/amx/processdata",
-    },
-    {
-      project_name: "Project 3",
-      folder_color: "rgb(239,185,93)",
-      numberoffile: "75 files",
-      size: "30 MB",
-      link: "/amx/processdata",
-    },
-    {
-      project_name: "Project 4",
-      folder_color: "rgb(55,109,236)",
-      numberoffile: "51 files",
-      size: "30 MB",
-      link: "/amx/processdata",
-    },
-  ];
-
-  let data02 = [
-    {
-      name: "Group A",
-      value: 90,
-    },
-    {
-      name: "Group B",
-      value: 10,
-    },
-  ];
-  const [bigChartData, setbigChartData] = React.useState("data1");
-
   const [addprojectopen, setaddprojectopen] = React.useState(false);
 
-  const setBgChartData = (name) => {
-    setbigChartData(name);
-  };
-
+  
   const AddProject = (name) => {
-    console.log("AddProject======");
+    // console.log("AddProject======");
     setaddprojectopen(true);
   };
   const CloseProject = (name) => {
@@ -274,7 +343,7 @@ function Dashboard(props) {
 
   const BuyNow = () => {
     setaddprojectopen(false);
-    toast.info("Buy functionality is under development!", {
+    toast.info("Contact Admin to Buy more Storage!", {
       position: "top-right",
       autoClose: 5000,
       hideProgressBar: false,
@@ -290,26 +359,228 @@ function Dashboard(props) {
   const OKProject = (name) => {
     setaddprojectopen(false);
   };
-  const Maxstorage = 16106127360;
+  // const Maxstorage = 16106127360;
+  const [user, setUser] = useState(null);
 
-  let GetAllProjects = async () => {
+
+
+  const getDetails = () => {
+    setUserid(localStorage.getItem("user_id"));
+   
+
+    setUsertoken(localStorage.getItem("amxtoken"));
+    
+   
+    
+  };
+
+  const cardBackgroundColors = ['#55d392', '#05daff', '#23efe2', '#e75b8fbf','#ffeeff']; // Add more colors as needed
+  const [selectedTimeRange, setSelectedTimeRange] = useState('past6months');
+
+
+  const GetAllProjects = async () => {
+
+    try {
+    // https://fibregrid.amxdrones.com/dronecount/projects/
+      const response = await axios.get(
+        "https://fibregrid.amxdrones.com/dronecount/v2/get-folders/",
+        config
+      );
+// console.log(response.data.map(item => item.folder_structure), "projectdata====>")
+      console.log(response.data[0].folder_structure, "All Projects====>");
+      const allProjectData=response.data[0].folder_structure
+      setProject_list(allProjectData);
+
+      
+     
+      
+      
+      console.log((response.data[1].total_size.toFixed(2)), "storage remaining");
+      setRemainingStorage((response.data[1].total_size).toFixed(2))
+// const consumed_data = localStorage.setItem("consumed_data");
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const GetAllChartData = async () => {
+
+    try {
+    // https://fibregrid.amxdrones.com/dronecount/projects/
+      const response = await axios.get(
+        "https://fibregrid.amxdrones.com/dronecount/v2/get-folders/",
+        config
+      );
+
+    
+// console.log(response.data.map(item => item.folder_structure), "projectdata====>")
+      // console.log(response.data[0].folder_structure, "All Projects Charts====>");
+      const allProjectData=response.data[0].folder_structure
+    
+
+      let response2 = await axios.get(
+        "https://fibregrid.amxdrones.com/dronecount/addDrone/",
+        config
+      );
+      console.log(response2.data, "dronedata charts====>");
+      const droneChartData=response2.data
+    
+       // Calculate the number of active drones
+    const numberOfActiveDrones = response2.data.reduce((count, drone) => {
+      if (drone.status === "true") {
+        return count + 1;
+      }
+      return count;
+    }, 0);
+
+    // console.log("Number of active drones:", numberOfActiveDrones);
+      
+      // Process data for the selected time range
+      const processedChartData = processDataForTimeRange(allProjectData,droneChartData, selectedTimeRange);
+      setBarChartData(processedChartData);
+
+  
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  const processDataForTimeRange = (data,data2, timeRange) => {
+    const today = new Date();
+    const sixMonthsAgo = new Date(today);
+    sixMonthsAgo.setMonth(today.getMonth() - 6);
+  
+    const monthsInTimeRange = [];
+  
+    let startDate, endDate;
+  
+    if (timeRange === 'past6months') {
+      startDate = sixMonthsAgo;
+      endDate = new Date(today);
+    } else if (timeRange === 'present6months') {
+      startDate = new Date(today);
+      startDate.setDate(1);
+      endDate = new Date(today);
+      endDate.setMonth(today.getMonth() + 6);
+    } else if (timeRange === 'future6months') {
+      startDate = new Date(today);
+      startDate.setMonth(today.getMonth() + 6);
+      endDate = new Date(today);
+      endDate.setMonth(today.getMonth() + 12);
+    } else if (timeRange === 'currentYear') {
+      startDate = new Date(today.getFullYear(), 0, 1);
+      endDate = new Date(today.getFullYear() + 1, 0, 1);
+    } else if (timeRange === 'previousYear') {
+      startDate = new Date(today.getFullYear() - 1, 0, 1);
+      endDate = new Date(today.getFullYear(), 0, 1);
+    } else if (timeRange === 'upcomingYear') {
+      startDate = new Date(today.getFullYear() + 1, 0, 1);
+      endDate = new Date(today.getFullYear() + 2, 0, 1);
+    }
+  
+  // Special handling for current year to ensure month names are visible
+  if (timeRange === 'currentYear') {
+    while (currentDate <= endDate) {
+      const monthName = currentDate.toLocaleString('default', { month: 'long', year: 'numeric' });
+      monthsInTimeRange.push({ name: monthName });
+      currentDate.setMonth(currentDate.getMonth() + 1);
+    }
+  } else {
+    while (currentDate <= endDate) {
+      const monthName = currentDate.toLocaleString('default', { month: 'long' });
+      monthsInTimeRange.push({ name: monthName, year: currentDate.getFullYear() });
+      currentDate.setMonth(currentDate.getMonth() + 1);
+    }
+  }
+
+    const currentDate = new Date(startDate);
+
+    while (currentDate <= endDate) {
+      const monthName = currentDate.toLocaleString('default', { month: 'long' });
+      const year = currentDate.getFullYear();
+  
+      monthsInTimeRange.push({ name: monthName, year });
+  
+      currentDate.setMonth(currentDate.getMonth() + 1);
+    }
+  
+    const chartData = monthsInTimeRange.map(monthData => {
+      // console.log(data)
+      const projectsForMonth = data.filter(
+        entry =>
+          new Date(entry.datetime).toLocaleString('default', { month: 'long' }) === monthData.name &&
+          new Date(entry.datetime).getFullYear() === monthData.year
+      );
+      // console.log(data2)
+      const dronesForMonth = data2.filter(
+        entry =>
+        new Date(entry.purchase_year).toLocaleString('default', { month: 'long' }) === monthData.name &&
+        new Date(entry.purchase_year).getFullYear() === monthData.year
+          // new Date(entry.created_timestamp).toLocaleString('default', { month: 'long' }) === monthData.name &&
+          // new Date(entry.created_timestamp).getFullYear() === monthData.year
+      );
+      const monthYear = `${monthData.name.slice(0, 3)} ${monthData.year}`; // Combine month and year
+    
+      return {
+        ...monthData,
+        name:monthYear,
+        Projects_Added: projectsForMonth.length, // Number of projects added for that month
+        Drones_Added: dronesForMonth.length,// Number of drones added for that month
+      };
+    });
+    return chartData;
+  };
+  
+
+  const timeRangeOptions = [
+    { value: 'past6months', label: 'Past 6 Months' },
+    { value: 'present6months', label: 'Present 6 Months' },
+    { value: 'currentYear', label: 'Current Year' },
+    { value: 'previousYear', label: 'Previous Year' },
+  ];
+  const GetRecentProjects = async () => {
+    try {
+      // https://fibregrid.amxdrones.com/dronecount/projects/
+      const response = await axios.get(
+        "https://fibregrid.amxdrones.com/dronecount/v2/get-folders/",
+        config2
+      );
+
+      const sortedData = response.data[0].folder_structure.sort((a, b) => {
+        // Sort in descending order (latest datetime first)
+        return new Date(b.datetime) - new Date(a.datetime);
+      });
+      
+      // Get the top 5 latest records
+      const top5Latest = sortedData.slice(0, 5);
+      
+      // console.log(top5Latest, "Top 5 latest projects");
+      
+      // recent_setProject_list(response.data);
+      recent_setProject_list(top5Latest);
+
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const [droneData, setDroneData] = useState([]);
+  let GetAllDrone = async () => {
     try {
       let data = await axios.get(
-        "https://fibregrid.amxdrones.com/dronecount/projects/"
+        "https://fibregrid.amxdrones.com/dronecount/addDrone/",
+        config
       );
-      console.log(data, "projectdata====>");
-      setfolder_list(data.data);
-      toast.success("Your project folder updated !", {
-        position: "top-right",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "light",
-        icon: <img src={drone} />,
-      });
+      console.log(data.data, "dronedata====>");
+      setDroneData(data.data);
+       // Calculate the number of active drones
+    const numberOfActiveDrones = data.data.reduce((count, drone) => {
+      if (drone.status === "true") {
+        return count + 1;
+      }
+      return count;
+    }, 0);
+
+    console.log("Number of active drones:", numberOfActiveDrones);
       // toast(`Successfully ${project_name}  project data was created`);
       // navigate("/");
       // CloseProject()
@@ -317,73 +588,148 @@ function Dashboard(props) {
       console.log(error);
     }
   };
-  const [storagedata, setstoragedata] = useState();
-  const GetstorageData = async () => {
-    //   let resss = 8589934592
-
-    //   data02[0]['value'] = 700
-    //   data02[0]['name'] = "Group A"
-
-    //   console.log(data02)
-
-    try {
-      const response = await fetch(
-        "https://fibregrid.amxdrones.com//dronecount/storage/"
-      );
-      console.log("response==>", response);
-
-      const jsonData = await response.json();
-      console.log("json data=====>", jsonData[0]["total_bytes"]);
-
-      const gb_convertsion =
-        Number(jsonData[0]["total_bytes"]) / (1024 * 1024 * 1024);
-
-      setstoragedata(gb_convertsion.toFixed(2));
-
-      console.log("gb_convertsion==>", gb_convertsion);
-      // setData(jsonData);
-
-      // dataArr = jsonData
-      // setLoading(false);
-    } catch (error) {
-      console.error("Error fetching data:", error);
-    }
-  };
   useEffect(() => {
+    GetAllChartData();
+  }, [selectedTimeRange]);
+
+  useEffect(() => {
+    
+  
+    getDetails();
     GetAllProjects();
-    GetstorageData();
-    // toast.success('Wellcome to dashboad ADMIN !', {
-    //   position: "top-right",
-    //   autoClose: 5000,
-    //   hideProgressBar: false,
-    //   closeOnClick: true,
-    //   pauseOnHover: true,
-    //   draggable: true,
-    //   progress: undefined,
-    //   theme: "light",
-    //   icon: <img src={drone} alt="drone_image-error" />
-    // });
+GetRecentProjects();
+GetAllDrone();
+GetAllChartData();
+    
   }, []);
 
-  let [state, setState] = useState({
-    name: "",
-  });
-  let { name } = state;
-  let handleChange = (e) => {
-    let { name, value } = e.target;
-    setState({ ...state, [name]: value });
-  };
+  
+  const monthNames = [
+    "January", "February", "March", "April", "May", "June",
+    "July", "August", "September", "October", "November", "December"
+  ];
+  
+  const chartData = [
+    {
+      name: "August",
+      Drones_Added: 0,
+      Projects_Added: 0,
+      amt: 2400
+    },
+    {
+      name: "August",
+      Drones_Added: 0,
+      Projects_Added: 0,
+      amt: 2400
+    },{
+      name: "August",
+      Drones_Added: 0,
+      Projects_Added: 0,
+      amt: 2400
+    },{
+      name: "August",
+      Drones_Added: 0,
+      Projects_Added: 0,
+      amt: 2400
+    },{
+      name: "August",
+      Drones_Added: 0,
+      Projects_Added: 0,
+      amt: 2400
+    },{
+      name: "August",
+      Drones_Added: 5,
+      Projects_Added: 2,
+      amt: 2400
+    },
+   
+  ];
+  
 
-  let handleSubmit = async (e) => {
+    const demoData=[
+      {
+          "name": "amx1 (9f806eb7-e583-4912-b091-9efecbbc74d9)",
+          "datetime": "2023-08-25T10:45:45.190000Z",
+      },
+      {
+        "name": "amx2 (9f806eb7-e583-4912-b091-9efecbbc74d9)",
+        "datetime": "2023-10-25T10:45:45.190000Z",
+    },{
+      "name": "amx3 (9f806eb7-e583-4912-b091-9efecbbc74d9)",
+      "datetime": "2023-07-25T10:45:45.190000Z",
+  },
+  {
+    "name": "amx4 (9f806eb7-e583-4912-b091-9efecbbc74d9)",
+    "datetime": "2023-08-24T10:45:45.190000Z",
+}, {
+  "name": "amx5 (9f806eb7-e583-4912-b091-9efecbbc74d9)",
+  "datetime": "2023-07-25T10:45:45.190000Z",
+},
+  
+    
+    ]
+    
+    
+  
+  useEffect(() => {
+    // Separate active and inactive drones
+    const active = droneData.filter(drone => drone.status === true);
+    const inactive = droneData.filter(drone => drone.status === false);
+    
+    console.log(active)
+  }, [droneData]);
+  const overviewdata=[
+    {
+      "icon":faUser,
+      "title":"total projects",
+      "count":project_list.length,
+      "item":"projects"
+    },
+    {
+      "icon":faFileInvoice,
+      "title":"total Drones",
+      "count":droneData.length,
+      "item":"drones"
+    },
+    {
+      "icon":faDatabase,
+      "title":"Max Storage",
+      "count":"5",
+      "item":"GB"
+    },
+    {
+      "icon":faFolder,
+      "title":"Total Missions",
+      "count":droneData.filter(drone => drone.status === true).length,
+      "item":"mission"
+    },
+  ]
+  const [data, setData] = useState({
+    name: "",
+    user_id: userIdO,
+  });
+  const [percentage1, setPercentage1] = useState(25);
+
+  const handleChangeEvent = (event) => {
+    setPercentage1(event.target.value);
+  };
+  const handleChange = (e) =>
+    setData((prevState) => ({ ...prevState, [e.target.name]: e.target.value }));
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     try {
-      let payload = state;
+      let payload = data;
       console.log(payload, "payload=====>");
-      let data = await axios
-        .post("https://fibregrid.amxdrones.com/dronecount/projects/", payload)
+      let data1 = await axios
+        .post(
+          "https://fibregrid.amxdrones.com/dronecount/projects/",
+          data,
+          config
+        )
         .then((res) => {
-          // const data2 = res.data;
+          const data2 = res.data;
           toast.success("New project added !", {
             position: "top-right",
             autoClose: 5000,
@@ -398,6 +744,7 @@ function Dashboard(props) {
 
           CloseProject();
           GetAllProjects();
+GetRecentProjects();
         })
         .catch((err) => {
           if (err.response) {
@@ -413,6 +760,7 @@ function Dashboard(props) {
               icon: <img src={drone} />,
             });
             GetAllProjects();
+GetRecentProjects();
             CloseProject();
             console.log(err.response.status);
             console.log(err.response.statusText);
@@ -428,7 +776,6 @@ function Dashboard(props) {
 
   const history = useHistory();
 
-  console.log(addprojectopen, "addprojectopen====>");
   return (
     <BackgroundColorContext.Consumer>
       {({ color }) => (
@@ -456,28 +803,25 @@ function Dashboard(props) {
                     {/* <span className="profession">Web & Web Designer</span> */}
                   </div>
                 </div>
-                {/* <form action="#"> */}
-                {/* <div className="wraper-dashboard"  >
-                    <div className="wraper-card-content-dashboard" >
-                      <header>Upload files </header>
-                      <DropFileInput
-                        onFileChange={(files) => onFileChange(files)}
-                      />
-
-                    </div>
-
-
-                  </div> */}
+              
                 <input
                   type="text"
                   class="form-control"
                   id="name"
                   name="name"
                   placeholder="Name"
-                  value={name}
                   onChange={handleChange}
                 />
-                {/* <textarea spellcheck="false" placeholder="Enter your message"></textarea> */}
+                <input
+                  type="hidden"
+                  class="form-control"
+                  id="user_id"
+                  name="user_id"
+                  value={userIdO}
+                  placeholder="user_id"
+                  onChange={handleChange}
+                />
+              
                 <div className="button">
                   <button id="close" onClick={CloseProject} className="cancel">
                     Cancel
@@ -504,15 +848,7 @@ function Dashboard(props) {
                   : "rgba(65, 195, 199,.03)",
             }}
           >
-            {/* <div className={addprojectopen == true ? "overlay show" : "overlay"} id="overlay">
-  <div data={color} className="popup show" id="popup">
-    <h2>Create Projects</h2>
-    <input type="file" placeholder="Choose File" />
-    <input type="text" placeholder="Enter Text" />
-    <button onClick={CloseProject}>Close</button>
-    <button onClick={OKProject}>Ok</button>
-  </div>
-</div> */}
+         
 
             <div className="container-fluid">
               <div className="row">
@@ -521,160 +857,91 @@ function Dashboard(props) {
                 <div className="col-md-8 col-sm-8 left-section">
                   {/* <h2>Left Section</h2> */}
                   <>
-                    {/* Drone List */}
-                    {/* <Row > */}
-                    {/* {drone_list.map((item) =>
-                        <Col md="3" sm='3' >
-                          <div className="card1" onClick={() => notify("tc")}>
-                            <div className="content" style={{ backgroundColor: item.folder_color, marginLeft: "10px" }}>
-                             
-                              <img src={dronelogo} style={{ width: "30px", height: "30px" }} />
-                              <h4 style={{ marginBottom: "5px", fontSize: "12px", fontWeight: "400", color: "white" }}>{item.drone_name}</h4>
-                            
-                            </div>
-                          </div>
-                        </Col>
-                      )} */}
-                    {/* <Col md="2">
-      <div className="card1">
-        <div className="content">
-        
-          <img src={dronelogo}   style={{width:"30px", height:"30px"}}  />
-          <h4 style={{ marginBottom: "5px", fontSize: "13px", fontWeight: "bold" }}>Drone-two</h4>
-          <h5 style={{ marginBottom: "5px", fontSize: "13px" }}> 30 files</h5>
-
-         
+                   
+<Row>
+                      <Col className="text-left" md="6">
+                        <CardTitle tag="h4" style={{}}>
+                          Dashboard Overview
+                        </CardTitle>
+                      </Col>
+                    </Row>
+ <Row>
+  {overviewdata.map((v,index)=>{
+    return(
+      <>
+      <Col md="3" sm="6">
+      <div className="card2" key={index}>
+          <div
+            className="content"
+            style={{ backgroundColor: cardBackgroundColors[index % cardBackgroundColors.length] }}
+          >
+            <FontAwesomeIcon icon={v.icon} style={{ color: "#ffffff", width: "20px", height: "20px" }} />
+            <h4 style={{ marginBottom: "5px", fontSize: "12px", fontWeight: "bold" }}>{v.title}</h4>
+            <h5 style={{ marginBottom: "5px", fontSize: "12px" }}>{v.count} {v.item}</h5>
+          </div>
         </div>
-      </div>
-    </Col> */}
-                    {/* <Col md="2">
-      <div className="card1">
-        <div className="content">
-          
-          <img src={dronelogo}   style={{width:"30px", height:"30px"}}  />
+    </Col> 
+      </>
+    )
+  })}
+                    
 
-          <h4 style={{ marginBottom: "5px", fontSize: "13px", fontWeight: "bold" }}>Drone-three</h4>
-          <h5 style={{ marginBottom: "5px", fontSize: "13px" }}> 90 files</h5>
-
-         
-        </div>
-      </div>
-    </Col> */}
-
-                    {/* </Row> */}
+                    </Row> 
 
                     <Row>
                       <Col className="text-left" md="6">
-                        <CardTitle tag="h4" style={{}}>
-                          Active Projects
+                        <CardTitle tag="h4" style={{ marginTop: "20px" }}>
+                          Overview
                         </CardTitle>
                       </Col>
                     </Row>
 
                     <Row>
-                      {project_list.map((item) => (
-                        <Col md="3">
-                          <div
-                            className="card2"
-                            onClick={() =>
-                              history.push("/amx/folders?project_id=" + item.id)
-                            }
-                          >
-                            <div
-                              className="content"
-                              style={{
-                                backgroundColor: "white",
-                                marginLeft: "10px",
-                              }}
-                            >
-                              {/* <FontAwesomeIcon icon={faBriefcase} style={{ color: "#ffffff", width: "20px", height: "20px" }} /> */}
-                              <img
-                                src={projectblue}
-                                style={{ width: "20px", height: "20px" }}
-                              />
-
-                              <h4
-                                style={{
-                                  marginBottom: "5px",
-                                  fontSize: "13px",
-                                  fontWeight: "400",
-                                }}
-                              >
-                                {item.name}
-                              </h4>
-                              <h5
-                                style={{
-                                  marginBottom: "5px",
-                                  fontSize: "13px",
-                                  fontWeight: "200",
-                                }}
-                              >
-                                -
-                              </h5>
-
-                              {/* <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p> */}
-                            </div>
-                          </div>
-                        </Col>
-                      ))}
-
-                      {/* <Col md="2">
-      <div className="card2">
-        <div className="content">
-          <FontAwesomeIcon icon={faUser} style={{ color: "#ffffff", width: "20px", height: "20px" }} />
-
-          <h4 style={{ marginBottom: "5px", fontSize: "13px", fontWeight: "bold" }}>Personal</h4>
-          <h5 style={{ marginBottom: "5px", fontSize: "13px" }}> 215 files</h5>
-
-       
-        </div>
-      </div>
-    </Col> */}
-                      {/* <Col md="2">
-      <div className="card2">
-        <div className="content">
-          <FontAwesomeIcon icon={faGraduationCap} style={{ color: "#ffffff", width: "20px", height: "20px" }} />
-
-          <h4 style={{ marginBottom: "5px", fontSize: "13px", fontWeight: "bold" }}>School</h4>
-          <h5 style={{ marginBottom: "5px", fontSize: "13px" }}> 75 files</h5>
-
-          
-        </div>
-      </div>
-    </Col> */}
-                      {/* <Col md="2">
-      <div className="card2">
-        <div className="content">
-          <FontAwesomeIcon icon={faBoxArchive} style={{ color: "#ffffff", width: "20px", height: "20px" }} />
-
-          <h4 style={{ marginBottom: "5px", fontSize: "13px", fontWeight: "bold" }}>Archive</h4>
-          <h5 style={{ marginBottom: "5px", fontSize: "13px" }}> 51 files</h5>
-
+                      <Col md="12" style={{ marginTop: "20px" }}>
+                      <ResponsiveContainer width="100%" height={400} cursor="pointer">
+                      <BarChart
+     
+      className="barChartStyles"
+      data={barChartData}
+    
+    >
+      <CartesianGrid strokeDasharray="2 2" />
+      <XAxis dataKey="name" />
+      <YAxis />
+      <Tooltip />
+      <Legend />
+      {/* {barChartData.some(item => item.Projects_Added > 0) && ( */}
+    <Bar dataKey="Projects_Added" fill="#3e98c7" minPointSize={1} />
+  {/* )} */}
+  {/* {barChartData.some(item => item.Drones_Added > 0) && ( */}
+    <Bar dataKey="Drones_Added" fill="#55d392" minPointSize={1} />
+  {/* )} */}
+    </BarChart>
+    </ResponsiveContainer>
+    <div>
+      <FormGroup style={{display:"flex",justifyContent:"center",alignItems:"center", gap:"2rem"}}>
+    <Label htmlFor="timeRange" style={{margin:0}} >
+      Select Duration
+    </Label>
+    <Input
+      name="select"
+      type="select"
+      id="timeRange"
+      onChange={(e) => setSelectedTimeRange(e.target.value)}
+      value={selectedTimeRange}
+    >
+     {timeRangeOptions.map(option => (
+              <option key={option.value} value={option.value}>{option.label}</option>
+            ))}
+    </Input>
+  </FormGroup>
          
         </div>
-      </div>
-    </Col> */}
 
-                      <Col md="3">
-                        <div onClick={AddProject} className="">
-                          <div className="content mt-3">
-                            <button
-                              type="file"
-                              className="header-content-btn2"
-                              // onClick={handleClickOpen}
-                            >
-                              +
-                            </button>
-
-                            {/* <FontAwesomeIcon icon={faPlus} style={{ color: "black", width: "20px", height: "20px" }} />
-          <h4 style={{ marginBottom: "5px", fontSize: "13px", fontWeight: "bold", }}>Add </h4> */}
-                            {/* <h5 style={{ marginBottom: "5px", fontSize: "13px" }}> Number</h5> */}
-
-                            {/* <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p> */}
-                          </div>
-                        </div>
+                      
                       </Col>
                     </Row>
+
 
                     <Row>
                       <Col className="text-left" md="6">
@@ -693,11 +960,11 @@ function Dashboard(props) {
                         {/* <CardBody> */}
 
                         {/* <UncontrolledAlert > */}
-                        {project_list.map((item) => (
+                        {recent_project_list.map((item) => (
                           <div
                             className="card4"
                             onClick={() =>
-                              history.push("/amx/folders?project_id=" + item.id)
+                              history.push("/amx/folders?project_id=" + item.name)
                             }
                           >
                             <div
@@ -711,49 +978,18 @@ function Dashboard(props) {
                             <p>{item.numberoffile}</p>
                             <p>{item.size}</p> */}
 
-                            <p>{item.name}</p>
+                            <p>{item.name.split("(")[0].trim()}</p>
                             {/* <p>-</p>
                             <p>-</p> */}
                           </div>
                         ))}
 
-                        {/* <div className="card5" >
-                  <FontAwesomeIcon icon={faUser} style={{ color: "white", width: "25px", height: "25px", marginLeft: "10px" }} />
-                  <p>IMG_1000</p>
-                  <p>PNG file</p>
-                  <p>5 MB</p>
-                </div>
-
-                <div className="card6" >
-                  <FontAwesomeIcon icon={faMicrophone} style={{ color: "white", width: "25px", height: "25px", marginLeft: "10px" }} />
-                  <p>IMG_1000</p>
-                  <p>PNG file</p>
-                  <p>5 MB</p>
-                </div>
-
-                <div className="card7" >
-                  <FontAwesomeIcon icon={faFileInvoice} style={{ color: "white", width: "25px", height: "25px", marginLeft: "10px" }} />
-                  <p>IMG_1000</p>
-                  <p>PNG file</p>
-                  <p>5 MB</p>
-                </div> */}
-
-                        {/* </UncontrolledAlert> */}
-
-                        {/* <UncontrolledAlert className="alert-with-icon" color="info">
-        <span className="tim-icons icon-bell-55" data-notify="icon" />
-        <span data-notify="message">
-          This is a notification with close button and icon and have
-          many lines. You can see that the icon and the close button
-          are always vertically aligned. This is a beautiful
-          notification. So you don't have to worry about the style.
-        </span>
-        
-      </UncontrolledAlert> */}
-                        {/* </CardBody> */}
-                        {/* </Card> */}
+                      
                       </Col>
                     </Row>
+
+                    
+                   
                   </>
                 </div>
 
@@ -786,7 +1022,7 @@ function Dashboard(props) {
                           style={{ textAlign: "center" }}
                           className="Storage-chart"
                         >
-                          Storage
+                       Storage
                         </h3>
                         <div
                           style={{ textAlign: "center", marginBottom: "auto" }}
@@ -795,72 +1031,57 @@ function Dashboard(props) {
                             className="row"
                             // style={{ height: "500px", width: "500px" }}
                           >
-                            <div className="col-12">
-                            <CircularProgressbar className="w-75"
-                              value={storagedata}
-                              maxValue={15}
-                              text={`${storagedata}`}
-                            />
-                            </div>
-                            
-                          </div>
-                          {/* <PieChart width={240} height={270} >
                            
+                            <div className="col-12"
+                         
+                             onMouseEnter={() => setHovered(true)}
+                             onMouseLeave={() => setHovered(false)}
+                         
+                            >
+      
+        <RoundProgressBar
+           value={remainingStorage - 10}
+          
+          max={Maxstorage}
+          text="AVAILABLE"
+          className="w-75"
+        />
+                               {/* <CircularProgressbar
+  className="w-75"
+  value={remainingStorage - 10}
+  maxValue={Maxstorage}
+  text={`${remainingStorage - 10} GB`}
+  
+ >
+  </CircularProgressbar> */}
+ 
 
-                            <Pie
-                              data={data02}
-                              dataKey="value"
-                              nameKey="name"
-                              cx="60%"
-                              cy="50%"
-                              innerRadius={60}
-                              outerRadius={90}
-                              fill={color == 'green' ? "#ff8c31" : color == 'primary' ? '#fd6585' : "rgb(65, 195, 199)"}
-                              label
 
-                            />
-                          </PieChart> */}
+
+{/* <div
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+      style={{ textAlign: 'center' }}
+    >
+      <CircularProgressbar
+        value={percentage}
+        text={`${hovered ? 0 : percentage}%`}
+        styles={buildStyles({
+          textSize: '16px',
+          pathTransitionDuration: 0.5,
+          pathColor: `#3498db`,
+          textColor: '#3498db',
+        })}
+      />
+    </div> */}
+                            </div>
+                          </div>
+                      
                         </div>
 
-                        <div style={{ textAlign: "center" }} className="center">
-                          {/* <div style={{textAlign:"center"}}className="">
-          <div className="">
-            <div
-              className=""
-              style={{
-                background: "rgba(18, 212, 255, 0.1)",
-                borderRadius: "1rem",
-                textAlign:"center"
-              }}
-            >
-              <div style={{textAlign:"center"}} className="storage-text">
-                <span style={{textAlign:"center"}} >storage</span> 
-                40% left
-              </div>
-              <sub style={{textAlign:"center"}}>3 GB of 5 GB are used</sub>
-
-              <div
-                className="w3-light-blue"
-                style={{ borderRadius: "1rem" }}
-              >
-                <div
-                  className="w3-blue"
-                  style={{
-                    height: "8px",
-                    width: "60%",
-                    borderRadius: "1rem",
-                  }}
-                ></div>
-              </div>
-              <br />
-            </div>
-          </div>
-        </div> */}
-                          {/* <div>
-                            <ProgressBar color={color} />
-                          </div> */}
-
-                          <div onClick={BuyNow} className="container-storage">
+                        {/* <div style={{ textAlign: "center" }} className="center">
+                    
+                                <div onClick={BuyNow} className="container-storage">
                             <a
                               data={color}
                               className="buynow"
@@ -876,22 +1097,10 @@ function Dashboard(props) {
                                 Buy now
                               </span>
                             </a>
-                            {/* <button style={{textAlign:"center"}} className="Storage-btn">BUY STORAGE</button> */}
                           </div>
-                          {/* <span style={{textAlign:"center"}} className="storage-part-recent-projects">
-          Recent Projects
-        </span>
-        <div className="card card-recent-prjects-list">
-          <i className="bi bi-folder2-open">
-            <span style={{textAlign:"center"}} className="project-lists-file"> project 1</span>
-          </i>
-        </div>
-        <div className="card card-recent-prjects-list">
-          <i className="bi bi-folder2-open">
-            <span style={{textAlign:"center"}} className="project-lists-file"> project 2</span>
-          </i>{" "}
-        </div> */}
-                        </div>
+                     
+                        </div> */}
+
                       </div>
                     </div>
                   </>

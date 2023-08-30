@@ -43,6 +43,14 @@ import SubChild from "views/projects/SubChild";
 import ParentProject from "views/projects/ParentProject";
 import Child from "views/projects/Child";
 import ViewerWrapper from "views/Viewer";
+import Folders from "views/Home/Folders";
+import NewMap from "views/NewMap";
+import FolderModal from "views/FolderModal";
+import NM2 from "views/NM2";
+import ModalFolders from "views/Home/ModalFolders";
+import NewViewer from "views/NewViewer";
+import FolderFolders from "views/Home/FolderFolders";
+import DemoVideoViewer from "views/VideoViewer/DemoVideoViewer";
 
 var ps;
 
@@ -107,19 +115,19 @@ function Admin(props) {
     });
   };
   const getBrandText = (path) => {
-    console.log(location.pathname,'location.pathname====>')
+    console.log('\nlocation.pathname====>\t'+location.pathname)
     for (let i = 0; i < routes.length; i++) {
-      console.log((location.pathname.indexOf(routes[i].layout + routes[i].path) !== -1),'routess=====>')
+      console.log('routess=====>'+(location.pathname.indexOf(routes[i].layout + routes[i].path) !== -1))
 
       if (location.pathname.indexOf(routes[i].layout + routes[i].path) !== -1) {
-        console.log(routes[i].name,'nameeee',i,'iiiii')
+        console.log("routes[i].name ->"+routes[i].name+'index\t->',i)
         return routes[i].name;
       }
       else{
-        console.log(routes[i].name,'nameeee',i,'iiiii')
+        console.log("routes[i].name=="+routes[i].name+'\tindex==',i)
         var routename = location.pathname
         const split_route = routename.split('/')
-        console.log(split_route[2],'split_route====>')
+        console.log('split_route====>\t'+split_route[2])
         return split_route[2]
       }
     }
@@ -142,7 +150,7 @@ function Admin(props) {
             />
             <div className="main-panel" ref={mainPanelRef} data={color}>
               <AdminNavbar
-                brandText={getBrandText(location.pathname)}
+                // brandText={getBrandText(location.pathname)}
                 toggleSidebar={toggleSidebar}
                 sidebarOpened={sidebarOpened}
               />
@@ -155,9 +163,25 @@ function Admin(props) {
                 <Route from="/amx/userprofile" render={() => <UserProfile/>} />
                 <Route from="/amx/parentproject" render={() => <ParentProject/>} />
                 <Route from="/amx/child" render={() => <Child/>} />
+                {/* <Route from="/amx/subchild" render={() => <Folders/>} /> */}
                 <Route from="/amx/subchild" render={() => <SubChild/>} />
-                <Route from="/amx/viewer" render={() => <ViewerWrapper/>} />
 
+              {/* analytics */}
+                <Route from="/amx/newVideoViewer" render={() =><DemoVideoViewer />} />
+              {/* analytics */}
+
+                <Route from="/amx/viewer" render={() => <ViewerWrapper/>} />
+                
+                <Route from="/amx/newviewer" render={() =><NewViewer />} />
+                <Route from="/amx/folders" render={() => <Folders/>} />
+
+                {/* <Route from="/amx/folders" render={() => <FolderFolders />} /> */}
+                
+                <Route from="/amx/savefolders" render={() => <ModalFolders/>} />
+                
+                <Route from="/amx/newmap" render={() => <NewMap />} />
+
+                <Route from="/amx/foldermodal" render={() => <NM2 />} />
                 <Redirect from="*" to="/amx/dashboard" />
               </Switch>
               {

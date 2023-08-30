@@ -8,6 +8,13 @@ import RightFolderBrower from 'components/RightFolderBrowser/RightFolderBrower';
 import {ToastContainer, toast} from 'react-toastify';
 import drone from "../../assets/drone.png"
 
+import pdfImage from "../../../src/views/assets/images/fileimagesLogo/pdf.png";
+import mp4Logo from "../../../src/views/assets/images/fileimagesLogo/mp4logo.png";
+import fileImageLogo from "../../../src/views/assets/images/fileimagesLogo/textlogo.png";
+import imageLogo from "../../../src/views/assets/images/fileimagesLogo/imgeLogo.png";
+import backImage from "../../../src/views/assets/images/fileimagesLogo/backImage.png";
+import DropFileInput from "views/DropFileInput/DropFileInput";
+
 
 const folder_list = [
   {
@@ -45,7 +52,14 @@ const folder_list = [
 const Child = () => {
   const [allprojectdata, SetAllProjectData] = React.useState({});
   let location = useLocation();
-
+  const goBack = () => {
+    window.history.back();
+    // history.push("/amx/folders?folder_id=" + localStorage.getItem('folder_id'));
+    // window.location.reload();
+    setTimeout(() => {
+      window.location.reload();
+    }, 100);
+  };
   useEffect(() => {
     GetAllProjectsData()
     toast.info('Pleae note other features are in development !', {
@@ -88,7 +102,15 @@ const Child = () => {
    
 
         <h2 style={{fontSize:"25px"}}>{allprojectdata.name}</h2>
-
+        <div className="row">
+                    <div
+                      className="col-1"
+                      onClick={goBack}
+                      style={{ cursor: "pointer" }}
+                    >
+                      <img src={backImage} alt="" height={25} />
+                    </div>
+                  </div>
       <div style={{}} className="row">
 
        

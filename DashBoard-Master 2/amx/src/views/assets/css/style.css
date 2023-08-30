@@ -1,54 +1,4 @@
-/**======================================================================
-=========================================================================
-Template Name: Datta Able Admin Template
-Author: Codedthemes
-supports: https://codedthemes.support-hub.io/
-File: style.css
-=========================================================================
-=========================================================================
-  == Table of Contents==
-	- Generic classes
-		-	Margin, Padding, Font class, text align, position, floating, overflow, background class, text color, display class, boarder class
-	- Theme Elements
-		-	Accordion, Button, tabs, typography, buttons, box shadow, Lable & Badges, Alert, Pagination, Breadcumb, Cards, Collapse,
-        -   Carousel, Grid, Progress, Model, tooltip, popover, Datepicker, Gridstack, lightbox, notification, Nestable, pnotify, rating,
-        -   Rangeslider, Slider, Syntax Highlighter, Tour, Treeview, Toolbar, Session Timeout, Session idle Timeout, offline, Animation
-    - Forms
-        -   Forms Elements, Advance Form Control, Validation, Masking, Wizard, Picker, Select
-	- Pages
-		-   Chat, authentication, Maintenance, Maps, Landingpage messages, task, Todo, Notes, Charts, Icons, Gallery, Editors,
-        -   Invoice, Full Calender, File Upload,
-=================================================================================
-=================================================================================== */
-/*
-    description Of variables for build for theme layouts
-        1) menu-caption-color
-            List of color for sidebar menu caption
 
-        2) brand-background
-            List of color for logo background
-
-        3) header-dark-background
-            List of color for Dark Header
-
-        4) header-light-background
-            List of color for light Header
-
-        5) menu-dark-background
-            List of color for Dark sidebar menu
-
-        6) menu-light-background
-            List of color for light sidebar menu
-
-        7) menu-active-color
-            List of color for Active item highliter
-
-        8) menu-icon-color
-            List of color for sidebar menu items icon colors
-*/
-/**  =====================
-     Google Font
-==========================  **/
 @import url("https://fonts.googleapis.com/css?family=Open+Sans:300,400,600");
 @import url("../plugins/bootstrap/css/bootstrap.min.css");
 @import url("../fonts/feather/css/feather.css");
@@ -84,6 +34,7 @@ h6 {
   color: #111;
   font-weight: 400;
 }
+
 
 h1 {
   font-size: 48px;
@@ -209,7 +160,7 @@ p.text-muted {
   line-height: 1.1;
   position: relative;
 }
-.card .card-header h5:after {
+/* .card .card-header h5:after {
   content: "";
   background-color: #04a9f5;
   position: absolute;
@@ -217,7 +168,7 @@ p.text-muted {
   top: 0;
   width: 4px;
   height: 20px;
-}
+} */
 .card .card-header.borderless {
   border-bottom: none;
 }
@@ -322,8 +273,8 @@ p.text-muted {
   border: none;
 }
 .dropdown-menu.show:before {
-  content: "\63";
-  font-family: "pct";
+  /* content: "\63";
+  font-family: "pct"; */
   position: absolute;
   left: 15px;
   top: -5px;
@@ -335,7 +286,7 @@ p.text-muted {
 }
 .dropdown-menu.show.dropdown-menu-right:before {
   left: auto;
-  right: 5px;
+  right: 15px;
 }
 .dropdown-menu[x-placement="top-start"] {
   margin-bottom: 15px;
@@ -368,9 +319,9 @@ p.text-muted {
           justify-content: center;
   margin-right: 10px;
 }
-.dropdown-menu > li.active, .dropdown-menu > li:active, .dropdown-menu > li:focus, .dropdown-menu > li:hover {
+/* .dropdown-menu > li.active, .dropdown-menu > li:active, .dropdown-menu > li:focus, .dropdown-menu > li:hover {
   background: rgba(4, 169, 245, 0.1);
-}
+} */
 .dropdown-menu > li.active > a, .dropdown-menu > li:active > a, .dropdown-menu > li:focus > a, .dropdown-menu > li:hover > a {
   background: transparent;
 }
@@ -10607,4 +10558,320 @@ div.code-toolbar > .toolbar span:hover {
 		-webkit-box-shadow: 0 0 0 0 rgba(4, 169, 245, 0);
 		box-shadow: 0 0 0 0 rgba(4, 169, 245, 0)
 	}
+}
+
+
+.form-labels {
+  display: flex;
+  justify-content: flex-start;
+  font-size: 14px;
+  gap:4px;
+  align-items: flex-end;
+}
+/* .MTableToolbar-actions-8 > div>div>span>button[title="Add"]{
+  display: none !important;
+} */
+.error-message{
+  color: red;
+  font-size: 10px;
+  display: flex;
+  justify-content: flex-start;
+  padding: 4px;
+}
+
+.asterisk-symbol{
+  /* color: red; */
+  color:rgb(236,115,109);
+  margin: 0;
+  padding: 0;
+}
+
+.MuiTableCell-paddingCheckbox:last-child{
+  background: rgb(244, 67, 54);
+    color: rgb(255, 255, 255);
+    width: 48px;
+    text-align: left !important;
+    box-sizing: border-box;
+    padding-left: 0;
+    padding-right: 4px;
+}
+
+/* .MTableToolbar-actions-8 > div>div>span:last-child {
+  display: none !important;
+}  */
+.MTableToolbar-actions-8 > div>div>span>button[title="Add"]{
+  display: none !important;
+}
+
+.myCustomDropdown  img {
+  width: 70%;
+  margin: 0 auto;
+  height: auto;
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.myCustomDropdown .dropdown-menu{
+min-width:.5rem;
+}
+
+.myCustomDropdown .dropdown-item {
+  display: block;
+  width: 100%;
+  padding: 0.25rem 1rem;
+  clear: both;
+  font-weight: 400;
+  color: #212529;
+  text-align: inherit;
+  white-space: nowrap;
+  background-color: transparent;
+  border: 0;
+}
+
+.search-location{
+  display: flex;
+  margin: 4px;
+}
+
+.search-location .search-location-input{
+  border-radius: 10px;
+  /* width: 180px; */
+  padding: 0.5rem;
+  width: 100%;
+}
+
+.buttonGroupContainer1{
+  display: flex;
+  margin-top: 1.4rem;
+
+}
+.buttonGroupContainer{
+  display: flex;
+  align-items: center;
+  margin-top: 1rem;
+
+}
+.buttonGroupContainerbutton{
+  display: flex;
+  
+}
+.navbar .photo img {
+  width: 100%;
+  height: 100%;
+}
+@media (max-width: 991px){
+
+
+.dropdown-toggle:after {
+    display: inline-block;
+    width: 0;
+    height: 0;
+    margin-left: 0.255em;
+    vertical-align: 0.255em;
+    content: "";
+    border-top: 0.3em solid;
+    border-right: 0.3em solid transparent;
+    border-bottom: 0;
+    border-left: 0.3em solid transparent;
+}
+}
+.password-input-wrapper {
+  position: relative;
+}
+
+.password-input {
+  padding-right: 32px; /* Adjust the padding to accommodate the icon */
+}
+
+.password-toggle {
+  position: absolute;
+  right: 8px; /* Adjust the icon position as needed */
+  bottom: 8px; /* Adjust the icon position as needed */
+  cursor: pointer;
+}
+
+.password-toggle svg {
+  font-size: 18px; /* Adjust the icon size as needed */
+}
+
+/* .password-input-wrapper {
+  position: relative;
+} */
+
+/* .password-input {
+  padding-right: 40px; /* Add space to accommodate the icon
+} */
+
+/* .password-toggle {
+  position: absolute;
+  right: 10px; /* Adjust the icon position as needed 
+  top: 50%; /* Vertically center the icon 
+  transform: translateY(-50%); /* Vertically center the icon 
+  cursor: pointer;
+} */
+
+/* .password-toggle svg {
+  font-size: 20px; 
+} */
+
+.modal .modal-dialog{
+  -webkit-transform: translate(-50%, 1%) !important;
+  transform: translate(-50%, 1%) !important;
+}
+.modal.show .modal-dialog {
+  -webkit-transform: translate(-50%, 7%) !important;
+  transform: translate(-50%, 7%) !important;
+}
+
+
+.file-input-container{
+  display: flex;
+  justify-content: center;
+}
+.modal-content {
+  box-shadow: 0 15px 35px rgba(50, 50, 93, 0.2), 0 5px 15px rgba(0, 0, 0, 0.17);
+  /* width: 75vw; */
+  width:70vw !important;
+  min-height: 680px !important;
+}
+
+.mission-first-line{
+display: flex !important;
+gap: .5rem !important;
+flex-wrap: wrap !important;
+z-index: 2000 !important;
+}
+
+@media (max-width:1024px){
+  .modal .modal-dialog{
+    -webkit-transform: translate(-20%, 17%) !important;
+    transform: translate(-20%, 17%) !important;
+  }
+  .modal.show .modal-dialog {
+    -webkit-transform: translate(-20%, 4%) !important;
+    transform: translate(-20%, 4%) !important;
+  }
+  .modal-content {
+    box-shadow: 0 15px 35px rgba(50, 50, 93, 0.2), 0 5px 15px rgba(0, 0, 0, 0.17);
+    /* width: 75vw; */
+    width:90vw !important;
+    min-height: 200px !important;
+  }
+}
+
+
+/* Base styles for the table
+.responsive-table-container .MuiPaper-root {
+  overflow-x: auto;
+}
+
+/* Apply responsive styles for small screens */
+/* @media (max-width: 768px) {
+  .responsive-table-container .MuiTableHead-root .MuiTableRow-root .MuiTableCell-root {
+    font-size: 14px;
+    padding: 8px;
+  }
+  .responsive-table-container .MuiTableBody-root .MuiTableRow-root .MuiTableCell-root {
+    font-size: 14px;
+    padding: 8px;
+  }
+}  */
+.form-control.addDrone-input{
+  padding: 10px 5px 10px 5px !important;
+}
+
+.modal-footer-save-file-container{
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  align-items: center;
+}
+.save-file-label-style {
+  width: 150px;
+  font-size: 1rem;
+  margin: 0;
+}
+.save-file-input-style {
+  display: flex;
+  padding: .5rem;
+  width: 200px;
+}
+.btn.mymapbuttons{
+  padding: 11px; 
+}
+
+.mymapcolumns{
+  display: flex;
+}
+@media (max-width:767px){
+  .modal .modal-dialog{
+    -webkit-transform: translate(0%, 17%) !important;
+    transform: translate(0%, 17%) !important;
+  }
+  .modal.show .modal-dialog {
+    -webkit-transform: translate(0%, 4%) !important;
+    transform: translate(0%, 4%) !important;
+    
+    min-height: 200px !important;
+  }
+  .modal-content {
+    box-shadow: 0 15px 35px rgba(50, 50, 93, 0.2), 0 5px 15px rgba(0, 0, 0, 0.17);
+    /* width: 75vw; */
+    width:95vw !important;
+    max-height: 85vh !important;
+    overflow: scroll;
+  }
+  .save-file-input-style {
+    flex-direction: column;
+    padding: 1rem;
+    width: 100px;
+  }
+
+  /* .btn.mymapbuttons{
+    padding: 8px 11px; 
+    font-size: 9px;
+  } */
+  .btn.mymapbuttons {
+    padding: 8px 0px;
+    font-size: 9px;
+    width: 38%;
+}
+  .mymapcolumns{
+    display: flex;
+    width: 100%;
+  }
+
+  .search-location .search-location-input {
+    border-radius: 10px;
+    /* width: 110px; */
+    width: 100%;
+    padding: 0.5rem;
+}
+.search-location .search-location-input::placeholder {
+font-size: 10px;
+}
+
+.search-location{
+  display: flex;
+  margin: 4px;
+}
+
+.search-location .search-location-input{
+  border-radius: 10px;
+  width: 110px;
+  padding: 0.5rem .1rem;
+}
+
+.mission-first-line{
+  
+  z-index: 100 !important;
+  }
+/* info window on map */
+ 
+}
+
+.barChartStyles{
+  width: 500px;
+  height: 300px;
 }

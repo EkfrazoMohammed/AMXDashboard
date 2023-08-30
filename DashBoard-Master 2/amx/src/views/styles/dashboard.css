@@ -125,7 +125,14 @@
     cursor: pointer;
     font-size: 0.62475rem;
     padding: 10px 8px;
-    background-color: #55d392;
+    
+  }
+
+  .card2:nth-child(1) .content {
+    background-color: #55d392; /* Greenish background color */
+  }
+  .card2:nth-child(3) .content {
+    background-color: #55d392; /* Greenish background color */
   }
 
   .card2 h4 {
@@ -771,6 +778,20 @@ section.active .profile{
   background: #fff;
   border-radius: 12px;
 }
+/* .overlay .popup-box {
+  position: relative;
+  padding: 30px;
+  max-width: 604px;
+  width: 100%;
+  background: #fff;
+  border-radius: 12px;
+  max-height: 90vh !important;
+  overflow-y: scroll;
+} */
+/* .overlay .popup-box::-webkit-scrollbar {
+  display: none;
+} */
+
 .popup-box .close {
   position: absolute;
   top: 16px;
@@ -855,21 +876,36 @@ section.active .profile{
 /* Dashboard popup */
 .wraper-dashboard {
   display: flex;
+  /* align-items: center; */
+  justify-content: center;
+  min-height: 100%;
+  /* min-width: 50vh; */
+  max-height: 70vh !important;
+  overflow-y: scroll !important;
+  overflow-x: hidden !important;
+}
+/* .wraper-dashboard {
+  display: flex;
   align-items: center;
   justify-content: center;
   min-height: 30vh;
-  /* min-width: 50vh; */
-  /* background: rgba(18, 212, 255, 0.1);
-  color: rgb(0, 0, 0); */
-}
-.wraper-card-content-dashboard {
+  
+} */
+/* .wraper-card-content-dashboard {
   width: 630px;
     padding: 37px;
     border-radius: 1rem;
     height: auto;
     background-color: #dee2e6;
-}
+} */
 
+.wraper-card-content-dashboard {
+  width: 630px;
+  padding: 37px;
+  border-radius: 1rem;
+  height: 100% !important;
+  background-color: #dee2e6;
+}
 .wraper-dashboard header {
   /* color: rgb(53, 118, 148);
   font-size: 20px;
@@ -892,4 +928,30 @@ section.active .profile{
   flex-direction: column;
   border: 2px dashed #6990f2;
   border-radius: 1rem;
+}
+
+@media (max-width:767px){
+  .wraper-card-content-dashboard {
+    width: 310px;
+    padding: 10px;
+    border-radius: 1rem;
+    height: 100% !important;
+    background-color: #dee2e6;
+  }
+  .overlay .popup-box {
+    position: relative;
+    padding: 30px;
+    max-width: 504px;
+    width: 90%;
+    background: #fff;
+    border-radius: 12px;
+    max-height: 90vh !important;
+}
+
+  .drop-file-preview__item__info p{
+    overflow: hidden;
+    text-overflow: ellipsis; 
+    width: 80px;
+    height: 20px !important;
+  }
 }

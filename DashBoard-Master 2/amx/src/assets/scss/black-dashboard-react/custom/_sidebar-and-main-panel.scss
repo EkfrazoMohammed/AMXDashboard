@@ -19,7 +19,20 @@
 .sidebar,
 .off-canvas-sidebar{
   @include linear-gradient($primary-states, $primary);
-  height: calc(100vh - 90px);
+  // height: calc(100vh - 90px);
+  // width: 230px;
+  // position: fixed;
+  // top: 0;
+  // left: 0;
+  // z-index: 1;
+  // background-size: cover;
+  // background-position: center center;
+  // display: block;
+  // box-shadow: 0px 0px 45px 0px rgba(0,0,0,0.6);
+  // margin-top: 80px;
+  // margin-left: 20px;
+  // border-radius: 5px;
+  height: calc(100vh - 30px);
   width: 230px;
   position: fixed;
   top: 0;
@@ -29,8 +42,8 @@
   background-position: center center;
   display: block;
   box-shadow: 0px 0px 45px 0px rgba(0,0,0,0.6);
-  margin-top: 80px;
-  margin-left: 20px;
+  margin-top: 15px;
+  margin-left: 15px;
   border-radius: 5px;
 
   .sidebar-wrapper{
@@ -463,6 +476,11 @@
     min-height: calc(100vh - 70px);
   }
 
+  > .content.mycustompadding{
+    padding:0 0px 10px 250px;
+    z-index:2000 !important;
+  }
+
   > .navbar {
     margin-bottom: 0;
   }
@@ -581,6 +599,10 @@
     .main-panel{
       > .content{
         padding-left: 130px;
+      }
+
+      > .content.mycustompadding{
+        padding-left: 130px !important;
       }
     }
 
@@ -734,7 +756,11 @@
   }
 
 }
-
+.gm-style .gm-style-iw-t {
+  position: absolute;
+  width: 100%;
+  bottom: 50px !important;
+}
 @media screen and (max-width: 768px){
 
   .main-panel .content {
@@ -742,4 +768,9 @@
     padding-right: 15px;
   }
 
+  .main-panel > .content.mycustompadding {
+    // padding: 50px 10px 10px 10px;
+    padding: 45px 0px 10px 0px;
+
+}
 }

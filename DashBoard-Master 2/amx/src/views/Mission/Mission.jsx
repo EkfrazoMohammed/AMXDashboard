@@ -271,7 +271,7 @@ function Maps() {
               <div
                   id="map"
                   className="map"
-                  style={{ position: "relative", overflow: "hidden" }}
+                  style={{ position: "relative"}}
                 >
     <DroneMap />
     </div>

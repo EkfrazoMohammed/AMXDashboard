@@ -138,7 +138,8 @@ function Sidebar(props) {
                 {/* {logoImg} */}
                 {/* {logoText} */}
                 <Link
-                  to={logo.innerLink}
+                  // to={logo.innerLink}
+                  to={'/amx'}
                   className=""
                   onClick={props.toggleSidebar}
                 >

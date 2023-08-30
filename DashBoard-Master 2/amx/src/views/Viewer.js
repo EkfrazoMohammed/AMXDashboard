@@ -15,7 +15,7 @@
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
 */
-import React, { useEffect ,useRef} from "react";
+import React, { useState,useEffect, useRef } from "react";
 
 // reactstrap components
 import { Card, CardHeader, CardBody, Row, Col } from "reactstrap";
@@ -297,28 +297,80 @@ import { Card, CardHeader, CardBody, Row, Col } from "reactstrap";
 //   }, []);
 //   return <div ref={mapRef} />;
 // };
-
+import Frame from 'react-frame-component';
 function ViewerWrapper() {
+   const myurl=process.env.PUBLIC_URL + '/NewViewer.html';
+  const [localStorageValue, setLocalStorageValue] = useState(null);
+  // const jstree = localStorage.getItem("jstree");
+  // console.log("jstree==>", jstree);
+  // useEffect(() => {
+  //   // Access the parent window's localStorage
+  //   const parentLocalStorage = window.parent.localStorage;
 
+  //   // Get the desired value from parentLocalStorage
+  //   const valueFromParent = parentLocalStorage.getItem('jstree');
+
+  //   // Update the state with the value from the parent window's localStorage
+  //   setLocalStorageValue(valueFromParent);
+  // }, []);
+
+  const [jstreeData, setJstreeData] = useState(null);
+
+  useEffect(() => {
+    // Send a message to the parent window to request the 'jstree' data
+    window.parent.postMessage('getJstreeData', 'https://3d.aivolved.in/');
+
+    // Listen for messages from the parent window
+    const receiveMessage = (event) => {
+      if (event.origin === 'https://3d.aivolved.in/' && event.data.type === 'jstreeData') {
+        // Access the 'jstree' data received from the parent window
+        const receivedData = event.data.data;
+        setJstreeData(receivedData);
+      }
+    };
+
+    window.addEventListener('message', receiveMessage);
+
+    // Clean up the event listener when the component unmounts
+    return () => {
+      window.removeEventListener('message', receiveMessage);
+    };
+  }, []);
+  console.log("jstree==>",jstreeData)
   return (
     <>
       <div className="content">
         {/* <Row> */}
-          {/* <Col md="12"> */}
-          <div
-                  id="map"
-                  className="map"
-                  style={{ position: "relative", overflow: "hidden",width:'100%',height: "calc(88vh)" }}
-                >
-      
-                  <iframe
+        {/* <Col md="12"> */}
+        <div
+          id="map"
+          className="map"
+          style={{
+            position: "relative",
+            overflow: "hidden",
+            width: "100%",
+            height: "calc(88vh)",
+          }}
+        >
+          {/* <iframe
                       style={{width:'100%', height:'100%'}}
 
                       src={'https://64.227.154.198'}
                       
-                    ></iframe>
-                </div>
-            {/* <Card className="card-plain">
+                    ></iframe> */}
+          <iframe
+            style={{ width: "100%", height: "100%" }}
+            src={"https://3d.aivolved.in/"}
+            id="iframeId"
+          ></iframe>
+    
+          {/* <iframe  
+           style={{ width: "100%", height: "100%" }}
+           src={myurl}
+            id="iframeId">
+          </iframe> */}
+        </div>
+        {/* <Card className="card-plain">
               <CardHeader>Viewer</CardHeader>
               <CardBody>
                 <div
@@ -336,7 +388,7 @@ function ViewerWrapper() {
                 </div>
               </CardBody>
             </Card> */}
-          {/* </Col> */}
+        {/* </Col> */}
         {/* </Row> */}
       </div>
     </>

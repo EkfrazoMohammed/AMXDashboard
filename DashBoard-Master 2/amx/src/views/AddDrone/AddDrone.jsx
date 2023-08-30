@@ -12,6 +12,8 @@ import { BackgroundColorContext } from "contexts/BackgroundColorContext";
 // import Button from "react-bootstrap/esm/Button";
 
 function AddDrone() {
+  const userId=localStorage.getItem("user_id");
+
   let [state, setState] = useState({
     aircraft_type: "",
     connection_id: "",
@@ -20,6 +22,7 @@ function AddDrone() {
     UIN: "",
     time_in_service: "",
     Next_maintainance: "",
+    user_id: userId,
   });
   let {
     aircraft_type,
@@ -29,6 +32,7 @@ function AddDrone() {
     UIN,
     time_in_service,
     Next_maintainance,
+    user_id,
   } = state;
   let handleChange = (e) => {
     let { name, value } = e.target;
@@ -418,7 +422,9 @@ null
                       />
                     </div>
 
-                    <div class="col-sm-6"></div>
+                    <div class="col-sm-6">
+                      <input type="hidden" name="user_id" value={userId} />
+                    </div>
                   </div>
                 </div>
 

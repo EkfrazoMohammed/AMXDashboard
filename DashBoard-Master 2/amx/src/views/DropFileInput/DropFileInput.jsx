@@ -1,97 +1,257 @@
 import React, { useRef, useState } from 'react';
 import PropTypes from 'prop-types';
-
-import './DroupFileInput.css';
-
-// import { ImageConfig } from '../../config/ImageConfig'; 
-// import uploadImg from '../../../src/assets/cloud-upload-regular-240.png';
-
-// import uploadImg from '/Users/apple/Documents/DashBoard-Master/black-dashboard-react-master/src/assets/cloud-upload-regular-240.png'
-import { ImageConfig } from './config/ImageConfig';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCloudArrowUp } from '@fortawesome/free-solid-svg-icons';
-import axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
-const DropFileInput = props => {
+import './DroupFileInput.css';
+import JSZip from 'jszip';
+const DropFileInput = ({ onFileChange ,onFolderChange}) => {
+  const wrapperRef = useRef(null);
+  const [fileList, setFileList] = useState([]);
+  
+  const [folderList, setFolderList] = useState([]);
 
-    const wrapperRef = useRef(null);
+  // Adds a CSS class when a file is dragged over the component
+  const onDragEnter = (e) => {
+    e.preventDefault();
+    wrapperRef.current.classList.add('dragover');
+  };
+  
+  // Removes the CSS class when a file is dragged out of the component
+  const onDragLeave = () => {
+    wrapperRef.current.classList.remove('dragover');
+  };
+  
+  // Removes the CSS class when a file is dropped onto the component
+  const onDrop = (e) => {
+    e.preventDefault();
+    wrapperRef.current.classList.remove('dragover');
+    handleFiles(e.dataTransfer.files);
+    console.log(e.data)
+    console.log(files)
+    const files = e.dataTransfer.files;
+    handleFolders(files);
+    console.log(files)
+  };
 
-    const [fileList, setFileList] = useState([]);
 
-    const onDragEnter = () => wrapperRef.current.classList.add('dragover');
-
-    const onDragLeave = () => wrapperRef.current.classList.remove('dragover');
-
-    const onDrop = () => wrapperRef.current.classList.remove('dragover');
-
-    const onFileDrop = async (e) => {
-        const newFile = e.target.files[0];
-        
-        if (newFile) {
-            const updatedList = [...fileList, newFile];
-            setFileList(updatedList);
-            props.onFileChange(updatedList);
-        }
-        // setFileList(newFile);
-        // props.onFileChange(newFile);
+ 
+  // Handles the file drop event
+  const handleFiles = (files) => {
+    const updatedList = [...fileList];
+    for (let i = 0; i < files.length; i++) {
+      updatedList.push(files[i]);
     }
-
-
-    const fileRemove = (file) => {
-        const updatedList = [...fileList];
-        updatedList.splice(fileList.indexOf(file), 1);
-        setFileList(updatedList);
-        props.onFileChange(updatedList);
+    for (let i = 0; i < files.length; i++) {
+      console.log(files[i].webkitRelativePath); // Access the relative path for folders
+      console.log(files[i].name); // Access the name of each file/folder
     }
+    setFileList(updatedList);
+    onFileChange(updatedList);
+  };
 
+    // Handles the file drop event
+    // const handleFolders = (files) => {
+    //   const updatedList = [...fileList];
+    //   for (let i = 0; i < files.length; i++) {
+    //     updatedList.push(files[i]);
+    //   }
+    //   for (let i = 0; i < files.length; i++) {
+    //     console.log(files[i].webkitRelativePath); // Access the relative path for folders
+    //     console.log(files[i].name); // Access the name of each file/folder
+    //   }
+    //   setFolderList(updatedList);
+    //   onFileChange(updatedList);
+    // };
+
+    // const uploadFolder = async () => {
+    //   if (folderList.length === 0) {
+    //     toast.error("No folder selected for upload.");
+    //     return;
+    //   }
+  
+    //   const zip = new JSZip();
+  
+    //   for (const folderFile of folderList) {
+    //     const fileContent = await readFileAsArrayBuffer(folderFile);
+    //     zip.file(folderFile.webkitRelativePath, fileContent);
+    //   }
+  
+    //   const zipBlob = await zip.generateAsync({ type: "blob" });
+  
+    //   // Here you can use the zipBlob to upload the ZIP file to your server
+    //   handleFolderUpload(zipBlob);
+  
+    //   setFolderList([]); // Clear the folderList after upload
+    // };
+  
+    // const readFileAsArrayBuffer = (file) => {
+    //   return new Promise((resolve, reject) => {
+    //     const reader = new FileReader();
+    //     reader.onload = (event) => resolve(event.target.result);
+    //     reader.onerror = (error) => reject(error);
+    //     reader.readAsArrayBuffer(file);
+    //   });
+    // };
+  
+    // const handleFolderUpload = async (zipBlob) => {
+    //   // Implement your actual upload logic here
+    //   console.log("Uploading folder...");
+    //   console.log("Zip blob:", zipBlob);
+    // };
+   
+    // const handleFolders = async (files) => {
+    //   const zip = new JSZip();
+    // console.log(files)
+    //   // Create a zip file and add each selected file to it
+    //   for (const file of files) {
+    //     const arrayBuffer = await file.arrayBuffer();
+    //     zip.file(file.name, arrayBuffer);
+    //   }
     
-    return (
-        <>
-                          <ToastContainer />
+    //   // Generate the zip data
+    //   const zipData = await zip.generateAsync({ type: 'blob' });
+      
+    //   console.log(zipData)
+    //   // Here you can call the onFolderChange callback with the generated ZIP blob
+    //   onFolderChange(zipData);
+    // };
+    
+  const handleFolders = async (filess) => {
+    const selectedFolderName = filess[0].webkitRelativePath.split('/')[0]; // Assuming you selected only one folder
 
-            <div
-                ref={wrapperRef}
-                className="drop-file-input"
-                onDragEnter={onDragEnter}
-                onDragLeave={onDragLeave}
-                onDrop={onDrop}
-            >
-                <div className="drop-file-input__label">
-                    {/* <img src={uploadImg} alt="" /> */}
-                    <FontAwesomeIcon icon={faCloudArrowUp} size="2xl" style={{color: "#3670ce",}} />
-                    <p>Drag & Drop your files here</p>
-                </div>
-                <input type="file" name="file" onChange={onFileDrop}/>
+    // Filter out files that are not in the selected folder
+    const folderData = Array.from(filess).filter(file => {
+      return file.webkitRelativePath.startsWith(selectedFolderName + '/');
+    });
+    console.log(folderData)
+    const folderName = folderData[0].webkitRelativePath.split('/')[0];
+    console.log("Selected Folder Name:", folderName);
+    const zip = new JSZip();
+
+    // Create a zip file and add each selected file to it
+    for (const file of folderData) {
+      const arrayBuffer = await file.arrayBuffer();
+      zip.file(file.name, arrayBuffer);
+    }
+
+    // Generate the zip data
+    const zipData = await zip.generateAsync({ type: 'blob' });
+    console.log(zipData)
+
+    // Create a Blob URL for the zip data
+    const blobUrl = URL.createObjectURL(zipData);
+
+    console.log(blobUrl)
+    // Create a temporary link element for downloading
+    // const downloadLink = document.createElement('a');
+    // downloadLink.href = blobUrl;
+    // downloadLink.download = 'files.zip';
+    // downloadLink.click();
+
+    // Here you can call the onFolderChange callback with the generated ZIP blob
+    onFolderChange(zipData,folderName);
+    // zipData=null;
+
+    // // Clean up the Blob URL
+    URL.revokeObjectURL(blobUrl);
+  };
+
+  // Removes a file from the list
+ 
+ 
+  const fileRemove = (file) => {
+    const updatedList = fileList.filter((item) => item !== file);
+    setFileList(updatedList);
+    onFileChange(updatedList);
+  };
+
+  return (
+    <>
+      <ToastContainer />
+      <div style={{display:"flex",gap:"1rem",margin:"0 auto"}}>
+        {/* <div> */}
+      <div
+        ref={wrapperRef}
+        className="drop-file-input"
+        onDragEnter={onDragEnter}
+        onDragLeave={onDragLeave}
+        onDragOver={(e) => e.preventDefault()}
+        onDrop={onDrop}
+      >
+        <div className="drop-file-input__label">
+          <FontAwesomeIcon
+            icon={faCloudArrowUp}
+            size="2xl"
+            style={{ color: '#3670ce' }}
+          />
+          <p>Drag & Drop your files here</p>
+        </div>
+       
+     
+        <input type="file" name="file" multiple onChange={(e) => handleFiles(e.target.files)} />
+      </div>
+      <div
+        ref={wrapperRef}
+        className="drop-file-input"
+        onDragEnter={onDragEnter}
+        onDragLeave={onDragLeave}
+        onDragOver={(e) => e.preventDefault()}
+        onDrop={onDrop}
+      >
+        <div className="drop-file-input__label">
+          <FontAwesomeIcon
+            icon={faCloudArrowUp}
+            size="2xl"
+            style={{ color: '#3670ce' }}
+          />
+          <p>Drag & Drop your Folder here</p>
+        </div>
+        <input 
+         type="file"
+        webkitdirectory="true"
+        mozdirectory="true"
+        directory="true"
+        multiple
+         onChange={(e) => handleFolders(e.target.files)} />
+     
+       </div>
+      </div>
+      {fileList.length > 0 && (
+        <div className="drop-file-preview">
+          <p style={{ color: 'white' }} className="drop-file-preview__title">
+            Ready to upload
+          </p>
+          {fileList.map((item, index) => (
+            <div key={index} className="drop-file-preview__item">
+              <img
+                src={URL.createObjectURL(item)}
+                alt=""
+                className="drop-file-preview__item__image"
+              />
+              <div className="drop-file-preview__item__info">
+                <p>{item.name}</p>
+                <p>{item.size}B</p>
+              </div>
+              <span
+                className="drop-file-preview__item__del"
+                onClick={() => fileRemove(item)}
+              >
+                x
+              </span>
             </div>
-            {
-                fileList.length > 0 ? (
-                    <div className="drop-file-preview">
-                        <p style={{color:'white'}} className="drop-file-preview__title">
-                            Ready to upload
-                            
-                        </p>
-                        {
-                            fileList.map((item, index) => (
-                                <div key={index} className="drop-file-preview__item">
-                                    <img src={ImageConfig[item.type.split('/')[1]] || ImageConfig['default']} alt="" />
-                                    <div className="drop-file-preview__item__info">
-                                        <p >{item.name}</p>
-                                        <p>{item.size}B</p>
-                                    </div>
-                                    <span className="drop-file-preview__item__del" onClick={() => fileRemove(item)}>x</span>
-                                </div>
-                            ))
-                        }
-                    </div>
-                ) : null
-            }
-        </>
-    );
-}
+          ))}
+        </div>
+      )}
+    </>
+  );
+};
 
 DropFileInput.propTypes = {
-    onFileChange: PropTypes.func
-}
+  onFileChange: PropTypes.func.isRequired,
+  onFolderChange: PropTypes.func.isRequired,
+};
 
 export default DropFileInput;

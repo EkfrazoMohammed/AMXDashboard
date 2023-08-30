@@ -15,6 +15,8 @@ import ThemeContextWrapper from "./components/ThemeWrapper/ThemeWrapper";
 import BackgroundColorWrapper from "./components/BackgroundColorWrapper/BackgroundColorWrapper";
 import Register from "views/Register";
 import Login from "views/Login.js";
+import ForgotPassword from "views/ForgotPassword";
+import ResetPassword from "views/ResetPassword";
 import Child from "views/projects/Child";
 import {ToastContainer, toast} from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -28,6 +30,10 @@ ReactDOM.render(
         <Switch>
         <Route from="/register" render={() => <Register/>} />
         <Route from="/login" render={() => <Login/>} />
+
+        <Route from="/forgotpassword" render={() => <ForgotPassword/>} />
+        <Route from="/resetpassword" render={() => <ResetPassword/>} />
+
         <Route from="/child" render={(props) => <Child {...props} />} />
         {/* <Route from="/adddrone" render={() => <AddDrone/>} /> */}
         {/* <Route from="/admin/processdata" render={() => <ProcessData/>} /> */}

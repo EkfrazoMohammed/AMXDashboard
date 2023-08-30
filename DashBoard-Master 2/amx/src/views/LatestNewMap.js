@@ -1,0 +1,521 @@
+import React, { useState, useEffect,useRef, useMemo } from "react";
+import { Card, CardHeader, CardBody, Row, Col} from "reactstrap";
+import { InputGroup, InputGroupAddon, Input } from "reactstrap";
+
+import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from "reactstrap";
+
+import storage from "../../src/firebaseConfig.js";
+import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
+
+import axios from "axios";
+import {
+  GoogleMap,
+  useJsApiLoader,
+  Marker,
+  useLoadScript,
+  Polygon,
+  Autocomplete
+} from "@react-google-maps/api";
+
+
+import ModalParent from "./projects/ModalParent";
+import ModalFolders from "./Home/ModalFolders";
+const libraries = ['places'];
+function generateKML(polygonCoordinates) {
+  // Create a KML string
+  const kmlString = `<?xml version="1.0" encoding="UTF-8"?>
+    <kml xmlns="http://www.opengis.net/kml/2.2">
+      <Document>
+        <Placemark>
+          <Polygon>
+            <outerBoundaryIs>
+              <LinearRing>
+                <coordinates>
+                  ${polygonCoordinates
+                    .map(({ lat, lng }) => `${lng},${lat},0`)
+                    .join(" ")}
+                </coordinates>
+              </LinearRing>
+            </outerBoundaryIs>
+          </Polygon>
+        </Placemark>
+      </Document>
+    </kml>`;
+
+  return kmlString;
+}
+
+const DroneMap = () => {
+  const [modal, setModal] = useState(false);
+
+  const toggle = () => setModal(!modal);
+  
+  const toggleAll = () => {
+    setNestedModal(!nestedModal);
+    setCloseAll(true);
+  };
+  const mapRef = useRef(null);
+  const autocompleteRef = useRef(null);
+
+  const { isLoaded} = useLoadScript({
+    googleMapsApiKey: "AIzaSyD-ww6ewKJkrhAZNRQRwITZRpSMnziHdc0", // Replace with your API key
+    libraries,
+  });
+
+  const handlePlaceSelect = () => {
+    const place = autocompleteRef.current.getPlace();
+
+    // if (place.geometry && place.geometry.location) {
+    //   const selectedLocation = {
+    //     lat: place.geometry.location.lat(),
+    //     lng: place.geometry.location.lng(),
+    //   };
+
+    //   // Do something with the selectedLocation (e.g., update the map's center)
+    //   mapRef.current.panTo(selectedLocation);
+
+    //   // Add a marker at the selected location
+    //   const newMarker = {
+    //     id: markers.length + 1,
+    //     position: selectedLocation,
+    //   };
+    //   setMarkers((prevMarkers) => [...prevMarkers, newMarker]);
+    // }
+    if (place.geometry && place.geometry.location) {
+      const selectedLocation = {
+        lat: place.geometry.location.lat(),
+        lng: place.geometry.location.lng(),
+      };
+
+      // Update the map's center and set the zoom level to 15
+      mapRef.current.panTo(selectedLocation);
+      mapRef.current.setZoom(16);
+  
+  };
+  };
+
+  const [polygonCoordinates, setPolygonCoordinates] = useState([]);
+  const [markers, setMarkers] = useState([]);
+  const [latestCoordinate, setLatestCoordinate] = useState(null);
+
+  const handlePolygonClick = (event) => {
+    const { latLng } = event;
+
+    // Update polygon coordinates
+    setPolygonCoordinates((prevCoordinates) => [
+      ...prevCoordinates,
+      {
+        lat: latLng.lat(),
+        lng: latLng.lng(),
+      },
+    ]);
+
+    // Update latest coordinate
+    setLatestCoordinate({
+      lat: latLng.lat(),
+      lng: latLng.lng(),
+    });
+  };
+
+  const handleMapClick = (event) => {
+    event.preventDefault();
+    const { latLng } = event;
+
+    // Create a new marker at the clicked location
+    const newMarker = {
+      id: markers.length + 1,
+      position: latLng,
+    };
+    setMarkers((prevMarkers) => [...prevMarkers, newMarker]);
+
+    // Update polygon coordinates with markers
+    setPolygonCoordinates((prevCoordinates) => [
+      ...prevCoordinates,
+      {
+        lat: latLng.lat(),
+        lng: latLng.lng(),
+      },
+    ]);
+
+    // Update latest coordinate
+    setLatestCoordinate({
+      lat: latLng.lat(),
+      lng: latLng.lng(),
+    });
+  };
+  const [showModal, setShowModal] = useState(false);
+  const [kmlURL, setKmlURL] = useState("");
+  const [modalOpen, setModalOpen] = useState(false);
+  
+    const toggleModal = () => {
+      setModalOpen(!modalOpen);
+    };
+
+  const sendBytes = async () => {
+    const Bytedata = {
+      user_id: localStorage.getItem("user_id"),
+      total_bytes: localStorage.getItem("bytes_transferred"),
+    };
+
+    try {
+      const response = await axios.post(
+        "https://fibregrid.amxdrones.com/dronecount/storage/",
+        Bytedata,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: localStorage.getItem("amxtoken").replace(/"/g, ""),
+          },
+        }
+      );
+
+      if (response.status === 200) {
+        const data = response.data;
+        console.log(`total_bytes_after_upload==> ${data.bytes}`);
+        localStorage.setItem("consumed_data", data.bytes);
+        window.location.reload()
+        // localStorage.setItem("consumed_data", "12345"); // Replace "12345" with a specific value for testing
+      } else {
+        throw new Error("Error occurred during byte data update.");
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handleExportKML = async () => {
+    const kmlString = generateKML(polygonCoordinates);
+  
+    // Create a Blob from the KML string
+    const kmlBlob = new Blob([kmlString], {
+      type: "application/vnd.google-earth.kml+xml",
+    });
+  
+    // Set the file name for the KML file
+    const fileName = "polygon.kml";
+  
+    const kmlDataURL = URL.createObjectURL(kmlBlob);
+    console.log(kmlDataURL)
+    localStorage.setItem("new_kml_file", kmlDataURL);
+    // Create a new File object from the Blob with the specified file name
+    const kmlFile = new File([kmlBlob], fileName);
+    console.log(kmlFile)
+
+  };
+
+  const icons_data={
+    four:"https://aactxg.stripocdn.email/content/guids/CABINET_f37167ea2322984dfeb6a0a05e92d2480b49356b15fb055bb2ce2e84131a12e4/images/icons8fullstop30.png",
+    three:"https://aactxg.stripocdn.email/content/guids/CABINET_f37167ea2322984dfeb6a0a05e92d2480b49356b15fb055bb2ce2e84131a12e4/images/rec.png",
+    one:"https://aactxg.stripocdn.email/content/guids/CABINET_f37167ea2322984dfeb6a0a05e92d2480b49356b15fb055bb2ce2e84131a12e4/images/fullstop.png",
+    two:"https://aactxg.stripocdn.email/content/guids/CABINET_f37167ea2322984dfeb6a0a05e92d2480b49356b15fb055bb2ce2e84131a12e4/images/newmoon.png",
+  }
+
+  const [selectedMarkerIndex, setSelectedMarkerIndex] = useState(null);
+
+  const handleMarkerDragEnd = (event, index) => {
+    const { latLng } = event;
+    const newCoordinates = [...polygonCoordinates];
+    newCoordinates[index] = {
+      lat: latLng.lat(),
+      lng: latLng.lng(),
+    };
+    setPolygonCoordinates(newCoordinates);
+  };
+  const handleDeleteMarker = (indexToDelete) => {
+    const newMarkers = markers.filter((marker, index) => index !== indexToDelete);
+    const newCoordinates = polygonCoordinates.filter(
+      (coordinate, index) => index !== indexToDelete
+    );
+  
+    setMarkers(newMarkers);
+    setPolygonCoordinates(newCoordinates);
+    setSelectedMarkerIndex(null); // Clear the selected marker index
+  };
+  
+  const handleCloseModal = () => {
+    // Revoke the URL to release memory
+    URL.revokeObjectURL(kmlURL);
+
+    // Hide the modal
+    setShowModal(false);
+  };
+  const [latitude, setLatitude] = useState("");
+  const [longitude, setLongitude] = useState("");
+  
+  const handleSearch = () => {
+    if (latitude && longitude) {
+      const selectedLocation = {
+        lat: parseFloat(latitude),
+        lng: parseFloat(longitude),
+      };
+  
+      // Update the map's center and set the zoom level
+      mapRef.current.panTo(selectedLocation);
+      mapRef.current.setZoom(16);
+    } else {
+      // Handle empty input error
+      console.log("Please enter both latitude and longitude.");
+    }
+  };
+  const [nestedModal, setNestedModal] = useState(false);
+  const [closeAll, setCloseAll] = useState(false);
+
+
+  const toggleNested = () => {
+    setNestedModal(!nestedModal);
+    setCloseAll(false);
+  };
+
+  const renderMap = () => {
+    const mapCenter = latestCoordinate || { lat: 12.979631 ,lng: 77.590687 };
+const reloadPageButton=()=>{
+  localStorage.removeItem("folder_name")
+  window.location.reload();
+}
+
+  const toggle = () => setModal(!modal);
+    return (
+      <div style={{ width: "100%", height: "100%" }}>
+      <div>
+      
+      <Modal isOpen={modal} toggle={toggle}>
+        <ModalHeader toggle={toggle}>Select Project</ModalHeader>
+        <ModalBody>
+         <ModalParent nestedToggle={toggleNested} /> 
+     
+     
+          <Modal
+            isOpen={nestedModal}
+            toggle={toggleNested}
+            // onClosed={closeAll ? toggle : undefined}
+          >
+            <ModalHeader>Nested Modal title</ModalHeader>
+            <ModalBody>
+              <ModalFolders />
+</ModalBody>
+         
+          </Modal>
+        </ModalBody>
+      
+      </Modal>
+    </div>
+        <div className="mission-first-line" style={{position: "relative",backgroundColor:"#f5f6fa"}}>
+
+        <div className="mymapcolumns">
+        <button
+          type="button"
+          onClick={() => {
+            handleExportKML(); // Call the handleExportKML function
+            toggle()
+          }}
+          className="btn btn-primary mymapbuttons"
+        >
+          Export KML
+        </button>
+       <button
+          type="button"
+          onClick={reloadPageButton}
+          className="btn btn-primary mymapbuttons"
+        >
+          Create New
+        </button>
+        
+        <Autocomplete
+        className="search-location"
+        onLoad={(autocomplete) => (autocompleteRef.current = autocomplete)}
+        onPlaceChanged={handlePlaceSelect}
+      >
+       
+        <Input
+    bsSize="lg"
+    type="search"
+    placeholder="Search for a location" className="search-location-input"
+  />
+    
+           
+         {/* <Input
+    bsSize="lg"
+    type="search"
+    placeholder="Search for a location" className="search-location-input"
+  /> */}
+        {/* <input type="text" /> */}
+      </Autocomplete>
+      </div>
+      <div className="mymapcolumns">
+   <div
+        className="search-location"
+        onLoad={(autocomplete) => (autocompleteRef.current = autocomplete)}
+        onPlaceChanged={handlePlaceSelect}
+      >
+       
+        <Input
+    bsSize="lg"
+    type="number"
+    placeholder="Search Latitude" className="search-location-input"
+    value={latitude}
+      onChange={(e) => setLatitude(e.target.value)}
+  />
+      </div>
+      <div
+        className="search-location"
+        onLoad={(autocomplete) => (autocompleteRef.current = autocomplete)}
+        onPlaceChanged={handlePlaceSelect}
+      >
+       
+        <Input
+    bsSize="lg"
+    type="number"
+    placeholder="Search Longitude" className="search-location-input"
+    value={longitude}
+      onChange={(e) => setLongitude(e.target.value)}
+  />
+      </div>
+
+  <Button className="btn btn-primary mymapbuttons" color="primary" onClick={handleSearch}>
+    Search Location
+  </Button>
+  </div>
+      </div>
+        <GoogleMap
+          center={mapCenter}
+          zoom={14}
+          onClick={handlePolygonClick}
+          onMapClick={handleMapClick}
+          mapContainerStyle={{ width: "100%", height: "90vh" }}
+          draggable={false}
+          onLoad={(map) => (mapRef.current = map)}
+          options={mapOptions}
+        >
+          {/* Render the polygon
+          {polygonCoordinates.length > 0 && (
+            <>
+              <Polygon
+                paths={polygonCoordinates}
+                strokeColor="#3ebfea"
+                strokeOpacity={0.8}
+                strokeWeight={2}
+                fillColor="#3ebfea"
+                fillOpacity={0.35}
+              />
+              {polygonCoordinates.map((coordinate, index) => (
+                <Marker key={index} position={coordinate} icon={icons_data.two}/>
+              ))}
+            </>
+          )} */}
+
+{polygonCoordinates.length > 0 && (
+  <>
+    <Polygon
+      paths={polygonCoordinates}
+      strokeColor="#3ebfea"
+      strokeOpacity={0.8}
+      strokeWeight={2}
+      fillColor="#3ebfea"
+      fillOpacity={0.35}
+    />
+    {polygonCoordinates.map((coordinate, index) => (
+      <Marker
+        key={index}
+        position={coordinate}
+        icon={icons_data.two}
+        draggable={true}
+        onDragEnd={(event) => handleMarkerDragEnd(event, index)}
+        onClick={() => setSelectedMarkerIndex(index)} // Set the selected marker index
+      />
+    ))}
+    {selectedMarkerIndex !== null && (
+      <Button
+        className="btn btn-danger"
+        onClick={() => handleDeleteMarker(selectedMarkerIndex)}
+      >
+        Delete Marker
+      </Button>
+    )}
+  </>
+)}
+
+{/* {polygonCoordinates.length > 0 && (
+  <>
+    <Polygon
+      paths={polygonCoordinates}
+      strokeColor="#3ebfea"
+      strokeOpacity={0.8}
+      strokeWeight={2}
+      fillColor="#3ebfea"
+      fillOpacity={0.35}
+    />
+    {polygonCoordinates.map((coordinate, index) => (
+      <Marker
+        key={index}
+        position={coordinate}
+        icon={icons_data.two}
+        draggable={true} // Only last marker is draggable
+        onDragEnd={(event) => handleMarkerDragEnd(event, index)}
+      />
+    ))}
+  </>
+)} */}
+
+          {/* Render the markers */}
+          {markers.map((marker) => (
+            <Marker key={marker.id} position={marker.position} />
+          ))}
+        </GoogleMap>
+      </div>
+    );
+  };
+  const mapOptions = {
+    // Basic options
+    mapTypeId: "hybrid",     // Set the map type (e.g., "roadmap", "terrain", "satellite", "hybrid")
+    // zoomControl: true,          // Display zoom control
+    streetViewControl: false,   // Display street view control
+    // fullscreenControl: true,    // Display fullscreen control
+
+    mapTypeControl: false,   // Disable map type control
+  
+    // Display options
+    backgroundColor: "#f2f2f2", // Background color of the map
+    disableDefaultUI: false,    // Disable default UI components (zoom, map type, etc.)
+    draggable: true,            // Make the map draggable
+    scrollwheel: true,          // Enable zoom via mouse scrollwheel
+    disableDoubleClickZoom: false, // Disable zoom on double click
+  
+    // Interaction options
+    gestureHandling: "auto",    // Define how the map responds to user gestures ("cooperative", "greedy", "auto")
+    draggableCursor: "pointer", // Set the cursor type when dragging the map
+    draggingCursor: "grabbing", // Set the cursor type when the map is being dragged
+    minZoom: 2, // Set the minimum zoom level to show the whole world map
+// maxZoom: 6, 
+  };
+  return isLoaded ? renderMap() : <div>Loading map...</div>;
+};
+
+const LatestNewMap = () => {
+
+
+  return (
+    <>
+      {/* <div className="content" style={{padding:"0 0px 10px 250px",zIndex:"2000 !important"}}> */}
+    
+      <div className="content mycustompadding">
+        <Row>
+          <Col md="12">
+            <Card className="card-plain">
+              <CardBody>
+                <div
+                  id="map"
+                  className="map"
+                  style={{ position: "relative" }}
+                >
+                  <DroneMap />
+                </div>
+              </CardBody>
+            </Card>
+          </Col>
+        </Row>
+      </div>
+    </>
+  );
+};
+
+export default LatestNewMap;
