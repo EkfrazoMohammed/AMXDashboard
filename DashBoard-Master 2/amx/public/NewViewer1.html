@@ -8,7 +8,367 @@
 
 </head>
 <body>
-    <style>
+  <style>
+    .folder::after {
+     width: 92px;
+     height: 60px;
+     position: absolute;
+     content: '';
+     background: linear-gradient(90deg, #8aa2e8 0%, #8aa2e8 100%);
+     top: 21px;
+     box-shadow: 0 0 5px 2px rgba(0, 0, 0, 0.3);
+     border-top-left-radius: 5px;
+     border-top-right-radius: 5px;
+     -webkit-transform: rotateX(-10deg);
+     transform: rotateX(-10deg);
+     transition: all 800ms ease;
+     /* background-color: #aed0c3; */
+     background: linear-gradient(90deg, #8aa2e8 0%, #8aa2e8 100%);
+ }
+ .folder::before {
+     width: 35px;
+     
+     height: 24px;
+     content: '';
+     background: linear-gradient(90deg, #8aa2e8 0%, #8aa2e8 100%);
+     position: absolute;
+     top: -11px;
+     border-top-left-radius: 5px;
+     border-top-right-radius: 5px;
+     background-color: #aed0c3;
+ }
+ .folder {
+  display: flex;
+     -webkit-perspective: 500px;
+     perspective: 500px;
+     width: 91px;
+     height: 60px;
+     background: linear-gradient(90deg, #8aa2e8 0%, #8aa2e8 100%);
+     /* position: absolute; */
+     /* top: 210px; */
+     /* left: 390px; */
+     border-top-right-radius: 5px;
+     cursor: pointer;
+     transition: all 300ms ease;
+     /* background-color: #aed0c3; */
+ }
+ 
+ .btn-primary:hover {
+    color: #fff;
+    background-color: #fff !important;
+    border-color: #fff !important;
+}
+ .folder-inside::before {
+     content: '';
+     background: repeating-linear-gradient(0deg, #ffffff, #ffffff 10px, #333333 10px, #333333 20px);
+     position: absolute;
+     top: -30px;
+     left: 25px;
+     width: 25px;
+     height: 85px;
+     color: #343434;
+     font-size: 40px;
+     line-height: 10px;
+     -webkit-transform: rotate(-90deg);
+     transform: rotate(-90deg);
+     opacity: 0.15;
+ }
+ .folder-inside {
+     width: 80px;
+     height: 51px;
+     position: absolute;
+     background: white;
+     top: 14px;
+     left: 7px;
+     box-shadow: 0 0 5px 5px rgba(0, 0, 0, 0.1);
+     -webkit-transform: rotate(-1deg);
+     transform: rotate(-1deg);
+     border: 2px solid white;
+     transition: all 200ms ease;
+ }
+ /* finally let's get this folder to rotate when we hover on it */
+
+.folder:hover::after{
+-webkit-transform: rotateX(-15deg);
+transform: rotateX(-15deg);
+}
+.folder:hover .folder-inside{
+-webkit-transform: rotate(-7deg) translateY(-15%);
+transform: rotate(-7deg) translateY(-15%);
+}
+/* hover over the folder to see the effect in action */
+ 
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700;800&display=swap');
+
+*{
+ padding: 0;
+ margin: 0;
+ box-sizing: border-box;
+}
+
+body th,tr,hr{
+ display: none !important;
+}
+body{
+ /* background-color: rgba(25,40,44,1); */
+
+ /* background-color:rgba(65, 195, 199, 0.03); */
+ padding: 1rem;
+ background-color: #f5f6fa;
+}
+.body-container{
+ display: flex;
+ flex-direction: column;
+ gap: 1rem;
+ justify-content: center;
+ align-items: center;
+ width: 100%;
+ height: calc(88vh);
+ font-family: 'Poppins', sans-serif;
+
+ background:url("https://aactxg.stripocdn.email/content/guids/CABINET_f37167ea2322984dfeb6a0a05e92d2480b49356b15fb055bb2ce2e84131a12e4/images/amxlogoremovebgpreview.png") no-repeat center center;
+ 
+
+}
+.wrapper{
+ width: 100%;
+ height: auto;
+ display: flex;
+ flex-direction: column;
+ gap:1rem;
+}
+.browse-btn{
+ border-radius: 5px;
+ padding: 1rem 3rem;
+ margin: 1rem;
+ border:none;
+ outline: none;
+ /* background-color: #FD6585; */
+ 
+ font-weight: 500;
+ cursor:pointer;
+ transition: all .2s ease-in-out;
+ 
+}
+
+.browse-btn:hover{
+background-color: rgba(25,40,44,1);
+}
+
+.subcontainer{
+   width: 100%;
+   height: auto;
+   display: flex;
+   flex-direction: column;
+   gap:1rem;
+}
+.div-containers{
+ display: flex;
+ flex-direction: column;
+ gap: 1rem;
+ justify-content: center;
+ align-items: center;
+
+}
+#launch-project{
+ /* color: #fff; */
+/* background-color: #3c5055 !important; */
+background-color: #FD6585 !important;
+ background-image: linear-gradient(to bottom left, #FD6585, #FA742B, #FD6585) !important;
+ background-image: -moz-linear-gradient(to bottom left, #FD6585, #FA742B, #FD6585) !important;
+ color: #ffffff;
+ box-shadow: none;
+ display: inline-block;
+ font-weight: 600;
+ text-align: center;
+ vertical-align: middle;
+ -webkit-user-select: none;
+ user-select: none;
+ border: 1px solid transparent;
+ 
+ padding: 11px 40px;
+ font-size: 14px;
+ line-height: 1.35em;
+ border-radius: 0.25rem;
+ transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+
+#launch-project:hover {
+ box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.4);
+ transform: translateY(-1px);
+ -webkit-transform: translateY(-1px);
+}
+.div-containers button .div-elements{
+
+padding: 1rem;
+font-size: 1rem;
+
+
+}
+/* #modalDiv{
+margin-top: 20px!important;
+height: 50%;
+} */
+.folderbutton{
+ color: #000;
+ background: none !important;
+
+ display: flex;
+ justify-content: center;
+ align-items: center;
+ flex-direction: column;
+margin: 1rem 0;
+gap: 1rem;
+}
+.folderbutton:hover{
+
+color:#000 !important;
+
+}
+@media (max-width:767px){
+.folderbutton2{
+ width: 40% !important;
+
+}
+}
+.btn-container{
+ width: 100%;
+ height: auto;
+ display: flex;
+ justify-content: center;
+ align-items: center;
+ gap: 1rem;
+}
+.modal-open {
+ overflow:none !important;
+}
+#modalDiv{
+ width: 100% !important;
+ height: 100%;
+ position: relative;
+}
+@media (min-width: 576px){
+ .modal-dialog {
+ min-width: 100% !important;
+ margin:0 !important;
+
+}}
+.modal-body{
+ padding: 0 !important;
+ background-color: #fff !important;
+}
+
+.modal_dialog{
+min-width: 500px;
+ min-width: 100%;
+ position: absolute;
+ top: 50px;
+ left: 0;
+ width: 100%;
+ height: auto;
+ margin: 0 !important; 
+ /* overflow: scroll !important; */
+}
+.btn-primary {
+ border-color: none !important;
+}
+iframe body.modal-open th{
+ display: none !important;
+}
+
+.modal-dialog .btn-primary {
+ color: #000;
+ background-color: #fff !important;
+ border-color: none !important;
+ border-color: #fff !important;
+}
+.image-container{
+ width: 100%;
+ height: auto;
+ display: flex;
+ justify-content: center;
+ align-items: center;
+ margin: 0 auto;
+}
+img{
+
+ min-width: 80px;
+ height: 50px;
+}
+
+#popup{
+ /* background-color: palegreen; */
+}
+
+.modalBodyContainer{
+ width: 100%;
+ height: auto;
+
+}
+.modal-content{
+height: 94vh;
+}
+ /* .modalWrapper{
+     width: 100%;
+     height: 94vh;
+     display: flex;
+     gap:1rem;
+     text-align: center;
+     padding: 1rem;
+ } */
+ .modalWrapper{
+     width: 100%;
+     min-height:94vh;
+     display: flex;
+     /* text-align: center; */
+     /* gap:1rem;
+     padding: 1rem; */
+ }
+ .modalWrapper .links{
+     display: flex;
+     flex-direction: column;
+     gap: 0.5rem;
+  }
+  .outputWrapper{
+   width: 100%;
+   height: auto;
+  }
+ .allprojects{
+   width: 100%;
+   height: auto;
+   display: flex;
+   gap:2rem;
+   flex-direction: column;
+ }
+ #htmlViewerModal {
+z-index: 1150; /* This value should be higher than the z-index of createModal1 */
+}
+
+.loader {
+ display: flex;
+ justify-content: center;
+ align-items: center;
+ height: 100px; /* Adjust the height as needed */
+}
+
+.loader::after {
+ content: "";
+ display: block;
+ width: 30px;
+ height: 30px;
+ border: 3px solid #ccc;
+ border-top: 3px solid #3498db;
+ border-radius: 50%;
+ animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+ 0% { transform: rotate(0deg); }
+ 100% { transform: rotate(360deg); }
+}
+
+ </style>
+    <!-- <style>
   @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700;800&display=swap');
 
 *{
@@ -272,7 +632,7 @@ img{
     100% { transform: rotate(360deg); }
 }
 
-    </style>
+    </style> -->
     <div class="body-container">
         <div class="wrapper">
             <div class="subcontainer">
@@ -438,17 +798,42 @@ async function getProjects() {
   projectSelectTitleH5.innerText = "Select a Project";
   projectSelectHeader.appendChild(projectSelectTitleH5);
 
+  const closeButtons=document.createElement("div")
   // Close button for the header
   const closeButton = document.createElement("button");
   closeButton.setAttribute("type", "button");
   closeButton.classList.add("close");
   closeButton.setAttribute("data-dismiss", "modal");
 
-  const closeIconSpan = document.createElement("span");
+  // const closeIconSpan = document.createElement("span");
+  const closeIconSpan = document.createElement("button");
+  
+  closeIconSpan.classList.add("btn");
   closeIconSpan.innerHTML = "&times;";
   closeButton.appendChild(closeIconSpan);
 
-  projectSelectHeader.appendChild(closeButton);
+  
+  // Create a "close all" button
+const closeAllButton = document.createElement("button");
+closeAllButton.setAttribute("type", "button");
+closeAllButton.classList.add("btn");
+closeAllButton.innerText = "Close All";
+closeAllButton.addEventListener("click", function() {
+    // Reload the page when "Close All" is clicked
+    setTimeout(()=>{
+
+      window.location.reload();
+    },1000)
+});
+  
+  
+closeButtons.appendChild(closeButton);
+closeButtons.appendChild(closeAllButton)
+
+  projectSelectHeader.appendChild(closeButtons);
+  
+  
+
 
   // Create a div to wrap the header
   const headerWrapper = document.createElement("div");
@@ -477,13 +862,23 @@ async function getProjects() {
       button.classList.add("folderbutton","folderbutton2", "entry-button", "btn", "btn-primary");
       button.classList.add("col-md-2");
 
+      const folderIconWrapper = document.createElement("div");
+        folderIconWrapper.classList.add("folder");
+
+        const folderIconInside = document.createElement("div");
+        folderIconInside.classList.add("folder-inside");
+
+        folderIconWrapper.appendChild(folderIconInside)
+      
+
       const imageElement = document.createElement("img");
-      imageElement.src = "https://aactxg.stripocdn.email/content/guids/CABINET_d2c61cd4fa579e3609ac1dce15feb3311d67f9975b3b433315a90ea0a424bac3/images/icons8symlinkdirectory48.png";
-      button.appendChild(imageElement);
+      imageElement.src="https://res.cloudinary.com/dxjrvvjp1/image/upload/v1693480473/icons8-folder-94_r3lnm7.png";
+      // imageElement.src = "https://aactxg.stripocdn.email/content/guids/CABINET_d2c61cd4fa579e3609ac1dce15feb3311d67f9975b3b433315a90ea0a424bac3/images/icons8symlinkdirectory48.png";
+      button.appendChild(folderIconWrapper);
 
       const textElement = document.createElement("p");
       textElement.innerText = project.name.split("(")[0].trim();
-      textElement.classList.add("m-0");
+      textElement.classList.add("mt-2");
 
       button.appendChild(textElement);
       
@@ -522,6 +917,7 @@ function createModal(project, index) {
   
 
   
+  
   // const closeButton = document.createElement("button");
   const closeButton = document.createElement("button");
 closeButton.setAttribute("type", "button");
@@ -537,9 +933,11 @@ closeButton.classList.add("close");
   const closeIconSpan = document.createElement("span");
   closeIconSpan.innerHTML = "&times;";
   
+  
   closeButton.appendChild(closeIconSpan);
 
   modalHeaderDiv.appendChild(modalTitleH5);
+
   modalHeaderDiv.appendChild(closeButton);
 
   const modalBodyDiv = document.createElement("div");
@@ -566,8 +964,17 @@ function createFolderItems(folders, parentList) {
     button.style.display = "flex";
     button.style.flexDirection = "column-reverse";
     button.style.justifyContent = "center";
+    button.style.gap = "1rem";
     button.style.alignItems = "center";
     button.classList.add("col-sm-6", "col-md-2");
+
+    const folderIconWrapper = document.createElement("div");
+        folderIconWrapper.classList.add("folder");
+
+        const folderIconInside = document.createElement("div");
+        folderIconInside.classList.add("folder-inside");
+
+        folderIconWrapper.appendChild(folderIconInside)
 
     const imageElement = document.createElement("img");
     imageElement.src = "https://aactxg.stripocdn.email/content/guids/CABINET_d2c61cd4fa579e3609ac1dce15feb3311d67f9975b3b433315a90ea0a424bac3/images/icons8symlinkdirectory48.png";
@@ -575,7 +982,7 @@ function createFolderItems(folders, parentList) {
     const textElement = document.createElement("span");
     textElement.innerText = folder.name.split("(")[0].trim();
     button.appendChild(textElement);
-    button.appendChild(imageElement);
+    button.appendChild(folderIconWrapper);
 
     button.addEventListener("click", () => {
       const modal = createModal1(folder);
@@ -709,10 +1116,18 @@ if (hasAllowedExtension(childFolder.name)) {
   button.style.alignItems="center";
   button.classList.add("col-sm-6", "col-md-2");
 
+
+  const folderIconWrapper = document.createElement("div");
+        folderIconWrapper.classList.add("folder");
+
+        const folderIconInside = document.createElement("div");
+        folderIconInside.classList.add("folder-inside");
+
+        folderIconWrapper.appendChild(folderIconInside)
   const imageElement = document.createElement("img");
   imageElement.src = "https://aactxg.stripocdn.email/content/guids/CABINET_d2c61cd4fa579e3609ac1dce15feb3311d67f9975b3b433315a90ea0a424bac3/images/icons8codefile48.png";
   button.appendChild(imageElement);
-
+  // button.appendChild(folderIconWrapper);
   const textElement = document.createElement("span");
 
   textElement.style.margin = "0";
@@ -734,15 +1149,23 @@ else{
 //   button.style.border = "1px solid blue";
   button.style.display = "flex";
   button.style.flexDirection = "column";
-  button.style.gap = "5px";
+  // button.style.gap = "5px";
+  button.style.gap = "1rem";
   button.style.alignItems="center";
   
   button.classList.add("col-sm-6", "col-md-2");
 
+  const folderIconWrapper = document.createElement("div");
+        folderIconWrapper.classList.add("folder");
+
+        const folderIconInside = document.createElement("div");
+        folderIconInside.classList.add("folder-inside");
+
+        folderIconWrapper.appendChild(folderIconInside)
   const imageElement = document.createElement("img");
   imageElement.src = "https://aactxg.stripocdn.email/content/guids/CABINET_d2c61cd4fa579e3609ac1dce15feb3311d67f9975b3b433315a90ea0a424bac3/images/icons8symlinkdirectory48.png";
-  button.appendChild(imageElement);
-
+  // button.appendChild(imageElement);
+  button.appendChild(folderIconWrapper);
   const textElement = document.createElement("span");
   // button.classList.add("m-1");
   textElement.style.margin = "0 auto !important";

@@ -16,11 +16,12 @@ import {
   Polygon,
   Autocomplete
 } from "@react-google-maps/api";
+import { ElevationService } from "@react-google-maps/api";
 
 
 import ModalParent from "./projects/ModalParent";
 import ModalFolders from "./Home/ModalFolders";
-const libraries = ['places'];
+const libraries = ['places','elevation'];
 function generateKML(polygonCoordinates) {
   // Create a KML string
   const kmlString = `<?xml version="1.0" encoding="UTF-8"?>
@@ -143,6 +144,54 @@ const DroneMap = () => {
       lng: latLng.lng(),
     });
   };
+
+  const handleMarkerClick = async (index) => {
+    if (!isLoaded || loadError) {
+      console.log("Google Maps API is not loaded or encountered an error.");
+      return;
+    }
+
+    const marker = markers[index];
+    const location = new window.google.maps.LatLng(marker.position.lat, marker.position.lng);
+
+    const elevator = new window.google.maps.ElevationService();
+    const request = {
+      locations: [location],
+    };
+
+    elevator.getElevationForLocations(request, (results, status) => {
+      if (status === window.google.maps.ElevationStatus.OK && results && results[0]) {
+        const elevation = results[0].elevation;
+        console.log(`Elevation at marker ${index}: ${elevation} meters`);
+      } else {
+        console.log("Elevation data not available.");
+      }
+    });
+  };
+  
+  
+
+  // const handleMarkerClick = async (index) => {
+  //   const marker = markers[index];
+  //   console.log(marker)
+  //   const elevationService = new window.google.maps.ElevationService();
+  
+  //   const location = new window.google.maps.LatLng(marker.position.lat, marker.position.lng);
+  //   const request = {
+  //     locations: [location],
+  //   };
+  // console.log(request)
+  //   elevationService.getElevationForLocations(request, (results, status) => {
+  //     if (status === "OK" && results && results[0]) {
+  //       const elevation = results[0].elevation;
+        
+  //       console.log(`Elevation at marker ${index}: ${elevation} meters`);
+  //     } else {
+  //       console.log("Elevation data not available.");
+  //     }
+  //   });
+  // };
+  
   const [showModal, setShowModal] = useState(false);
   const [kmlURL, setKmlURL] = useState("");
   const [modalOpen, setModalOpen] = useState(false);
@@ -265,9 +314,26 @@ const DroneMap = () => {
     setNestedModal(!nestedModal);
     setCloseAll(false);
   };
+// Calculate the center of the polygon coordinates
+const calculatePolygonCenter = (coordinates) => {
+  if (coordinates.length === 0) {
+    // Default center when no coordinates are present
+    return { lat: 12.979631, lng: 77.590687 };
+  }
+
+  const latSum = coordinates.reduce((sum, coord) => sum + coord.lat, 0);
+  const lngSum = coordinates.reduce((sum, coord) => sum + coord.lng, 0);
+
+  const centerLat = latSum / coordinates.length;
+  const centerLng = lngSum / coordinates.length;
+
+  return { lat: centerLat, lng: centerLng };
+};
+
 
   const renderMap = () => {
-    const mapCenter = latestCoordinate || { lat: 12.979631 ,lng: 77.590687 };
+    // const mapCenter = latestCoordinate || { lat: 12.979631 ,lng: 77.590687 };
+    const mapCenter = calculatePolygonCenter(polygonCoordinates);
 const reloadPageButton=()=>{
   localStorage.removeItem("folder_name")
   window.location.reload();
@@ -419,8 +485,10 @@ const reloadPageButton=()=>{
         position={coordinate}
         icon={icons_data.two}
         draggable={true}
+        
+        onClick={() => handleMarkerClick(index)}
         onDragEnd={(event) => handleMarkerDragEnd(event, index)}
-        onClick={() => setSelectedMarkerIndex(index)} // Set the selected marker index
+        // onClick={() => setSelectedMarkerIndex(index)} // Set the selected marker index
       />
     ))}
     {selectedMarkerIndex !== null && (
@@ -465,11 +533,13 @@ const reloadPageButton=()=>{
     );
   };
   const mapOptions = {
+
     // Basic options
     mapTypeId: "hybrid",     // Set the map type (e.g., "roadmap", "terrain", "satellite", "hybrid")
     // zoomControl: true,          // Display zoom control
     streetViewControl: false,   // Display street view control
-    // fullscreenControl: true,    // Display fullscreen control
+
+    fullscreenControl: false,
 
     mapTypeControl: false,   // Disable map type control
   
@@ -486,6 +556,7 @@ const reloadPageButton=()=>{
     draggingCursor: "grabbing", // Set the cursor type when the map is being dragged
     minZoom: 2, // Set the minimum zoom level to show the whole world map
 // maxZoom: 6, 
+keyboardShortcuts: false,
   };
   return isLoaded ? renderMap() : <div>Loading map...</div>;
 };

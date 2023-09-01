@@ -619,6 +619,23 @@ handleUploadPhoto();
                       )}
                     </Col>
 
+                    <Col className="pl-md-1" md="3">
+                      <span className="form-labels">
+                  Company Name:{" "}
+                      </span>
+
+                      <input
+                        onChange={changeUserHandler}
+                        name="company_name"
+                        type="text"
+                        className="form-control"
+                        placeholder="Enter Company Name"
+                       
+                      />
+                      {errors.mail && (
+                        <span className="error-message">Email is required</span>
+                      )}
+                    </Col>
                     <Col className="pr-md-1" md="3">
                       <div style={{ padding: "0px 8px" }}>
                         {imagePreview ? ( // Render the image preview only when a photo is selected
@@ -688,13 +705,7 @@ handleUploadPhoto();
                             style={{ display: "none" }}
                           />
                         </div>
-                        {/* <input
-type="file"
-accept="image/*"
-name="photo"
-onChange={handleFileChange} // Add the onChange event here
-style={{ display: 'block', margin: '10px auto' }}
-/> */}
+
                       </div>
                     </Col>
                     <Col className="pl-md-1 buttonGroupContainer1" md="3">
@@ -716,16 +727,14 @@ style={{ display: 'block', margin: '10px auto' }}
                           Save
                         </Button>
                       )}
-                      {/* <Button>
-        Save
-      </Button> */}
+                     
                     </Col>
                   </Row>
                   <Row></Row>
 
                   <p>Change Passwords</p>
                   <Row>
-                    <Col className="pr-md-1" md="4">
+                    <Col className="pr-md-1" md="3">
                       <span className="form-labels">
                         <span className="asterisk-symbol">*</span> Old Password:{" "}
                       </span>
@@ -744,7 +753,7 @@ style={{ display: 'block', margin: '10px auto' }}
                         </span>
                       )}
                     </Col>
-                    <Col className="pl-md-1" md="4">
+                    <Col className="pl-md-1" md="3">
                       <span className="form-labels">
                         <span className="asterisk-symbol">*</span> New Password:{" "}
                       </span>
@@ -764,7 +773,7 @@ style={{ display: 'block', margin: '10px auto' }}
                       )}
                     </Col>
 
-                    <Col className="pl-md-1 buttonGroupContainer" md="4">
+                    <Col className="pl-md-1 buttonGroupContainer" md="2">
                       <Button
                         color="primary"
                         type="submit"
@@ -774,98 +783,12 @@ style={{ display: 'block', margin: '10px auto' }}
                       </Button>
                     </Col>
                   </Row>
-                  {/* <Row>
-          <Col className="pr-md-1" md="4">
-            <FormGroup>
-              <label>First Name</label>
-              <Input
-                defaultValue="Mike"
-                placeholder="Company"
-                type="text"
-              />
-            </FormGroup>
-          </Col>
-          <Col className="pl-md-1" md="4">
-            <FormGroup>
-              <label>Last Name</label>
-              <Input
-                defaultValue="Andrew"
-                placeholder="Last Name"
-                type="text"
-              />
-            </FormGroup>
-            
-          </Col>
-          <Col md="4" className="buttonGroupContainer">
-          <Button color="primary" type="submit" >
-        Save
-      </Button>
-          </Col>
-          
-        </Row> */}
+         
 
-                  {/* <Row>
-          <Col md="12">
-            <FormGroup>
-              <label>Address</label>
-              <Input
-                defaultValue="Bld Mihail Kogalniceanu, nr. 8 Bl 1, Sc 1, Ap 09"
-                placeholder="Home Address"
-                type="text"
-              />
-            </FormGroup>
-          </Col>
-        </Row> */}
-                  {/* <Row>
-          <Col className="pr-md-1" md="6">
-            <FormGroup>
-              <label>City</label>
-              <Input
-                defaultValue="Mike"
-                placeholder="City"
-                type="text"
-              />
-            </FormGroup>
-          </Col>
-          <Col className="pr-md-1" md="6">
-            <FormGroup>
-              <label>Country</label>
-              <Input
-                defaultValue="Andrew"
-                placeholder="Country"
-                type="text"
-              />
-            </FormGroup>
-          </Col>
-          <Col className="pl-md-1" md="4">
-            <FormGroup>
-              <label>Postal Code</label>
-              <Input placeholder="ZIP Code" type="number" />
-            </FormGroup>
-          </Col>
-        </Row>
-        <Row>
-          <Col md="8">
-            <FormGroup>
-              <label>About Me</label>
-              <Input
-                cols="80"
-                defaultValue="Lamborghini Mercy, Your chick she so thirsty, I'm in
-                  that two seat Lambo."
-                placeholder="Here can be your description"
-                rows="4"
-                type="textarea"
-              />
-            </FormGroup>
-          </Col>
-        </Row> */}
+                 
                 </Form>
               </CardBody>
-              {/* <CardFooter>
-      <Button className="btn-fill" color="primary" type="submit">
-        Save
-      </Button>
-    </CardFooter> */}
+             
             </Card>
           </Col>
           <Col md="4">

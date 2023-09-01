@@ -47,6 +47,7 @@ function AddDrone() {
     time_in_service: "",
     Next_maintainance: "",
     user_id: userIdO,
+    Status:true
 
   });
 
@@ -58,6 +59,7 @@ function AddDrone() {
     UIN: false,
     time_in_service: false,
     Next_maintainance: false,
+    Status:false
   });
   let {
     aircraft_type,
@@ -68,6 +70,7 @@ function AddDrone() {
     time_in_service,
     Next_maintainance,
     user_id,
+    Status,
   } = state;
   let handleChange = (e) => {
     let { name, value } = e.target;
