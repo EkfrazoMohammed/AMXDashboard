@@ -1,20 +1,4 @@
-/*!
 
-=========================================================
-* Black Dashboard React v1.2.1
-=========================================================
-
-* Product Page: https://www.creative-tim.com/product/black-dashboard-react
-* Copyright 2022 Creative Tim (https://www.creative-tim.com)
-* Licensed under MIT (https://github.com/creativetimofficial/black-dashboard-react/blob/master/LICENSE.md)
-
-* Coded by Creative Tim
-
-=========================================================
-
-* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-
-*/
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 
@@ -50,6 +34,8 @@ function UserProfile() {
   const userIdO = localStorage.getItem("user_id");
 
   const userNameO = localStorage.getItem("user_name").replace(/"/g, "");
+  
+  const companyNameO = localStorage.getItem("company_name").replace(/"/g, "");
   const amxtokenO = localStorage.getItem("amxtoken").replace(/"/g, "");
   const [newPhoto, setNewPhoto] = useState(null);
   // const local_profile_photo = localStorage.getItem('profile_photo');
@@ -80,78 +66,61 @@ function UserProfile() {
       window.location.reload();
     }, 100);
   };
-  // const handleUploadPhoto = (selectedFile) => {
-  //   // Create a reference to the storage location where you want to store the photo.
-  //   const storageRef = ref(storage, "user_photos/" + selectedFile.name);
-
-  //   // Upload the photo to Firebase Storage using the ref.
-  //   const uploadTask = uploadBytesResumable(storageRef, selectedFile);
-
-  //   // Listen for state changes, errors, and completion of the upload.
-  //   uploadTask.on(
-  //     "state_changed",
-  //     (snapshot) => {
-  //       // You can track the progress of the upload here if needed.
-  //       // const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-  //       // console.log("Upload is " + progress + "% done");
-  //     },
-  //     (error) => {
-  //       // Handle any errors that occur during the upload.
-  //       console.error("Error uploading the photo:", error);
-  //     },
-  //     () => {
-  //       // The upload is complete.
-  //       // Get the download URL for the photo and update the state with it.
-  //       getDownloadURL(uploadTask.snapshot.ref)
-  //         .then((downloadURL) => {
-  //           console.log("Photo uploaded. Download URL:", downloadURL);
-  //           setUser({
-  //             ...user,
-  //             photo: downloadURL,
-  //           });
-  //           setDisableButton(false);
-  //           // Now you can use the downloadURL to store it in your data or display the photo on the page.
-  //         })
-  //         .catch((error) => {
-  //           console.error("Error getting download URL:", error);
-  //         });
-  //     }
-  //   );
-  // };
   React.useEffect(() => {
-    // Save the 'photo' state into 'local_profile_photo' in localStorage
-    setNewPhoto(localStorage.getItem("profile_photo"));
+   setNewPhoto(localStorage.getItem("profile_photo"));
   }, [newPhoto]);
 
   const [user, setUser] = useState({
     user_id: userIdO,
     user_name: "",
     mail: "",
-    photo:""
+    photo:"",
+    company_name:""
     
   });
-  // const handleFileChange = (e) => {
-  //     setDisableButton(true);
-  //   const selectedFile = e.target.files[0];
-  //   setFile(selectedFile);
-  //   console.log(file)
-  //   if (selectedFile) {
-  //     const reader = new FileReader();
-  //     reader.onloadend = () => {
-  //       setImagePreview(reader.result);
-  //       console.log(imagePreview)
+ 
+  
 
-  //     };
-  //     reader.readAsDataURL(selectedFile);
-  //     console.log(reader.readAsDataURL)
-  //     setData({
-  //       ...data,
-  //       photo: selectedFile,
-  //     });
-  //   } else {
-  //     setImagePreview(null);
-  //   }
-  // };
+  console.log(user)
+
+  const [errors, setErrors] = useState({
+    user_name: false,
+    mail: false,
+    company_name:false,
+    password: false,
+  });
+  const changeUserHandler = (e) => {
+    setUser({ ...user, [e.target.name]: e.target.value });
+    setErrors({ ...errors, [e.target.name]: false });
+  };
+
+  const [password, setPassword] = useState({
+    old_password: "",
+    new_password: "",
+  });
+  const [passworderrors, setPassworderrors] = useState({
+    old_password: false,
+    new_password: false,
+  });
+  const changePasswordHandler = (e) => {
+    setPassword({ ...password, [e.target.name]: e.target.value });
+    setPassworderrors({ ...passworderrors, [e.target.name]: false });
+  };
+  const config = {
+    headers: {
+      Authorization: amxtokenO,
+    },
+  };
+
+  const config1 = {
+    // params: {
+    //   user_id: userIdO,
+    // },
+    headers: {
+      'Content-Type': 'multipart/form-data',
+      Authorization: amxtokenO,
+    },
+  };
   const handleFileChange = (e) => {
     setDisableButton(true);
     const selectedFile = e.target.files[0];
@@ -172,10 +141,7 @@ function UserProfile() {
         photo: selectedFile, // or photo: null
       });
       setDisableButton(false);
-      // reader.readAsDataURL(selectedFile);
-      // // If a file is selected, call handleUploadPhoto to upload the photo
-      // handleUploadPhoto(selectedFile);
-    } else {
+     } else {
       // If no file is selected, set the photo in the state to an empty string or null
       setUser({
         ...user,
@@ -249,139 +215,108 @@ function UserProfile() {
       });
     }
   };
-  
+//   const UpdateUser = async (e) => {
+//     e.preventDefault();
+//     if (!user.user_name || !user.mail || !user.company_name) {
+//       setErrors({
+//         user_name: !user.user_name,
+//         mail: !user.mail,
+//         company_name: !user.company_name,
+//       });
+//       return;
+//     }
+//     try {
+//       let data1 = await axios
+//         .put(
+//           `https://fibregrid.amxdrones.com/dronecount/updateuser/${userIdO}/`,
+//           user,
+//           config1
+//         )
+//         .then((res) => {
+//           const data2 = res.data;
+//          alert(res.data.photo_url)
 
-  console.log(user)
+//           // window.location.reload();
+// // Call handleUploadPhoto to update profile photo
+// handleUploadPhoto();
+//           // console.log(user.user_name);
 
-  const [errors, setErrors] = useState({
-    user_name: false,
-    mail: false,
-    password: false,
-  });
-  const changeUserHandler = (e) => {
-    setUser({ ...user, [e.target.name]: e.target.value });
-    setErrors({ ...errors, [e.target.name]: false });
-  };
+//           toast.success("User Profile updated successfully !", {
+//             position: "top-right",
+//             autoClose: 3000,
+//             hideProgressBar: false,
+//             closeOnClick: true,
+//             pauseOnHover: true,
+//             draggable: true,
+//             progress: undefined,
+//             theme: "light",
+//             icon: <img src={drone} />,
+//           });
+//           localStorage.setItem("user_name", user.user_name);
+//           localStorage.setItem("profile_photo", user.photo);
+//           localStorage.setItem("company_name",user.company_name)
+//           setTimeout(() => {
+//             window.location.reload();
+//           }, 2000);
 
-  const [password, setPassword] = useState({
-    old_password: "",
-    new_password: "",
-  });
-  const [passworderrors, setPassworderrors] = useState({
-    old_password: false,
-    new_password: false,
-  });
-  const changePasswordHandler = (e) => {
-    setPassword({ ...password, [e.target.name]: e.target.value });
-    setPassworderrors({ ...passworderrors, [e.target.name]: false });
-  };
-  const config = {
-    headers: {
-      Authorization: amxtokenO,
-    },
-  };
-
-  const config1 = {
-    params: {
-      user_id: userIdO,
-    },
-    headers: {
-      'Content-Type': 'multipart/form-data',
-      Authorization: amxtokenO,
-    },
-  };
-
-  const UpdateUser = async (e) => {
-    e.preventDefault();
-    if (!user.user_name || !user.mail) {
-      setErrors({
-        user_name: !user.user_name,
-        mail: !user.mail,
-      });
-      return;
-    }
-    try {
-      let data1 = await axios
-        .put(
-          `https://fibregrid.amxdrones.com/dronecount/updateuser/${userIdO}/`,
-          user,
-          config
-        )
-        .then((res) => {
-          const data2 = res.data;
-         alert(res.data.photo_url)
-
-          // window.location.reload();
-// Call handleUploadPhoto to update profile photo
-handleUploadPhoto();
-          // console.log(user.user_name);
-
-          toast.success("User Profile updated successfully !", {
-            position: "top-right",
-            autoClose: 5000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-            theme: "light",
-            icon: <img src={drone} />,
-          });
-          localStorage.setItem("user_name", user.user_name);
-          localStorage.setItem("profile_photo", user.photo);
-          setTimeout(() => {
-            window.location.reload();
-          }, 3000);
-
-          // window.location.reload();
-        })
-        .catch((err) => {
-          console.log(err);
-          toast.error("Failed to Update Profile !", {
-            position: "top-right",
-            autoClose: 5000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-            theme: "light",
-            icon: <img src={drone} />,
-          });
-        });
-    } catch (error) {
-      console.log(error);
-      toast.error("Failed to Update Profile !", {
-        position: "top-right",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "light",
-        icon: <img src={drone} />,
-      });
-    }
-  };
-  const handleUpdateProfile = async () => {
-    if (!file && (!user.user_name || !user.mail)) {
-      // No file selected and missing required user information, return or display an error message
-      return;
-    }
-  
+//           // window.location.reload();
+//         })
+//         .catch((err) => {
+//           console.log(err);
+//           toast.error("Failed to Update Profile !", {
+//             position: "top-right",
+//             autoClose: 3000,
+//             hideProgressBar: false,
+//             closeOnClick: true,
+//             pauseOnHover: true,
+//             draggable: true,
+//             progress: undefined,
+//             theme: "light",
+//             icon: <img src={drone} />,
+//           });
+//         });
+//     } catch (error) {
+//       console.log(error);
+//       toast.error("Failed to Update Profile !", {
+//         position: "top-right",
+//         autoClose: 3000,
+//         hideProgressBar: false,
+//         closeOnClick: true,
+//         pauseOnHover: true,
+//         draggable: true,
+//         progress: undefined,
+//         theme: "light",
+//         icon: <img src={drone} />,
+//       });
+//     }
+//   };
+  const handleUpdateProfile = async (e) => {
+    // if (!file && (!user.user_name || !user.mail)) {
+    //   // No file selected and missing required user information, return or display an error message
+    //   return;
+    // }
+  e.preventDefault()
+  if (!user.user_name || !user.mail) {
+    setErrors({
+      user_name: !user.user_name,
+      mail: !user.mail,
+      company_name: !user.company_name
+    });
+    return;
+  }
     const formData = new FormData();
   
     // Append user information fields to the FormData
     formData.append('user_id', userIdO);
     formData.append('user_name', user.user_name);
     formData.append('mail', user.mail);
-  
+    formData.append('company_name', user.company_name);
     if (file) {
       // If a file is selected, append it to the FormData
       formData.append('photo', file);
     }
-  
+    
+    console.log(formData)
     try {
       const response = await axios.put(
         `https://fibregrid.amxdrones.com/dronecount/updateuser/${userIdO}/`,
@@ -401,13 +336,11 @@ handleUploadPhoto();
           // If a file was uploaded, update the new photo in state and localStorage
           setNewPhoto(response.data.photo_url);
           localStorage.setItem('profile_photo', response.data.photo_url);
-          setTimeout(()=>{
-
-            window.location.reload();
-          },3000)
-          
         }
-  
+        
+        localStorage.setItem("user_name",user.user_name)
+        localStorage.setItem("company_name",user.company_name)
+       
         toast.success('Profile updated successfully!', {
           position: 'top-right',
           autoClose: 5000,
@@ -419,7 +352,10 @@ handleUploadPhoto();
           theme: 'light',
           icon: <img src={drone} />,
         });
-  
+  setTimeout(()=>{
+
+            window.location.reload();
+          },3000)
         // ... (other actions or reload if needed)
       } else {
         throw new Error('Failed to update profile.');
@@ -543,42 +479,12 @@ handleUploadPhoto();
               </CardHeader>
               <CardBody>
                 <Form>
-                  {/* <Row>
-          <Col className="pr-md-1" md="5">
-            <FormGroup>
-              <label>Company (disabled)</label>
-              <Input
-                defaultValue="Creative Code Inc."
-                disabled
-                placeholder="Company"
-                type="text"
-              />
-            </FormGroup>
-          </Col>
-          <Col className="px-md-1" md="3">
-            <FormGroup>
-              <label>Username</label>
-              <Input
-                defaultValue="michael23"
-                placeholder="Username"
-                type="text"
-              />
-            </FormGroup>
-          </Col>
-          <Col className="pl-md-1" md="4">
-            <FormGroup>
-              <label htmlFor="exampleInputEmail1">
-                Email address
-              </label>
-              <Input placeholder="mike@email.com" type="email" />
-            </FormGroup>
-          </Col>
-        </Row> */}
+               
                   <p>Edit Username and Email</p>
                   <Row
                     style={{
                       display: "flex",
-                      justifyContent: "center",
+                      justifyContent: "flexStart",
                       alignItems: "center",
                     }}
                   >
@@ -601,7 +507,7 @@ handleUploadPhoto();
                         </span>
                       )}
                     </Col>
-                    <Col className="pl-md-1" md="3">
+                    <Col className="pr-md-1" md="3">
                       <span className="form-labels">
                         <span className="asterisk-symbol">*</span> User Email:{" "}
                       </span>
@@ -619,9 +525,10 @@ handleUploadPhoto();
                       )}
                     </Col>
 
-                    <Col className="pl-md-1" md="3">
+                
+                    <Col className="pr-md-1" md="3">
                       <span className="form-labels">
-                  Company Name:{" "}
+                        <span className="asterisk-symbol">*</span> Company Name:{" "}
                       </span>
 
                       <input
@@ -630,12 +537,13 @@ handleUploadPhoto();
                         type="text"
                         className="form-control"
                         placeholder="Enter Company Name"
-                       
+                        required
                       />
-                      {errors.mail && (
-                        <span className="error-message">Email is required</span>
+                       {errors.company_name && (
+                        <span className="error-message">Company name is required</span>
                       )}
                     </Col>
+                    
                     <Col className="pr-md-1" md="3">
                       <div style={{ padding: "0px 8px" }}>
                         {imagePreview ? ( // Render the image preview only when a photo is selected
@@ -708,7 +616,10 @@ handleUploadPhoto();
 
                       </div>
                     </Col>
-                    <Col className="pl-md-1 buttonGroupContainer1" md="3">
+                  
+                  
+                   
+                    <Col className="pr-md-1 buttonGroupContainer1" md="3">
                       {disableButton ? (
                         <Button
                           color="primary"
@@ -753,7 +664,7 @@ handleUploadPhoto();
                         </span>
                       )}
                     </Col>
-                    <Col className="pl-md-1" md="3">
+                    <Col className="pr-md-1" md="3">
                       <span className="form-labels">
                         <span className="asterisk-symbol">*</span> New Password:{" "}
                       </span>
@@ -773,7 +684,7 @@ handleUploadPhoto();
                       )}
                     </Col>
 
-                    <Col className="pl-md-1 buttonGroupContainer" md="2">
+                    <Col className="pr-md-1 buttonGroupContainer" md="3">
                       <Button
                         color="primary"
                         type="submit"
@@ -800,7 +711,7 @@ handleUploadPhoto();
                   <div className="block block-two" />
                   <div className="block block-three" />
                   <div className="block block-four" />
-                  <a href="#pablo" onClick={(e) => e.preventDefault()}>
+                  {/* <a href="#pablo" onClick={(e) => e.preventDefault()}> */}
                     {/* <img
             alt="..."
             className="avatar"
@@ -843,9 +754,9 @@ handleUploadPhoto();
 } */}
                     <h5 className="title">User ID : {userIdO}</h5>
                     <h5 className="title">User Name : {userNameO}</h5>
-                  </a>
-                  {/* <p className="description">user ID</p>
-        <p className="description">user Email</p> */}
+                    <h5 className="title">Company Name : {companyNameO}</h5>
+                  {/* </a> */}
+               
                 </div>
                 {/* <div className="card-description">
         Do not be scared of the truth because we need to restart the

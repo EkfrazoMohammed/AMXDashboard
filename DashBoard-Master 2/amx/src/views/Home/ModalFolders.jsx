@@ -461,71 +461,11 @@ setData(folders11)
   };
   
   const [nameKml,setNameKml]=useState('KML file');
-  // const handleSaveFile = async () => {
-
-  //   try {
-  //     console.log('savie1')
-  //     const kmlfilepath = localStorage.getItem("new_kml_file")
-  //     console.log(kmlfilepath)
-
-  //     const api_url =
-  //       "https://fibregrid.amxdrones.com/dronecount/projects/" +
-  //       localStorage.getItem("project_id") +
-  //       "/folders/" +
-  //       localStorage.getItem("folder_id") +
-  //       "/upload/";
-  //     const data = { name: nameKml, file_path: kmlfilepath };
-
-  //     const response = await fetch(api_url, {
-  //       method: "POST",
-  //       headers: {
-  //         "Content-Type": "application/json",
-  //         Authorization: localStorage
-  //           .getItem("amxtoken")
-  //           .replace(/"/g, ""),
-  //       },
-  //       body: JSON.stringify(data),
-  //     });
-
-  //     if (response.ok) {
-  //       console.log(await response.json());
-  //       // await sendBytes();
-  //       // closeAll();
-  //       toast.success("New KML File Saved !", {
-  //         position: "top-right",
-  //         autoClose: 3000,
-  //         hideProgressBar: false,
-  //         closeOnClick: true,
-  //         pauseOnHover: true,
-  //         draggable: true,
-  //         progress: undefined,
-  //         theme: "light",
-  //         icon: <img src={drone} />,
-  //       });
-  //       setTimeout(()=>{
-  //         window.location.reload();
-
-  //       },4000)
-
-  //     }
-  //   } catch (error) {
-  //     console.error("error", error);
-  //     toast.error("Unable to save file!", {
-  //       position: "top-right",
-  //       autoClose: 3000,
-  //       hideProgressBar: false,
-  //       closeOnClick: true,
-  //       pauseOnHover: true,
-  //       draggable: true,
-  //       progress: undefined,
-  //       theme: "light",
-  //       icon: <img src={drone} />,
-  //     });
-  //   }
-  // }
+ const [saving,setSaving]=useState(false);
 
   const handleSaveFile = async () => {
     try {
+      setSaving(true)
       const kmlDataURL = localStorage.getItem("new_kml_file");
   
       // Convert the data URL back to a Blob
@@ -557,26 +497,15 @@ setData(folders11)
       if (uploadResponse.status === 200) {
         console.log("File uploaded successfully!");
         
-       
+        setSaving(false)
         closeAll();
-       
-    //     toast.success("New KML File added !", {
-    //   position: "top-right",
-    //   autoClose: 5000,
-    //   hideProgressBar: false,
-    //   closeOnClick: true,
-    //   pauseOnHover: true,
-    //   draggable: true,
-    //   progress: undefined,
-    //   theme: "light",
-    //   icon: <img src={drone} />,
-    // });
-    alert("File uploaded successfully!")
+      
         setTimeout(()=>{
                   window.location.reload();
         
-                },3000)
+                },500)
       } else {
+        setSaving(false)
         console.error("File upload failed.");
       
           toast.error("File upload failed, Please try agin later !", {
@@ -597,19 +526,9 @@ setData(folders11)
           },3000)
       }
     } catch (error) {
+      setSaving(true)
       console.error("error", error);
       if (error.response) {
-        // toast.error("Server down, Please try agin later !", {
-        //   position: "top-right",
-        //   autoClose: 5000,
-        //   hideProgressBar: false,
-        //   closeOnClick: true,
-        //   pauseOnHover: true,
-        //   draggable: true,
-        //   progress: undefined,
-        //   theme: "light",
-        //   icon: <img src={drone} />,
-        // });
         closeAll();
         setTimeout(()=>{
           window.location.reload();
@@ -617,7 +536,7 @@ setData(folders11)
         },3000)
       
       }
-      // Handle catch error...
+   
     }
   };
   
@@ -705,9 +624,38 @@ setData(folders11)
                           </div>
             {' '}{' '}
             <div style={{display:"flex",gap:"1rem"}}>
-            <Button color="primary" onClick={handleSaveFile}>
-             Save File here
+              {saving ? <>
+               <div style={{display:'flex',justifyContent:'center',alignItems:'center'}}>
+
+
+               <Button color="primary" disabled onClick={handleSaveFile} style={{display:"flex",justifyContent:"center",alignItems:"center",gap:"5px"}}>
+             {/* Save File here */}
+
+             <Spinner
+                        size="md"
+                        color="secondary"
+                        style={{
+                        height: "15px",
+                        width: "15px",
+                 
+                      }}
+                        
+                      >
+            </Spinner>
+                      <span>
+             Saving file
+             </span>
             </Button>
+            </div> </> :<>
+              <Button color="primary" onClick={handleSaveFile}>
+             Save File here
+
+          
+            </Button>
+              </> }
+            {/* <Button color="primary" onClick={handleSaveFile}>
+             Save File here
+            </Button> */}
             <Button color="secondary" onClick={closeAll}>
               Cancel
             </Button>

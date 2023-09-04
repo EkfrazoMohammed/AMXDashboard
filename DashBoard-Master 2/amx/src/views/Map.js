@@ -99,7 +99,7 @@ function DroneMap(props) {
   
   const handleMarkerClick = (drone) => {
     // alert(drone.model_name)
-    toast.info("Model : "+drone.model_name, {
+    toast.info( `Model: ${drone.model_name}\nConnection ID: ${drone.connection_id}`, {
       position: "top-right",
       autoClose: 2000,
       hideProgressBar: false,
@@ -190,7 +190,9 @@ function DroneMap(props) {
       <GoogleMap
         center={center}
         zoom={10}
-        mapContainerStyle={{ width: "100%", height: "97vh",position:"relative",zIndex:"2000" }}
+        mapContainerStyle={{ width: "100%", height: "calc(100vh - 22px)",position:"relative",zIndex:"2000" }}
+      
+        // mapContainerStyle={{ width: "100%", height: "97vh",position:"relative",zIndex:"2000" }}
         options={mapOptions}
       >
      

@@ -118,46 +118,170 @@ const DropFileInput = ({ onFileChange ,onFolderChange}) => {
     //   // Here you can call the onFolderChange callback with the generated ZIP blob
     //   onFolderChange(zipData);
     // };
+    // const handleFolders = async (filess) => {
+    //   const selectedFolderName = filess[0].webkitRelativePath.split('/')[0]; // Assuming you selected only one folder
+    //   let blobUrl; // Define blobUrl here
     
-  const handleFolders = async (filess) => {
-    const selectedFolderName = filess[0].webkitRelativePath.split('/')[0]; // Assuming you selected only one folder
+    //   // Filter out files that are not in the selected folder
+    //   const folderData = Array.from(filess).filter((file) => {
+    //     return file.webkitRelativePath.startsWith(selectedFolderName + '/');
+    //   });
+    //   console.log(folderData);
+    //   const folderName = folderData[0].webkitRelativePath.split('/')[0];
+    //   console.log("Selected Folder Name:", folderName);
+    //   const zip = new JSZip();
+    
+    //   try {
+    //     // Create a zip file and add each selected file to it
+    //     for (const file of folderData) {
+    //       const arrayBuffer = await file.arrayBuffer();
+    //       zip.file(file.name, arrayBuffer);
+    //     }
+    
+    //     // Generate the zip data
+    //     const zipData = await zip.generateAsync({ type: 'blob' });
+    
+    //     // Create a Blob URL for the zip data
+    //     blobUrl = URL.createObjectURL(zipData);
+    
+    //     // Here you can call the onFolderChange callback with the generated ZIP blob
+    //     onFolderChange(zipData, folderName);
+    //   } catch (error) {
+    //     console.error("Error creating or handling the ZIP data:", error);
+    //   } finally {
+    //     // Clean up the Blob URL
+    //     if (blobUrl) {
+    //       URL.revokeObjectURL(blobUrl);
+    //     }
+    //   }
+    // };
+    
+    
+//   const handleFolders = async (filess) => {
+//     const selectedFolderName = filess[0].webkitRelativePath.split('/')[0]; // Assuming you selected only one folder
 
-    // Filter out files that are not in the selected folder
-    const folderData = Array.from(filess).filter(file => {
-      return file.webkitRelativePath.startsWith(selectedFolderName + '/');
-    });
-    console.log(folderData)
-    const folderName = folderData[0].webkitRelativePath.split('/')[0];
-    console.log("Selected Folder Name:", folderName);
-    const zip = new JSZip();
+//     // Filter out files that are not in the selected folder
+//     const folderData = Array.from(filess).filter(file => {
+//       return file.webkitRelativePath.startsWith(selectedFolderName + '/');
+//     });
+//     console.log(folderData)
+//     const folderName = folderData[0].webkitRelativePath.split('/')[0];
+//     console.log("Selected Folder Name:", folderName);
+//     const zip = new JSZip();
 
-    // Create a zip file and add each selected file to it
-    for (const file of folderData) {
-      const arrayBuffer = await file.arrayBuffer();
-      zip.file(file.name, arrayBuffer);
-    }
+//     // Create a zip file and add each selected file to it
+//     for (const file of folderData) {
+//       const arrayBuffer = await file.arrayBuffer();
+//       zip.file(file.name, arrayBuffer);
+//     }
 
-    // Generate the zip data
-    const zipData = await zip.generateAsync({ type: 'blob' });
-    console.log(zipData)
+//     // Generate the zip data
+//     const zipData = await zip.generateAsync({ type: 'blob' });
+//     console.log(zipData)
 
-    // Create a Blob URL for the zip data
-    const blobUrl = URL.createObjectURL(zipData);
+//     // Create a Blob URL for the zip data
+//     const blobUrl = URL.createObjectURL(zipData);
 
-    console.log(blobUrl)
-    // Create a temporary link element for downloading
-    // const downloadLink = document.createElement('a');
-    // downloadLink.href = blobUrl;
-    // downloadLink.download = 'files.zip';
-    // downloadLink.click();
+//     console.log(blobUrl)
+   
+   
+//  // Create a temporary link element for downloading
+//  const downloadLink = document.createElement('a');
+//  downloadLink.href = blobUrl;
+//  downloadLink.download = `zip-${folderName}.zip`;
 
-    // Here you can call the onFolderChange callback with the generated ZIP blob
-    onFolderChange(zipData,folderName);
-    // zipData=null;
+//  // Simulate a click on the link to trigger the download
+//  downloadLink.click();
+//  console.log(downloadLink)
 
-    // // Clean up the Blob URL
-    URL.revokeObjectURL(blobUrl);
-  };
+//  // Clean up the Blob URL and revoke it
+//  URL.revokeObjectURL(blobUrl);
+// console.log(zipData)
+//  // Here you can call the onFolderChange callback if needed
+//  if (typeof onFolderChange === 'function') {
+//    onFolderChange(zipData,folderName);
+//  }
+//   };
+
+// const handleFolders = async (filess) => {
+//   const selectedFolderName = filess[0].webkitRelativePath.split('/')[0]; // Assuming you selected only one folder
+
+//   // Filter out files that are not in the selected folder
+//   const folderData = Array.from(filess).filter((file) => {
+//     return file.webkitRelativePath.startsWith(selectedFolderName + '/');
+//   });
+//   console.log(folderData);
+//   const folderName = folderData[0].webkitRelativePath.split('/')[0];
+//   console.log('Selected Folder Name:', folderName);
+//   const zip = new JSZip();
+
+//   // Create a zip file and add each selected file to it
+//   for (const file of folderData) {
+//     const arrayBuffer = await file.arrayBuffer();
+//     zip.file(file.name, arrayBuffer);
+//   }
+
+//   // Generate the zip data
+//   const zipData = await zip.generateAsync({ type: 'blob' });
+//   console.log(zipData);
+
+//   // Create a temporary link element for downloading
+//   const downloadLink = document.createElement('a');
+//   downloadLink.href = URL.createObjectURL(zipData); // Use Blob URL here
+//   downloadLink.download = `zip-${folderName}.zip`;
+
+//   // Simulate a click on the link to trigger the download
+//   downloadLink.click();
+
+//   // Clean up the Blob URL and revoke it
+//   URL.revokeObjectURL(downloadLink.href);
+//   console.log(zipData);
+
+//   // Here you can call the onFolderChange callback if needed
+//   if (typeof onFolderChange === 'function') {
+//     onFolderChange(zipData, folderName);
+//   }
+// };
+
+const handleFolders = async (filess) => {
+  const selectedFolderName = filess[0].webkitRelativePath.split('/')[0]; // Assuming you selected only one folder
+
+  // Filter out files that are not in the selected folder
+  const folderData = Array.from(filess).filter((file) => {
+    return file.webkitRelativePath.startsWith(selectedFolderName + '/');
+  });
+  console.log(folderData);
+  const folderName = folderData[0].webkitRelativePath.split('/')[0];
+  console.log('Selected Folder Name:', folderName);
+  const zip = new JSZip();
+
+  // Create a zip file and add each selected file to it
+  for (const file of folderData) {
+    const arrayBuffer = await file.arrayBuffer();
+    zip.file(file.name, arrayBuffer);
+  }
+
+  // Generate the zip data
+  const zipData = await zip.generateAsync({ type: 'blob' });
+  console.log(zipData);
+
+  // Create a File object from the Blob data
+  const zipFile = new File([zipData], `zip-${folderName}.zip`, { type: 'application/zip' });
+
+  
+//   // Create a temporary link element for downloading
+  const downloadLink = document.createElement('a');
+  downloadLink.href = URL.createObjectURL(zipData); // Use Blob URL here
+  downloadLink.download = `zip-${folderName}.zip`;
+
+//   // Simulate a click on the link to trigger the download
+  downloadLink.click();
+
+  // Here you can call the onFolderChange callback with the created File object
+  if (typeof onFolderChange === 'function') {
+    onFolderChange(zipFile, folderName);
+  }
+};
 
   // Removes a file from the list
  
@@ -233,7 +357,8 @@ const DropFileInput = ({ onFileChange ,onFolderChange}) => {
               />
               <div className="drop-file-preview__item__info">
                 <p>{item.name}</p>
-                <p>{item.size}B</p>
+                {/* <p>{item.size}B</p> */}
+                <p>{(item.size/1024).toFixed(2)}KB</p>
               </div>
               <span
                 className="drop-file-preview__item__del"

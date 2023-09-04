@@ -83,6 +83,10 @@ const Login = () => {
             "amxtoken",
             JSON.stringify(res.data.result.user_info.token)
           );
+          localStorage.setItem(
+            "company_name",
+            JSON.stringify(res.data.result.user_info.company)
+          );
          
           localStorage.setItem("consumed_data", (JSON.stringify(res.data.result.Bytes)).replace(/"/g, ""));
           
@@ -126,40 +130,6 @@ if (pathOfPhoto !== undefined && pathOfPhoto !== null) {
               icon: <img src={drone} alt="" />,
             });
 
-            // let data1 = await axios.post(
-            //   "https://fibregrid.amxdrones.com/dronecount/login/",
-            //   payload
-            // ).then(res => {
-            //   console.log("999999999999====",res)
-            //   localStorage.setItem('user_id',res.data.user_id)
-            //   const data2 = res.data;
-            //   history.push('/amx');
-            // })
-            // .catch(err => {
-            //   if (err.response) {
-            //       toast.error('Please check your credentials !', {
-            //           position: "top-right",
-            //           autoClose: 5000,
-            //           hideProgressBar: false,
-            //           closeOnClick: true,
-            //           pauseOnHover: true,
-            //           draggable: true,
-            //           progress: undefined,
-            //           theme: "light",
-            //           icon: <img src={drone}/>
-            //           });
-            //     console.log(err.response.status);
-            //     console.log(err.response.statusText);
-            //     console.log(err.message);
-            //     console.log(err.response.headers); // 👉️ {... response headers here}
-            //     console.log(err.response.data); // 👉️ {... response data here}
-            //   }
-            // });
-            //   console.log(data1,"projectdata====>");
-            //   console.log(data1.message,"projectdata====>statuys");
-
-            //  if data1.code
-            //   history.push('/admin');
             console.log(err.response.status);
             console.log(err.response.statusText);
             console.log(err.message);
@@ -182,12 +152,12 @@ if (pathOfPhoto !== undefined && pathOfPhoto !== null) {
       <ToastContainer />
       <div className="auth-wrapper">
         <div className="auth-content">
-          <div className="auth-bg">
+          {/* <div className="auth-bg">
             <span className="r"></span>
             <span className="r s"></span>
             <span className="r s"></span>
             <span className="r"></span>
-          </div>
+          </div> */}
           <div className="">
             <div className="card card-body text-center">
               <div className="mb-4">

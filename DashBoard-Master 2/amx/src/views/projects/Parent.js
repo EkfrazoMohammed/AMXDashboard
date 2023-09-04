@@ -299,9 +299,10 @@ const Parent = () => {
       clearInterval(progressUpdater); // Stop the progress updater
           if (err.response) {
             if (
-              err.response.data.error ===
-              "Project with the same name already exists"
-            ) {
+              err.response.data.message ===
+              "Project Name is already taken"
+            ) 
+            {
               toast.error(
                 "Project with the same name already exists. Please try again later!",
                 {

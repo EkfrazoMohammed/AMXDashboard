@@ -10643,7 +10643,7 @@ min-width:.5rem;
 
 .buttonGroupContainer1{
   display: flex;
-  margin-top: 1.4rem;
+  /* margin-top: 1.4rem; */
 
 }
 .buttonGroupContainer{
@@ -10715,15 +10715,25 @@ min-width:.5rem;
   font-size: 20px; 
 } */
 
-.modal .modal-dialog{
+/* .modal .modal-dialog{
   -webkit-transform: translate(-50%, 1%) !important;
   transform: translate(-50%, 1%) !important;
 }
 .modal.show .modal-dialog {
   -webkit-transform: translate(-50%, 7%) !important;
   transform: translate(-50%, 7%) !important;
+} */
+.modal-dialog{
+  margin: 1.7rem 0 !important;
 }
-
+.modal .modal-dialog {
+  -webkit-transform: translate(270px, 50px) !important;
+  transform: translate(270px, 50px) !important;
+}
+.modal.show .modal-dialog {
+  -webkit-transform: translate(270px, 50px) !important;
+  transform: translate(270px, 50px) !important;
+}
 
 .file-input-container{
   display: flex;
@@ -10733,9 +10743,17 @@ min-width:.5rem;
   box-shadow: 0 15px 35px rgba(50, 50, 93, 0.2), 0 5px 15px rgba(0, 0, 0, 0.17);
   /* width: 75vw; */
   width:70vw !important;
-  min-height: 680px !important;
 }
-
+.modal-content {
+  box-shadow: 0 15px 35px rgba(50, 50, 93, 0.2), 0 5px 15px rgba(0, 0, 0, 0.17);
+  /* width: 75vw; */
+  width: 70vw !important;
+  /* overflow: scroll; */
+  overflow-y: scroll;
+  
+  min-height: 680px !important;
+  max-height: 700px !important;
+}
 .mission-first-line{
 display: flex !important;
 gap: .5rem !important;

@@ -131,6 +131,20 @@ function Folders() {
         .catch((err) => {
           console.log(err);
           if (err.response) {
+            if(err.response.data.message==="Folder name already exists in the specified location"){
+              toast.error("Folder name already exists !", {
+                position: "top-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "light",
+                icon: <img src={drone} />,
+              });
+            }else{
+              
             toast.error("Server down, Please try agin later !", {
               position: "top-right",
               autoClose: 5000,
@@ -142,6 +156,8 @@ function Folders() {
               theme: "light",
               icon: <img src={drone} />,
             });
+            
+          }
             //             GetAllProjects();
             // GetRecentProjects();
             //             CloseProject();
@@ -409,7 +425,7 @@ function Folders() {
     setSelectedFolderName(name)
   };
   
-  
+  console.log(selectedFolder)
   
   const handleUpload2 = async () => {
     if (!selectedFolder) {
@@ -438,7 +454,7 @@ const formData = new FormData();
 // Append the fields to the FormData object
 formData.append("user_id", userId);
 formData.append("folder_name", folderIdo);
-formData.append("folder", selectedFolder,"one.zip");
+formData.append("folder", selectedFolder);
 
 console.log(formData);
 try {
@@ -457,6 +473,7 @@ try {
       setPercentage(percentCompleted);
     },
   });
+  console.log(response)
   if (response.status === 200) {
     console.log(response.data);
    
@@ -466,7 +483,7 @@ try {
         // ... (your toast options)
       });
       setTimeout(() => {
-        window.location.reload();
+        // window.location.reload();
       }, 3000);
    
   } 
@@ -484,7 +501,7 @@ try {
       icon: <img src={drone} />,
     });
     setTimeout(() => {
-      window.location.reload();
+      // window.location.reload();
     }, 3000);
   }
 } catch (error) {
@@ -502,7 +519,7 @@ try {
     icon: <img src={drone} />,
   });
   setTimeout(() => {
-    window.location.reload();
+    // window.location.reload();
   }, 3000);
 }
 }
@@ -562,8 +579,15 @@ try {
 
     if (paramValue_folder_id) {
       setFolderID(paramValue_folder_id);
+      console.log(paramValue_folder_id)
       setShowfileButton(true);
       setShowfolderButton(true);
+      if (paramValue_folder_id.startsWith("KML")) {
+        // Folder name starts with "KML," show an alert
+        console.log("Found a folder starting with 'KML'");
+        setShowfileButton(false);
+      }
+   
       try {
         // const response = await fetch(
         //   "https://fibregrid.amxdrones.com/dronecount/folders/" +
@@ -623,10 +647,24 @@ try {
 
         // Filter files based on extensions
         // const files11 = jsonData.filter(item => allowedExtensions.includes(getFileExtension(item.name)));
-        const files11 = jsonData.filter((item) => {
-          const extension = getFileExtension(item.name);
-          return allowedExtensions.includes(extension);
-        });
+        // const files11 = jsonData.filter((item) => {
+        //   console.log("files11=>",item.name.replace(/\s\([^)]*\)/, ''))
+        //   const extension = getFileExtension(item.name.replace(/\s\([^)]*\)/, ''));
+        //   console.log(extension)
+        //   return allowedExtensions.includes(extension);
+        // });
+        // Filter files based on extensions
+const files11 = jsonData.filter((item) => {
+  const match = item.name.match(/^(.*?)\s*\([^)]*\)\s*$/);
+  const filename = match ? match[1] : item.name;
+  // console.log("files11=>", filename);
+  const extensionMatch = filename.match(/\.([^.]+)$/);
+  const extension = extensionMatch ? extensionMatch[1] : '';
+  // console.log(extension)
+  return allowedExtensions.includes(extension.toLowerCase()); // Convert to lowercase for case-insensitive comparison
+});
+
+
         // Filter folders (remaining items) based on exceptions
         const folders11 = jsonData.filter((item) => !files11.includes(item));
 
@@ -682,13 +720,7 @@ try {
     localStorage.setItem("folder_id", item.name);
     window.location.reload();
   };
-  //   function getFileNameWithoutExtension(fileName) {
-  //     if (fileName) {
-  //         const indexOfDot = fileName.lastIndexOf(".");
-  //         return indexOfDot !== -1 ? fileName.slice(0, indexOfDot) : fileName;
-  //     }
-  //     return "";
-  // }
+ 
 
   const getFileExtension = (fileName) => {
     if (fileName) {
@@ -697,34 +729,6 @@ try {
     }
     return "";
   };
-  // function shouldRenderFolder(fileName) {
-  //   return excludedPatterns.some(pattern => pattern.test(fileName));
-  // }
-
-  // function shouldRenderFile(fileName) {
-  //   return !shouldRenderFolder(fileName);
-  // }
-  // function shouldRenderFile(fileName) {
-  //   // Add any patterns you want to exclude from rendering here
-  //   const excludedPatterns = [
-  //       /\(\w+-\w+\)/, // Matches patterns like "(49cb3faf-f3...)"
-  //   ];
-
-  //   return !excludedPatterns.some(pattern => pattern.test(fileName));
-  // }
-  // const getFileExtension = (url) => {
-  //   const splitUrl = url.split(".");
-  //   return splitUrl[splitUrl.length - 1];
-  // };
-
-  // const downloadFile = (fileUrl) => {
-  //   const link = document.createElement("a");
-  //   link.href = fileUrl;
-  //   link.download = fileUrl.substring(fileUrl.lastIndexOf("/") + 1);
-  //   document.body.appendChild(link);
-  //   link.click();
-  //   document.body.removeChild(link);
-  // };
   const downloadFileAtUrl = (url) => {
     console.log(url)
     fetch(url)
@@ -745,8 +749,9 @@ try {
 
   const renderFileElement = (name, item) => {
     const url=item.url;
+   
     // console.log(item.url)
-    const extension = getFileExtension(name);
+    const extension = getFileExtension(name.replace(/\s\([^)]*\)/, ''));
 
     const downloadFile = (name, url) => {
       console.log(url);
@@ -768,14 +773,71 @@ try {
           console.error("Error downloading file:", error);
         });
     };
-    function getFileNameWithoutExtension(fileName) {
-      const indexOfDot = fileName.lastIndexOf(".");
-      return indexOfDot !== -1 ? fileName.slice(0, indexOfDot) : fileName;
-    }
+    
 
     const handleView = () => {
       window.open(url, "_blank");
     };
+
+    const deleteFile = async () => {
+      try {
+        console.log('Deleting file:', item.name);
+    
+        const payload = {
+          user_id: userId,
+          file_name: item.name
+        };
+    
+        const response = await axios.delete("https://fibregrid.amxdrones.com/dronecount/delete/", {
+  data: payload
+});
+
+        console.log('File deletion response:', response.data);
+        toast.success(item.name.replace(/\s\([^)]*\)/, '')+ " deleted successfully!", {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+          icon: <img src={drone} />,
+        });
+        setTimeout(()=>{
+          window.location.reload()
+        },1000)
+      } catch (err) {
+        console.error('Error deleting file:', err);
+        if(err.response.data.message){
+          toast.error(err.response.data.message+"!", {
+            position: "top-right",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "light",
+            icon: <img src={drone} />,
+          });
+        }else{
+          
+        toast.error("Server down, Please try agin later !", {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+          icon: <img src={drone} />,
+        });
+      }
+      }
+    };
+    
 
     if (extension.split("?")[0] === "pdf") {
       return (
@@ -785,10 +847,12 @@ try {
               <img src={pdfImage} alt="PDF" />
             </DropdownToggle>
             <DropdownMenu style={{ width: "auto" }}>
-              {/* <DropdownItem onClick={handleView}>View</DropdownItem> */}
+            <DropdownItem onClick={handleView}>View</DropdownItem>
               <DropdownItem onClick={() => downloadFile(name, url)}>
+             
                 Download
               </DropdownItem>
+              <DropdownItem onClick={() => deleteFile()}>Delete</DropdownItem>
             </DropdownMenu>
           </UncontrolledDropdown>
         </>
@@ -803,13 +867,16 @@ try {
         <>
           <UncontrolledDropdown className="myCustomDropdown" direction="down">
             <DropdownToggle data-toggle="dropdown" tag="span">
-              <img src={imageLogo} alt="PDF" />
+              <img src={imageLogo} alt="png" />
             </DropdownToggle>
             <DropdownMenu style={{ width: "auto" }}>
-                          {/* <DropdownItem onClick={handleView}>View</DropdownItem> */}
               <DropdownItem onClick={() => downloadFile(name, url)}>
+                       
                 Download
               </DropdownItem>
+              <DropdownItem onClick={handleView}>View</DropdownItem>
+               
+              <DropdownItem onClick={() => deleteFile()}>Delete</DropdownItem>
             </DropdownMenu>
           </UncontrolledDropdown>
         </>
@@ -822,10 +889,12 @@ try {
               <img src={mp4Logo} alt="MP4" />
             </DropdownToggle>
             <DropdownMenu style={{ width: "auto" }}>
-                          {/* <DropdownItem onClick={handleView}>View</DropdownItem> */}
+                          <DropdownItem onClick={handleView}>View</DropdownItem>
               <DropdownItem onClick={() => downloadFile(name, url)}>
                 Download
               </DropdownItem>
+              
+              <DropdownItem onClick={() => deleteFile()}>Delete</DropdownItem>
             </DropdownMenu>
           </UncontrolledDropdown>
         </>
@@ -838,10 +907,12 @@ try {
               <img src={fileImageLogo} alt="fileImageLogo" />
             </DropdownToggle>
             <DropdownMenu style={{ width: "auto" }}>
-                          {/* <DropdownItem onClick={handleView}>View</DropdownItem> */}
+                          <DropdownItem onClick={handleView}>View</DropdownItem>
               <DropdownItem onClick={() => downloadFile(name, url)}>
                 Download
               </DropdownItem>
+              
+              <DropdownItem onClick={() => deleteFile()}>Delete</DropdownItem>
             </DropdownMenu>
           </UncontrolledDropdown>
         </>
@@ -966,43 +1037,140 @@ try {
                     >
                       <div>Go Back</div>
                     </Tooltip>
-                    {showfolderButton ? (
-                      <div>
-                        <button
-                          type="button"
-                          className="btn btn-primary"
-                          onClick={AddFolder}
-                        >
-                          Add Folder
-                        </button>
-                      </div>
-                    ) : (
-                      ""
-                    )}
-                  </div>
-                  {loading ? (
-                    <>
-                      <Spinner
-                        size="md"
-                        color="primary"
-                        style={{
-                          height: "2rem",
-                          width: "2rem",
-                        }}
-                      ></Spinner>
-                      <span style={{ fontSize: "20px" }}>
-                        {" "}
-                        Fetching Folders
-                      </span>
-                    </>
-                  ) : data.length === 0 && fileList.length === 0 ? (
-                    <>
-                      <div style={{}} className="row mt-4">
+                      {showfolderButton ? (
+                        <div>
+                          <button
+                            type="button"
+                            className="btn btn-primary"
+                            onClick={AddFolder}
+                          >
+                            Add Folder
+                          </button>
+                        </div>
+                      ) : (
+                        ""
+                      )}
+                    </div>
+                    {loading ? (
+                      <>
+                        <Spinner
+                          size="md"
+                          color="primary"
+                          style={{
+                            height: "2rem",
+                            width: "2rem",
+                          }}
+                        ></Spinner>
                         <span style={{ fontSize: "20px" }}>
                           {" "}
-                          No Folders / Files
+                          Fetching Folders
                         </span>
-                        <div>
+                      </>
+                    ) : data.length === 0 && fileList.length === 0 ? (
+                      <>
+                        <div style={{}} className="row mt-4">
+                          <span style={{ fontSize: "20px" }}>
+                            {" "}
+                            No Folders / Files
+                          </span>
+                          <div>
+                            {showfileButton ? (
+                              <div className="p-4">
+                                <button
+                                  data={color}
+                                  type="file"
+                                  className="header-content-btn1"
+                                  onClick={openFIlePopUp}
+                                >
+                                  +
+                                </button>
+                              </div>
+                            ) : (
+                              ""
+                            )}
+                          </div>
+                        </div>
+                      </>
+                    ) : (
+                      <>
+                        {/* data.length > 0 && ( */}
+                        <div style={{}} className="row mt-4">
+                          {data.length === 0 ? (
+                            <p></p>
+                          ) : (
+                            data.map((item) => (
+                              
+                              //  <div  className="row">
+                              <>
+                                {/* <Link to={item.link}> */}
+
+                                <div onClick={reloadAndGetData.bind(null, item)}>
+                                  <div className="file-cards">
+                                    <div
+                                      style={{}}
+                                      className="col-lg-2 col-sm-2 col-md-2 mb-5 mt-5"
+                                    >
+                                      {/* <div style={{justifyContent:"center"}} className="col-lg-2 col-sm-12 col-md-3"> */}
+                                      <div
+                                        data={color}
+                                        style={{ alignContent: "center" }}
+                                        class="folder"
+                                      >
+                                        {/* <div class="folder-inside" style={{ backgroundColor: item.folder_color }}> */}
+                                        <div
+                                          class="folder-inside"
+                                          style={{}}
+                                        ></div>
+                                      </div>
+
+                                      {/* </div> */}
+                                    </div>
+                                  </div>
+                                  <h4
+                                    style={{
+                                      fontSize: 12,
+                                      textAlign: "center",
+                                      paddingTop: "10px",
+                                    }}
+                                  >
+                                    {item.name.split("(")[0].trim()}
+                                  </h4>
+                                </div>
+                              </>
+                            ))
+                          )}
+                        
+
+                          {fileList.map((item) => (
+                            <div key={item.id}>
+                              {" "}
+                              {/* Assuming item has a unique ID */}
+                              <div className="file-cards">
+                                <div className="col-lg-1 col-sm-2 col-md-2 mb-5 mt-5 w-100">
+                                  <div className="file">
+                                    {item.name &&
+                                      renderFileElement(
+                                        getFileExtension(item.name)
+                                        ,
+                                        item
+                                      )}
+                                  </div>
+                                </div>
+                              </div>
+                              <h4
+                                style={{
+                                  fontSize: 12,
+                                  textAlign: "center",
+                                  paddingTop: "10px",
+                                }}
+                              >
+                                {item.name.replace(/\s\([^)]*\)/, '') && item.name.replace(/\s\([^)]*\)/, '').length > 15
+                                  ? `${item.name.replace(/\s\([^)]*\)/, '').slice(0, 15)}...`
+                                  : item.name.replace(/\s\([^)]*\)/, '')}
+                              </h4>
+                            </div>
+                          ))}
+
                           {showfileButton ? (
                             <div className="p-4">
                               <button
@@ -1018,105 +1186,9 @@ try {
                             ""
                           )}
                         </div>
-                      </div>
-                    </>
-                  ) : (
-                    <>
-                      {/* data.length > 0 && ( */}
-                      <div style={{}} className="row mt-4">
-                        {data.length === 0 ? (
-                          <p></p>
-                        ) : (
-                          data.map((item) => (
-                            //  <div  className="row">
-                            <>
-                              {/* <Link to={item.link}> */}
-
-                              <div onClick={reloadAndGetData.bind(null, item)}>
-                                <div className="file-cards">
-                                  <div
-                                    style={{}}
-                                    className="col-lg-2 col-sm-2 col-md-2 mb-5 mt-5"
-                                  >
-                                    {/* <div style={{justifyContent:"center"}} className="col-lg-2 col-sm-12 col-md-3"> */}
-                                    <div
-                                      data={color}
-                                      style={{ alignContent: "center" }}
-                                      class="folder"
-                                    >
-                                      {/* <div class="folder-inside" style={{ backgroundColor: item.folder_color }}> */}
-                                      <div
-                                        class="folder-inside"
-                                        style={{}}
-                                      ></div>
-                                    </div>
-
-                                    {/* </div> */}
-                                  </div>
-                                </div>
-                                <h4
-                                  style={{
-                                    fontSize: 12,
-                                    textAlign: "center",
-                                    paddingTop: "10px",
-                                  }}
-                                >
-                                  {item.name.split("(")[0].trim()}
-                                </h4>
-                              </div>
-                            </>
-                          ))
-                        )}
-                       
-
-                        {fileList.map((item) => (
-                          <div key={item.id}>
-                            {" "}
-                            {/* Assuming item has a unique ID */}
-                            <div className="file-cards">
-                              <div className="col-lg-1 col-sm-2 col-md-2 mb-5 mt-5 w-100">
-                                <div className="file">
-                                  {item.name &&
-                                    renderFileElement(
-                                      getFileExtension(item.name)
-                                      ,
-                                      item
-                                    )}
-                                </div>
-                              </div>
-                            </div>
-                            <h4
-                              style={{
-                                fontSize: 12,
-                                textAlign: "center",
-                                paddingTop: "10px",
-                              }}
-                            >
-                              {item.name && item.name.length > 15
-                                ? `${item.name.slice(0, 15)}...`
-                                : item.name}
-                            </h4>
-                          </div>
-                        ))}
-
-                        {showfileButton ? (
-                          <div className="p-4">
-                            <button
-                              data={color}
-                              type="file"
-                              className="header-content-btn1"
-                              onClick={openFIlePopUp}
-                            >
-                              +
-                            </button>
-                          </div>
-                        ) : (
-                          ""
-                        )}
-                      </div>
-                      {/* ) */}
-                    </>
-                  )}
+                        {/* ) */}
+                      </>
+                    )}
                   {/* <FolderUploadComponent /> */}
                   <div
                     className={

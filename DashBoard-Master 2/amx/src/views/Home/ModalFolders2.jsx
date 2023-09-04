@@ -243,12 +243,23 @@ function ModalFolders2({ folderDataName }) {
 // }
 const allowedExtensions = ['csv','pdf','jpg','png', 'jpeg', 'mp3', 'mp4', 'zip', 'laz',"js",'md',"kml","svg","json","xml"];
 
-// Filter files based on extensions
 // const files11 = jsonData.filter(item => allowedExtensions.includes(getFileExtension(item.name)));
-const files11 = jsonData.filter(item => {
-  const extension = getFileExtension(item.name);
-  return allowedExtensions.includes(extension);
+
+// Filter files based on extensions
+// const files11 = jsonData.filter(item => {
+//   const extension = getFileExtension(item.name);
+//   return allowedExtensions.includes(extension);
+// });
+const files11 = jsonData.filter((item) => {
+  const match = item.name.match(/^(.*?)\s*\([^)]*\)\s*$/);
+  const filename = match ? match[1] : item.name;
+  // console.log("files11=>", filename);
+  const extensionMatch = filename.match(/\.([^.]+)$/);
+  const extension = extensionMatch ? extensionMatch[1] : '';
+  // console.log(extension)
+  return allowedExtensions.includes(extension.toLowerCase()); // Convert to lowercase for case-insensitive comparison
 });
+
 // Filter folders (remaining items) based on exceptions
 const folders11 = jsonData.filter(item => !files11.includes(item));
 
@@ -446,8 +457,12 @@ setData(folders11)
   };
 
   const [nameKml,setNameKml]=useState('KML File');
+  
+ const [saving,setSaving]=useState(false);
   const handleSaveFile = async () => {
+    
     try {
+      setSaving(true)
       const kmlDataURL = localStorage.getItem("new_kml_file");
   
       // Convert the data URL back to a Blob
@@ -489,6 +504,8 @@ setData(folders11)
         //   theme: "light",
         //   icon: <img src={drone} />,
         // });
+        
+        setSaving(false)
         closeAll();
         setTimeout(()=>{
           window.location.reload();
@@ -496,6 +513,8 @@ setData(folders11)
         },3000)
         // Rest of your success handling code...
       } else {
+        
+        setSaving(false)
         console.error("File upload failed.");
         
           // toast.error("File upload failed, Please try agin later !", {
@@ -517,6 +536,8 @@ setData(folders11)
         }
     } catch (error) {
       console.error("error", error);
+      
+      setSaving(true)
       if (error.response) {
         toast.error("Server down, Please try agin later !", {
           position: "top-right",
@@ -673,7 +694,7 @@ setData(folders11)
           {/* Render the FolderContentModal with selected folder data */}
           {selectedFolder && <ModalFolders3 folderDataName={selectedFolder} />}
         </ModalBody>
-        <ModalFooter>
+        {/* <ModalFooter>
           <div className="modal-footer-save-file-container">
           <label className="save-file-label-style"
                          
@@ -692,9 +713,100 @@ setData(folders11)
                           </div>
             {' '}{' '}
             <div style={{display:"flex",gap:"1rem"}}>
+              {saving ? <>
+               <div style={{display:'flex',justifyContent:'center',alignItems:'center'}}>
+
+
+                <Button disabled color="secondary" >
+                <Spinner
+                        size="md"
+                        color="secondary"
+                        style={{
+                        height: "10px",
+                        width: "10px",
+                        display:'flex',
+                        justifyContent:'center',
+                        alignItems:'center'
+                      }}
+                        
+                      >
+            </Spinner>
+           
+             Saving file
+            </Button>
+            </div> </> :<>
+              <Button color="primary" onClick={handleSaveFile}>
+             Save File here
+            </Button>
+              </> }
+            {/* <Button color="primary" onClick={handleSaveFile}>
+             Save File here
+            </Button> 
+            <Button color="secondary" onClick={closeAll}>
+              Cancel
+            </Button>
+            </div>
+            {/* <div style={{display:"flex",gap:"1rem"}}>
             <Button color="primary" onClick={handleSaveFile}>
              Save File here
             </Button>
+            <Button color="secondary" onClick={closeAll}>
+              Cancel
+            </Button>
+            </div>
+        </ModalFooter> */}
+
+<ModalFooter>
+          <div className="modal-footer-save-file-container">
+          <label className="save-file-label-style"
+                         
+                        >
+                         Save File as:
+                         </label>
+          <input 
+                            type="text"
+                            class="form-control save-file-input-style"
+                             placeholder="Save As"
+                            name="kml_file"
+                            onChange={(e)=>{setNameKml(e.target.value)}}
+                          />
+                           
+           
+                          </div>
+            {' '}{' '}
+            <div style={{display:"flex",gap:"1rem"}}>
+              {saving ? <>
+               <div style={{display:'flex',justifyContent:'center',alignItems:'center'}}>
+
+
+               <Button color="primary" disabled onClick={handleSaveFile} style={{display:"flex",justifyContent:"center",alignItems:"center",gap:"5px"}}>
+             {/* Save File here */}
+
+             <Spinner
+                        size="md"
+                        color="secondary"
+                        style={{
+                        height: "15px",
+                        width: "15px",
+                 
+                      }}
+                        
+                      >
+            </Spinner>
+                      <span>
+             Saving file
+             </span>
+            </Button>
+            </div> </> :<>
+              <Button color="primary" onClick={handleSaveFile}>
+             Save File here
+
+          
+            </Button>
+              </> }
+            {/* <Button color="primary" onClick={handleSaveFile}>
+             Save File here
+            </Button> */}
             <Button color="secondary" onClick={closeAll}>
               Cancel
             </Button>

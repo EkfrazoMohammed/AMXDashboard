@@ -43,6 +43,8 @@ import {
   UncontrolledTooltip,
   Alert,
   UncontrolledAlert,
+  UncontrolledPopover,
+  Dropdown
 } from "reactstrap";
 
 import { PieChart, Pie } from "recharts";
@@ -295,7 +297,7 @@ function Dashboard(props) {
     };
     notificationAlertRef.current.notificationAlert(options);
   };
-
+  
 
   // notifications ends
 
@@ -427,7 +429,7 @@ function Dashboard(props) {
     
        // Calculate the number of active drones
     const numberOfActiveDrones = response2.data.reduce((count, drone) => {
-      if (drone.status === "true") {
+      if (drone.Status === true) {
         return count + 1;
       }
       return count;
@@ -564,6 +566,7 @@ function Dashboard(props) {
   };
 
   const [droneData, setDroneData] = useState([]);
+  const [activeDrones,setActiveDrones]=useState([])
   let GetAllDrone = async () => {
     try {
       let data = await axios.get(
@@ -574,13 +577,14 @@ function Dashboard(props) {
       setDroneData(data.data);
        // Calculate the number of active drones
     const numberOfActiveDrones = data.data.reduce((count, drone) => {
-      if (drone.status === "true") {
+      if (drone.Status === true) {
         return count + 1;
       }
       return count;
     }, 0);
 
     console.log("Number of active drones:", numberOfActiveDrones);
+    setActiveDrones(numberOfActiveDrones)
       // toast(`Successfully ${project_name}  project data was created`);
       // navigate("/");
       // CloseProject()
@@ -588,6 +592,7 @@ function Dashboard(props) {
       console.log(error);
     }
   };
+  // console.log(activeDrones)
   useEffect(() => {
     GetAllChartData();
   }, [selectedTimeRange]);
@@ -673,8 +678,8 @@ GetAllChartData();
   
   useEffect(() => {
     // Separate active and inactive drones
-    const active = droneData.filter(drone => drone.status === true);
-    const inactive = droneData.filter(drone => drone.status === false);
+    const active = droneData.filter(drone => drone.Status === true);
+    const inactive = droneData.filter(drone => drone.Status === false);
     
     console.log(active)
   }, [droneData]);
@@ -700,7 +705,7 @@ GetAllChartData();
     {
       "icon":faFolder,
       "title":"Total Missions",
-      "count":droneData.filter(drone => drone.status === true).length,
+      "count":droneData.filter(drone => drone.Status === true).length,
       "item":"mission"
     },
   ]
@@ -773,7 +778,9 @@ GetRecentProjects();
       console.log(error);
     }
   };
+  const [dropdownOpen, setDropdownOpen] = useState(false);
 
+  const toggle = () => setDropdownOpen((prevState) => !prevState);
   const history = useHistory();
 
   return (
@@ -866,7 +873,7 @@ GetRecentProjects();
                       </Col>
                     </Row>
  <Row>
-  {overviewdata.map((v,index)=>{
+  {/* {overviewdata.map((v,index)=>{
     return(
       <>
       <Col md="3" sm="6">
@@ -882,10 +889,106 @@ GetRecentProjects();
         </div>
     </Col> 
       </>
-    )
-  })}
-                    
+    ) })} */}
+   <Col md="3" sm="6">
+      <div className="card2">
+          <div
+            className="content"
+            style={{ backgroundColor:'#55d392' }}
+          >
+            <FontAwesomeIcon icon={faUser} style={{ color: "#ffffff", width: "20px", height: "20px" }} />
+            <h4 style={{ marginBottom: "5px", fontSize: "12px", fontWeight: "bold" }}>total projects</h4>
+            <h5 style={{ marginBottom: "5px", fontSize: "12px" }}>{project_list.length} projects</h5>
+          </div>
+        </div>
+    </Col> 
+  
+    <Col md="3" sm="6">
+      <div className="card2">
+          <div
+            className="content"
+            style={{ backgroundColor:'#05daff' }}
+          >
+            <FontAwesomeIcon icon={faFileInvoice} style={{ color: "#ffffff", width: "20px", height: "20px" }} />
+            <h4 style={{ marginBottom: "5px", fontSize: "12px", fontWeight: "bold" }}>total Drones</h4>
+            <h5 style={{ marginBottom: "5px", fontSize: "12px" }}>{droneData.length} drones</h5>
+          </div>
+        </div>
+    </Col> 
+    <Col md="3" sm="6">
+    <div style={{
+overflow:'visible'
+}}>
 
+           <Dropdown  isOpen={dropdownOpen} toggle={() => {
+  toggle(); // Call the 'toggle' function
+}}>
+    <DropdownToggle tag="span">
+    
+      <div className="card2">
+          <div
+            className="content"
+            style={{ backgroundColor:'#23efe2',
+            overflow:'visible'
+            
+          }}
+          >
+            <FontAwesomeIcon icon={faDatabase} style={{ color: "#ffffff", width: "20px", height: "20px" }} />
+            <h4 style={{ marginBottom: "5px", fontSize: "12px", fontWeight: "bold" }}>max storage</h4>
+            <h5 style={{ marginBottom: "5px", fontSize: "12px" }}>5 GB</h5>
+            {/* <Dropdown isOpen={dropdownOpen} toggle={toggle} >
+        <DropdownToggle caret tag="span">Dropdown</DropdownToggle>
+        <DropdownMenu>
+      
+          
+          <DropdownItem>Buy Now</DropdownItem>
+        </DropdownMenu>
+      </Dropdown> */}
+
+  </div>    </div>
+
+    </DropdownToggle>
+    <DropdownMenu container="body">
+      <DropdownItem onClick={BuyNow} className="container-storage">
+      <div >
+                            <a
+                              data={color}
+                              className="buynow"
+                              title="Buy storage"
+                            >
+                              <i
+                                style={{ color: "white" }}
+                                className="tim-icons icon-key-25"
+                              ></i>
+                              <span
+                                style={{ marginLeft: "10px", color: "white" }}
+                              >
+                                Buy now
+                              </span>
+                            </a>
+                          </div>
+      </DropdownItem>
+    
+    </DropdownMenu>
+  </Dropdown>
+
+  
+</div>
+    
+    </Col> 
+    
+    <Col md="3" sm="6">
+      <div className="card2">
+          <div
+            className="content"
+            style={{ backgroundColor:'#e75b8fbf' }}
+          >
+            <FontAwesomeIcon icon={faFolder} style={{ color: "#ffffff", width: "20px", height: "20px" }} />
+            <h4 style={{ marginBottom: "5px", fontSize: "12px", fontWeight: "bold" }}>Total Mission</h4>
+            <h5 style={{ marginBottom: "5px", fontSize: "12px" }}>{droneData.filter(drone => drone.Status === true).length} missions</h5>
+          </div>
+        </div>
+    </Col> 
                     </Row> 
 
                     <Row>

@@ -157,20 +157,22 @@ const DemoVideoViewer = () => {
 </div> */}
 <div className="videos-wrapper">
 
-{/* <div className="video-block">
+<div className="video-block">
     <div className="video-inner">
 
     <video className="video-play" controls autoPlay muted >
-    <source src="https://firebasestorage.googleapis.com/v0/b/amxstorage.appspot.com/o/amx%2Fbangalore.mp4?alt=media&token=4830a379-7bb3-4403-aad0-c8ba06be9665" type="video/mp4"/> 
-    <source src="https://firebasestorage.googleapis.com/v0/b/amxstorage.appspot.com/o/files%2Fbangalore.mp4?alt=media&token=d940df74-107c-4351-8ffd-4cfb15b8287e" type="video/mp4"/>
+    {/* <source src="https://firebasestorage.googleapis.com/v0/b/amxstorage.appspot.com/o/amx%2Fbangalore.mp4?alt=media&token=4830a379-7bb3-4403-aad0-c8ba06be9665" type="video/mp4"/> 
+    <source src="https://firebasestorage.googleapis.com/v0/b/amxstorage.appspot.com/o/files%2Fbangalore.mp4?alt=media&token=d940df74-107c-4351-8ffd-4cfb15b8287e" type="video/mp4"/> */}
 
-    <source src="https://res.cloudinary.com/dxjrvvjp1/video/upload/v1692214366/bangalore_anocly.mp4" type="video/mp4"/>
+    {/* <source src="https://res.cloudinary.com/dxjrvvjp1/video/upload/v1692214366/bangalore_anocly.mp4" type="video/mp4"/> */}
+
+    <source src="https://res.cloudinary.com/dxjrvvjp1/video/upload/v1693803135/YOLO1_rrdmbb.mp4" type="video/mp4"/>
         </video>
         <div className="video-title">
           CAM 1
         </div>
     </div>
-</div> */}
+</div> 
 {/* <div className="video-block">
     <div className="video-inner">
 

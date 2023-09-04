@@ -116,37 +116,7 @@ function ModalFolders3({ folderDataName }) {
   const [showfileButton, setShowfileButton] = useState(false);
 
   const [fileList, setFileList] = useState([]);
-  const sendBytes = async () => {
-    const Bytedata = {
-      user_id: localStorage.getItem("user_id"),
-      total_bytes: localStorage.getItem("bytes_transferred"),
-    };
-
-    try {
-      const response = await axios.post(
-        "https://fibregrid.amxdrones.com/dronecount/storage/",
-        Bytedata,
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: localStorage.getItem("amxtoken").replace(/"/g, ""),
-          },
-        }
-      );
-
-      if (response.status === 200) {
-        const data = response.data;
-        console.log(`total_bytes_after_upload==> ${data.bytes}`);
-        localStorage.setItem("consumed_data", data.bytes);
-        window.location.reload()
-        // localStorage.setItem("consumed_data", "12345"); // Replace "12345" with a specific value for testing
-      } else {
-        throw new Error("Error occurred during byte data update.");
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  };
+  
   const fetchData = async () => {
     setLoading(true); // Start loading
 
@@ -427,8 +397,12 @@ setData(folders11)
   };
   
   const [nameKml,setNameKml]=useState('KML file');
+  
+ const [saving,setSaving]=useState(false);
   const handleSaveFile = async () => {
     try {
+      
+      setSaving(true)
       const kmlDataURL = localStorage.getItem("new_kml_file");
   
       // Convert the data URL back to a Blob
@@ -470,6 +444,8 @@ setData(folders11)
         //   theme: "light",
         //   icon: <img src={drone} />,
         // });
+        
+        setSaving(false)
         closeAll();
         setTimeout(()=>{
           window.location.reload();
@@ -479,6 +455,7 @@ setData(folders11)
       } else {
         console.error("File upload failed.");
        
+        setSaving(false)
           // toast.error("File upload failed, Please try agin later !", {
           //   position: "top-right",
           //   autoClose: 5000,
@@ -498,6 +475,8 @@ setData(folders11)
       }
     } catch (error) {
       console.error("error", error);
+      
+      setSaving(true)
       if (error.response) {
         toast.error("Server down, Please try agin later !", {
           position: "top-right",
@@ -654,7 +633,7 @@ setData(folders11)
           {/* Render the FolderContentModal with selected folder data */}
           {selectedFolder && <ModalFolders3 folderDataName={selectedFolder} />}
         </ModalBody>
-        <ModalFooter>
+        {/* <ModalFooter>
           <div className="modal-footer-save-file-container">
           <label className="save-file-label-style"
                          
@@ -676,6 +655,62 @@ setData(folders11)
             <Button color="primary" onClick={handleSaveFile}>
              Save File here
             </Button>
+            <Button color="secondary" onClick={closeAll}>
+              Cancel
+            </Button>
+            </div>
+        </ModalFooter> */}
+          <ModalFooter>
+          <div className="modal-footer-save-file-container">
+          <label className="save-file-label-style"
+                         
+                        >
+                         Save File as:
+                         </label>
+          <input 
+                            type="text"
+                            class="form-control save-file-input-style"
+                             placeholder="Save As"
+                            name="kml_file"
+                            onChange={(e)=>{setNameKml(e.target.value)}}
+                          />
+                           
+           
+                          </div>
+            {' '}{' '}
+            <div style={{display:"flex",gap:"1rem"}}>
+              {saving ? <>
+               <div style={{display:'flex',justifyContent:'center',alignItems:'center'}}>
+
+
+               <Button color="primary" disabled onClick={handleSaveFile} style={{display:"flex",justifyContent:"center",alignItems:"center",gap:"5px"}}>
+             {/* Save File here */}
+
+             <Spinner
+                        size="md"
+                        color="secondary"
+                        style={{
+                        height: "15px",
+                        width: "15px",
+                 
+                      }}
+                        
+                      >
+            </Spinner>
+                      <span>
+             Saving file
+             </span>
+            </Button>
+            </div> </> :<>
+              <Button color="primary" onClick={handleSaveFile}>
+             Save File here
+
+          
+            </Button>
+              </> }
+            {/* <Button color="primary" onClick={handleSaveFile}>
+             Save File here
+            </Button> */}
             <Button color="secondary" onClick={closeAll}>
               Cancel
             </Button>

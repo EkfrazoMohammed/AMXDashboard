@@ -107,12 +107,12 @@ const ForgotPassword = () => {
       <ToastContainer />
       <div className="auth-wrapper">
         <div className="auth-content">
-          <div className="auth-bg">
+          {/* <div className="auth-bg">
             <span className="r"></span>
             <span className="r s"></span>
             <span className="r s"></span>
             <span className="r"></span>
-          </div>
+          </div> */}
           <div className="">
             <div className="card card-body text-center">
               <div className="mb-4">

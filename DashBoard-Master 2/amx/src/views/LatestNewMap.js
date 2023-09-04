@@ -95,13 +95,15 @@ const DroneMap = () => {
   };
   };
 
+  // localStorage.setItem("mylatestCoordinate", JSON.stringify({ lat: 12.979631 ,lng: 77.590687 }));
+
   const [polygonCoordinates, setPolygonCoordinates] = useState([]);
   const [markers, setMarkers] = useState([]);
   const [latestCoordinate, setLatestCoordinate] = useState(null);
 
   const handlePolygonClick = (event) => {
     const { latLng } = event;
-
+  
     // Update polygon coordinates
     setPolygonCoordinates((prevCoordinates) => [
       ...prevCoordinates,
@@ -110,13 +112,44 @@ const DroneMap = () => {
         lng: latLng.lng(),
       },
     ]);
-
-    // Update latest coordinate
-    setLatestCoordinate({
-      lat: latLng.lat(),
-      lng: latLng.lng(),
+  
+    // Update latest coordinate using the callback form of setState
+    setLatestCoordinate((prevLatestCoordinate) => {
+      // Construct the new coordinate object
+      const newCoordinate = {
+        lat: latLng.lat(),
+        lng: latLng.lng(),
+      };
+  
+      // Save the new coordinate to local storage
+      localStorage.setItem("mylatestCoordinate", JSON.stringify(newCoordinate));
+  
+      // Return the new coordinate to update latestCoordinate
+      return newCoordinate;
     });
   };
+
+  
+//   const handlePolygonClick = (event) => {
+//     const { latLng } = event;
+
+//     // Update polygon coordinates
+//     setPolygonCoordinates((prevCoordinates) => [
+//       ...prevCoordinates,
+//       {
+//         lat: latLng.lat(),
+//         lng: latLng.lng(),
+//       },
+//     ]);
+// console.log(polygonCoordinates)
+//     // Update latest coordinate
+//     setLatestCoordinate({
+//       lat: latLng.lat(),
+//       lng: latLng.lng(),
+//     });
+//     console.log(latestCoordinate)
+//     localStorage.setItem("mylatestCoordinate", JSON.stringify(latestCoordinate));
+//   };
 
   const handleMapClick = (event) => {
     event.preventDefault();
@@ -127,6 +160,7 @@ const DroneMap = () => {
       id: markers.length + 1,
       position: latLng,
     };
+    console.log(newMarker)
     setMarkers((prevMarkers) => [...prevMarkers, newMarker]);
 
     // Update polygon coordinates with markers
@@ -145,29 +179,29 @@ const DroneMap = () => {
     });
   };
 
-  const handleMarkerClick = async (index) => {
-    if (!isLoaded || loadError) {
-      console.log("Google Maps API is not loaded or encountered an error.");
-      return;
-    }
+  // const handleMarkerClick = async (index) => {
+  //   if (!isLoaded || loadError) {
+  //     console.log("Google Maps API is not loaded or encountered an error.");
+  //     return;
+  //   }
 
-    const marker = markers[index];
-    const location = new window.google.maps.LatLng(marker.position.lat, marker.position.lng);
+  //   const marker = markers[index];
+  //   const location = new window.google.maps.LatLng(marker.position.lat, marker.position.lng);
 
-    const elevator = new window.google.maps.ElevationService();
-    const request = {
-      locations: [location],
-    };
+  //   const elevator = new window.google.maps.ElevationService();
+  //   const request = {
+  //     locations: [location],
+  //   };
 
-    elevator.getElevationForLocations(request, (results, status) => {
-      if (status === window.google.maps.ElevationStatus.OK && results && results[0]) {
-        const elevation = results[0].elevation;
-        console.log(`Elevation at marker ${index}: ${elevation} meters`);
-      } else {
-        console.log("Elevation data not available.");
-      }
-    });
-  };
+  //   elevator.getElevationForLocations(request, (results, status) => {
+  //     if (status === window.google.maps.ElevationStatus.OK && results && results[0]) {
+  //       const elevation = results[0].elevation;
+  //       console.log(`Elevation at marker ${index}: ${elevation} meters`);
+  //     } else {
+  //       console.log("Elevation data not available.");
+  //     }
+  //   });
+  // };
   
   
 
@@ -200,37 +234,7 @@ const DroneMap = () => {
       setModalOpen(!modalOpen);
     };
 
-  const sendBytes = async () => {
-    const Bytedata = {
-      user_id: localStorage.getItem("user_id"),
-      total_bytes: localStorage.getItem("bytes_transferred"),
-    };
 
-    try {
-      const response = await axios.post(
-        "https://fibregrid.amxdrones.com/dronecount/storage/",
-        Bytedata,
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: localStorage.getItem("amxtoken").replace(/"/g, ""),
-          },
-        }
-      );
-
-      if (response.status === 200) {
-        const data = response.data;
-        console.log(`total_bytes_after_upload==> ${data.bytes}`);
-        localStorage.setItem("consumed_data", data.bytes);
-        window.location.reload()
-        // localStorage.setItem("consumed_data", "12345"); // Replace "12345" with a specific value for testing
-      } else {
-        throw new Error("Error occurred during byte data update.");
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  };
 
   const handleExportKML = async () => {
     const kmlString = generateKML(polygonCoordinates);
@@ -314,8 +318,16 @@ const DroneMap = () => {
     setNestedModal(!nestedModal);
     setCloseAll(false);
   };
+  
+const storedCoordinate = localStorage.getItem("mylatestCoordinate");
+
 // Calculate the center of the polygon coordinates
 const calculatePolygonCenter = (coordinates) => {
+  const storedCoordinate = localStorage.getItem("mylatestCoordinate");
+
+  if (storedCoordinate) {
+    return JSON.parse(storedCoordinate);
+  }
   if (coordinates.length === 0) {
     // Default center when no coordinates are present
     return { lat: 12.979631, lng: 77.590687 };
@@ -327,15 +339,31 @@ const calculatePolygonCenter = (coordinates) => {
   const centerLat = latSum / coordinates.length;
   const centerLng = lngSum / coordinates.length;
 
-  return { lat: centerLat, lng: centerLng };
+  const newCenters={ lat: centerLat, lng: centerLng };
+  
+  return newCenters;
 };
 
 
   const renderMap = () => {
     // const mapCenter = latestCoordinate || { lat: 12.979631 ,lng: 77.590687 };
-    const mapCenter = calculatePolygonCenter(polygonCoordinates);
-const reloadPageButton=()=>{
-  localStorage.removeItem("folder_name")
+    // const mapCenter = calculatePolygonCenter(polygonCoordinates);
+    // console.log(mapCenter)
+  // Check if there's a latestCoordinate in local storage
+  const mapCenter =calculatePolygonCenter(polygonCoordinates);
+
+// const reloadPageButton=()=>{
+//   localStorage.removeItem("folder_name")
+//   window.location.reload();
+// }
+const reloadPageButton = () => {
+  // Store the latestCoordinate in local storage
+ 
+
+  // Remove other data from local storage if needed
+  localStorage.removeItem("folder_name");
+
+  // Reload the page
   window.location.reload();
 }
 
@@ -444,30 +472,16 @@ const reloadPageButton=()=>{
       </div>
         <GoogleMap
           center={mapCenter}
-          zoom={14}
+          zoom={16}
           onClick={handlePolygonClick}
           onMapClick={handleMapClick}
-          mapContainerStyle={{ width: "100%", height: "90vh" }}
+          // mapContainerStyle={{ width: "100%", height: "90vh" }}
+          mapContainerStyle={{ width: "100%", height: "calc(100vh - 80px)" }}
           draggable={false}
           onLoad={(map) => (mapRef.current = map)}
           options={mapOptions}
         >
-          {/* Render the polygon
-          {polygonCoordinates.length > 0 && (
-            <>
-              <Polygon
-                paths={polygonCoordinates}
-                strokeColor="#3ebfea"
-                strokeOpacity={0.8}
-                strokeWeight={2}
-                fillColor="#3ebfea"
-                fillOpacity={0.35}
-              />
-              {polygonCoordinates.map((coordinate, index) => (
-                <Marker key={index} position={coordinate} icon={icons_data.two}/>
-              ))}
-            </>
-          )} */}
+         
 
 {polygonCoordinates.length > 0 && (
   <>
@@ -486,9 +500,12 @@ const reloadPageButton=()=>{
         icon={icons_data.two}
         draggable={true}
         
-        onClick={() => handleMarkerClick(index)}
+        // onClick={() => {
+        //   // handleMarkerClick(index);
+        //   handleDeleteMarker(index)}}
+
         onDragEnd={(event) => handleMarkerDragEnd(event, index)}
-        // onClick={() => setSelectedMarkerIndex(index)} // Set the selected marker index
+        onClick={() => setSelectedMarkerIndex(index)} // Set the selected marker index
       />
     ))}
     {selectedMarkerIndex !== null && (
@@ -502,27 +519,6 @@ const reloadPageButton=()=>{
   </>
 )}
 
-{/* {polygonCoordinates.length > 0 && (
-  <>
-    <Polygon
-      paths={polygonCoordinates}
-      strokeColor="#3ebfea"
-      strokeOpacity={0.8}
-      strokeWeight={2}
-      fillColor="#3ebfea"
-      fillOpacity={0.35}
-    />
-    {polygonCoordinates.map((coordinate, index) => (
-      <Marker
-        key={index}
-        position={coordinate}
-        icon={icons_data.two}
-        draggable={true} // Only last marker is draggable
-        onDragEnd={(event) => handleMarkerDragEnd(event, index)}
-      />
-    ))}
-  </>
-)} */}
 
           {/* Render the markers */}
           {markers.map((marker) => (

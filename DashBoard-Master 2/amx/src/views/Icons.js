@@ -541,24 +541,24 @@ function DroneList() {
     //   filterPlaceholder: "filter",
     // }, 
     
-    {
-      title: "Latitude",
-      field: "latitude",
-      filterPlaceholder: "filter",
-      cellStyle: {minWidth: 110 },
-    }, {
-      title: "Longitude",
-      field: "longitude",
-      filterPlaceholder: "filter",
-      cellStyle: {minWidth: 110 },
-    },
+    // {
+    //   title: "Latitude",
+    //   field: "latitude",
+    //   filterPlaceholder: "filter",
+    //   cellStyle: {minWidth: 110 },
+    // }, {
+    //   title: "Longitude",
+    //   field: "longitude",
+    //   filterPlaceholder: "filter",
+    //   cellStyle: {minWidth: 110 },
+    // },
     
-    {
-      title: "Location",
-      field: "location",
-      filterPlaceholder: "filter",
-      cellStyle: {minWidth: 310 },
-    }, 
+    // {
+    //   title: "Location",
+    //   field: "location",
+    //   filterPlaceholder: "filter",
+    //   cellStyle: {minWidth: 310 },
+    // }, 
     {
       title: "Status",
       field: "Status",

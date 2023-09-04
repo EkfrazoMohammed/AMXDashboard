@@ -16,7 +16,7 @@
      content: '';
      background: linear-gradient(90deg, #8aa2e8 0%, #8aa2e8 100%);
      top: 21px;
-     box-shadow: 0 0 5px 2px rgba(0, 0, 0, 0.3);
+     /* box-shadow: 0 0 5px 2px rgba(0, 0, 0, 0.3); */
      border-top-left-radius: 5px;
      border-top-right-radius: 5px;
      -webkit-transform: rotateX(-10deg);
@@ -80,7 +80,7 @@
      background: white;
      top: 14px;
      left: 7px;
-     box-shadow: 0 0 5px 5px rgba(0, 0, 0, 0.1);
+     /* box-shadow: 0 0 5px 5px rgba(0, 0, 0, 0.1); */
      -webkit-transform: rotate(-1deg);
      transform: rotate(-1deg);
      border: 2px solid white;
@@ -218,7 +218,7 @@ height: 50%;
  align-items: center;
  flex-direction: column;
 margin: 1rem 0;
-gap: 1rem;
+/* gap: 1rem; */
 }
 .folderbutton:hover{
 
@@ -290,12 +290,13 @@ iframe body.modal-open th{
  align-items: center;
  margin: 0 auto;
 }
+
 img{
 
- min-width: 80px;
- height: 50px;
+min-width: 80px;
+/* height: 50px; */
+height: 66px;
 }
-
 #popup{
  /* background-color: palegreen; */
 }
@@ -699,9 +700,14 @@ img{
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title" id="htmlViewerModalLabel">HTML Viewer</h5>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
+
+          <span>
+            <button class="btn" aria-hidden="true" onclick="closeAll()">Close All</button>
+            <span> &nbsp;&nbsp;</span>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <button class="btn" aria-hidden="true" onclick="closeAll()">&times;</button>
+            </button>
+          </span>
         </div>
         <div class="modal-body">
           <iframe src="" frameborder="0" style="width: 100%; height: 80vh;"></iframe>
@@ -718,6 +724,11 @@ img{
 <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 <script>
   
+  function closeAll(){
+    setTimeout(()=>{
+      window.location.reload()
+    },500)
+  }
 
   const userIdO = localStorage.getItem("user_id");
 	const amxtokenO = localStorage.getItem("amxtoken").replace(/"/g, "");
@@ -823,7 +834,7 @@ closeAllButton.addEventListener("click", function() {
     setTimeout(()=>{
 
       window.location.reload();
-    },1000)
+    },500)
 });
   
   
@@ -846,7 +857,7 @@ closeButtons.appendChild(closeAllButton)
   const projectDiv = document.createElement("div");
   projectDiv.classList.add("row");
       projectDiv.style.display="flex"
-      projectDiv.style.gap="1rem"
+      // projectDiv.style.gap="1rem"
 
     
     data.forEach((project, index) => {
@@ -872,9 +883,10 @@ closeButtons.appendChild(closeAllButton)
       
 
       const imageElement = document.createElement("img");
-      imageElement.src="https://res.cloudinary.com/dxjrvvjp1/image/upload/v1693480473/icons8-folder-94_r3lnm7.png";
+      imageElement.src="https://aactxg.stripocdn.email/content/guids/CABINET_d2c61cd4fa579e3609ac1dce15feb3311d67f9975b3b433315a90ea0a424bac3/images/amx_folderremovebgpreview.png"
+      // imageElement.src="https://res.cloudinary.com/dxjrvvjp1/image/upload/v1693480473/icons8-folder-94_r3lnm7.png";
       // imageElement.src = "https://aactxg.stripocdn.email/content/guids/CABINET_d2c61cd4fa579e3609ac1dce15feb3311d67f9975b3b433315a90ea0a424bac3/images/icons8symlinkdirectory48.png";
-      button.appendChild(folderIconWrapper);
+      button.appendChild( imageElement);
 
       const textElement = document.createElement("p");
       textElement.innerText = project.name.split("(")[0].trim();
@@ -917,28 +929,60 @@ function createModal(project, index) {
   
 
   
-  
-  // const closeButton = document.createElement("button");
+  // ==== old close button ====
+//    const closeButton = document.createElement("button");
+//  closeButton.setAttribute("type", "button");
+//  closeButton.classList.add("close");
+//   closeButton.addEventListener("click", () => {
+//     const modal = document.getElementById(`exampleModalLong${index}`);
+//     $(modal).modal("hide"); 
+//   });
+//   const closeIconSpan = document.createElement("span");
+//   closeIconSpan.innerHTML = "&times;";
+//   closeButton.appendChild(closeIconSpan);
+
+  const closeButtons=document.createElement("div")
+  // Close button for the header
   const closeButton = document.createElement("button");
-closeButton.setAttribute("type", "button");
-// closeButton.setAttribute("data-dismiss", "modal");
-closeButton.classList.add("close");
+  closeButton.setAttribute("type", "button");
+  closeButton.classList.add("close");
+  // closeButton.setAttribute("data-dismiss", "modal");
   closeButton.addEventListener("click", () => {
     const modal = document.getElementById(`exampleModalLong${index}`);
-    $(modal).modal("hide"); // Using jQuery to close the modal
+    $(modal).modal("hide"); 
   });
-  // const closeButtonText = document.createTextNode("Close");
+  // const closeIconSpan = document.createElement("span");
+  const closeIconSpan = document.createElement("button");
   
-
-  const closeIconSpan = document.createElement("span");
+  closeIconSpan.classList.add("btn");
   closeIconSpan.innerHTML = "&times;";
-  
-  
   closeButton.appendChild(closeIconSpan);
 
+  
+  // Create a "close all" button
+const closeAllButton = document.createElement("button");
+closeAllButton.setAttribute("type", "button");
+closeAllButton.classList.add("btn");
+closeAllButton.innerText = "Close All";
+closeAllButton.addEventListener("click", function() {
+    // Reload the page when "Close All" is clicked
+    setTimeout(()=>{
+
+      window.location.reload();
+    },500)
+});
+  
+  
+closeButtons.appendChild(closeButton);
+closeButtons.appendChild(closeAllButton)
+
+
+
+  
+  
   modalHeaderDiv.appendChild(modalTitleH5);
 
-  modalHeaderDiv.appendChild(closeButton);
+  modalHeaderDiv.appendChild(closeButtons);
 
   const modalBodyDiv = document.createElement("div");
   modalBodyDiv.classList.add("modal-body", "modalBodyContainer");
@@ -964,7 +1008,7 @@ function createFolderItems(folders, parentList) {
     button.style.display = "flex";
     button.style.flexDirection = "column-reverse";
     button.style.justifyContent = "center";
-    button.style.gap = "1rem";
+    // button.style.gap = "1rem";
     button.style.alignItems = "center";
     button.classList.add("col-sm-6", "col-md-2");
 
@@ -977,12 +1021,15 @@ function createFolderItems(folders, parentList) {
         folderIconWrapper.appendChild(folderIconInside)
 
     const imageElement = document.createElement("img");
-    imageElement.src = "https://aactxg.stripocdn.email/content/guids/CABINET_d2c61cd4fa579e3609ac1dce15feb3311d67f9975b3b433315a90ea0a424bac3/images/icons8symlinkdirectory48.png";
+    imageElement.src="https://aactxg.stripocdn.email/content/guids/CABINET_d2c61cd4fa579e3609ac1dce15feb3311d67f9975b3b433315a90ea0a424bac3/images/amx_folderremovebgpreview.png"
+    // imageElement.src = "https://aactxg.stripocdn.email/content/guids/CABINET_d2c61cd4fa579e3609ac1dce15feb3311d67f9975b3b433315a90ea0a424bac3/images/icons8symlinkdirectory48.png";
+    // imageElement.src = "https://aactxg.stripocdn.email/content/guids/CABINET_f37167ea2322984dfeb6a0a05e92d2480b49356b15fb055bb2ce2e84131a12e4/images/textlogo600ae37041cf252ad0d2.png";
+    
     
     const textElement = document.createElement("span");
     textElement.innerText = folder.name.split("(")[0].trim();
     button.appendChild(textElement);
-    button.appendChild(folderIconWrapper);
+    button.appendChild(imageElement);
 
     button.addEventListener("click", () => {
       const modal = createModal1(folder);
@@ -1075,18 +1122,49 @@ function createModal1(folder) {
   foldersListUl1.style.gap='1rem'
   foldersListUl1.style.margin="1rem"
 
-      const closeButton = document.createElement("button");
-      closeButton.setAttribute("type", "button");
-      closeButton.setAttribute("data-dismiss", "modal");
-      closeButton.classList.add("close");
+      // const closeButton = document.createElement("button");
+      // closeButton.setAttribute("type", "button");
+      // closeButton.setAttribute("data-dismiss", "modal");
+      // closeButton.classList.add("close");
+      // const closeIconSpan = document.createElement("span");
+      // closeIconSpan.innerHTML = "&times;";
+      // closeButton.appendChild(closeIconSpan);
 
-      const closeIconSpan = document.createElement("span");
-      closeIconSpan.innerHTML = "&times;";
+      const closeButtons=document.createElement("div")
+  // Close button for the header
+  const closeButton = document.createElement("button");
+  closeButton.setAttribute("type", "button");
+  closeButton.classList.add("close");
+  closeButton.setAttribute("data-dismiss", "modal");
 
-      closeButton.appendChild(closeIconSpan);
+  // const closeIconSpan = document.createElement("span");
+  const closeIconSpan = document.createElement("button");
+  
+  closeIconSpan.classList.add("btn");
+  closeIconSpan.innerHTML = "&times;";
+  closeButton.appendChild(closeIconSpan);
+
+  
+  // Create a "close all" button
+const closeAllButton = document.createElement("button");
+closeAllButton.setAttribute("type", "button");
+closeAllButton.classList.add("btn");
+closeAllButton.innerText = "Close All";
+closeAllButton.addEventListener("click", function() {
+    // Reload the page when "Close All" is clicked
+    setTimeout(()=>{
+
+      window.location.reload();
+    },500)
+});
+  
+  
+closeButtons.appendChild(closeButton);
+closeButtons.appendChild(closeAllButton)
+
 
       modalHeaderDiv.appendChild(modalTitleH5);
-      modalHeaderDiv.appendChild(closeButton);
+      modalHeaderDiv.appendChild(closeButtons);
 
       const modalBodyDiv = document.createElement("div");
       modalBodyDiv.classList.add("modal-body");
@@ -1112,7 +1190,7 @@ if (hasAllowedExtension(childFolder.name)) {
   button.style.border = "1px solid #fff";
   button.style.display = "flex";
   button.style.flexDirection = "column";
-  button.style.gap = "10px";
+  // button.style.gap = "1rem";
   button.style.alignItems="center";
   button.classList.add("col-sm-6", "col-md-2");
 
@@ -1125,7 +1203,9 @@ if (hasAllowedExtension(childFolder.name)) {
 
         folderIconWrapper.appendChild(folderIconInside)
   const imageElement = document.createElement("img");
-  imageElement.src = "https://aactxg.stripocdn.email/content/guids/CABINET_d2c61cd4fa579e3609ac1dce15feb3311d67f9975b3b433315a90ea0a424bac3/images/icons8codefile48.png";
+  // imageElement.src = "https://aactxg.stripocdn.email/content/guids/CABINET_d2c61cd4fa579e3609ac1dce15feb3311d67f9975b3b433315a90ea0a424bac3/images/icons8codefile48.png";
+  // imageElement.src = "https://aactxg.stripocdn.email/content/guids/CABINET_f37167ea2322984dfeb6a0a05e92d2480b49356b15fb055bb2ce2e84131a12e4/images/textlogo600ae37041cf252ad0d2.png";
+  imageElement.src="https://aactxg.stripocdn.email/content/guids/CABINET_d2c61cd4fa579e3609ac1dce15feb3311d67f9975b3b433315a90ea0a424bac3/images/amx_fileremovebgpreview.png"
   button.appendChild(imageElement);
   // button.appendChild(folderIconWrapper);
   const textElement = document.createElement("span");
@@ -1150,7 +1230,7 @@ else{
   button.style.display = "flex";
   button.style.flexDirection = "column";
   // button.style.gap = "5px";
-  button.style.gap = "1rem";
+  // button.style.gap = "1rem";
   button.style.alignItems="center";
   
   button.classList.add("col-sm-6", "col-md-2");
@@ -1163,9 +1243,11 @@ else{
 
         folderIconWrapper.appendChild(folderIconInside)
   const imageElement = document.createElement("img");
-  imageElement.src = "https://aactxg.stripocdn.email/content/guids/CABINET_d2c61cd4fa579e3609ac1dce15feb3311d67f9975b3b433315a90ea0a424bac3/images/icons8symlinkdirectory48.png";
+
+  imageElement.src="https://aactxg.stripocdn.email/content/guids/CABINET_d2c61cd4fa579e3609ac1dce15feb3311d67f9975b3b433315a90ea0a424bac3/images/amx_folderremovebgpreview.png"
+  // imageElement.src = "https://aactxg.stripocdn.email/content/guids/CABINET_d2c61cd4fa579e3609ac1dce15feb3311d67f9975b3b433315a90ea0a424bac3/images/icons8symlinkdirectory48.png";
   // button.appendChild(imageElement);
-  button.appendChild(folderIconWrapper);
+  button.appendChild(imageElement);
   const textElement = document.createElement("span");
   // button.classList.add("m-1");
   textElement.style.margin = "0 auto !important";
