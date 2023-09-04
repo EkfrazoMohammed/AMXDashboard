@@ -266,7 +266,7 @@ const handleFolders = async (filess) => {
   console.log(zipData);
 
   // Create a File object from the Blob data
-  const zipFile = new File([zipData], `zip-${folderName}.zip`, { type: 'application/zip' });
+  const zipFile = new File([zipData], `${folderName}.zip`, { type: 'application/zip' });
 
   
 //   // Create a temporary link element for downloading
