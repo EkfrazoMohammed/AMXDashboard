@@ -449,8 +449,6 @@ function Dashboard(props) {
       // console.log(response.data[0].folder_structure, "All Projects Charts====>");
       const allProjectData = response.data[0].folder_structure;
 
-      console.log(allProjectData);
-
       let response2 = await axios.get(
         "https://fibregrid.amxdrones.com/dronecount/addDrone/",
         config
@@ -483,7 +481,7 @@ function Dashboard(props) {
       function convertData(dynamicData, datasetType) {
         const labels = dynamicData.map((item) => `${item.name}`);
         const data = dynamicData.map((item) => item[datasetType]);
-  
+
         const dataset = {
           fill: true,
           label: datasetType,
@@ -498,21 +496,20 @@ function Dashboard(props) {
               ? "rgba(255, 99, 132, 0.5)"
               : "rgba(75, 192, 192, 0.5)",
         };
-  
+
         return {
           labels: labels,
           datasets: [dataset],
         };
       }
-      
-  
+
       const projectsData = convertData(processedChartData, "Projects_Added");
       const dronesData = convertData(processedChartData, "Drones_Added");
-  
+
       console.log("Projects Data:");
       console.log(projectsData);
       setProjectdataChart(projectsData);
-  
+
       console.log("Drones Data:");
       console.log(dronesData);
       setDronedataChart(dronesData);
@@ -531,8 +528,8 @@ function Dashboard(props) {
         },
       };
 
-      const f1=(str)=>{
-        let s1={
+      const f1 = (str) => {
+        let s1 = {
           responsive: true,
           plugins: {
             legend: {
@@ -545,9 +542,9 @@ function Dashboard(props) {
             },
           },
         };
-      }
-      let pf1=f1("Project Added")
-      console.log(pf1)
+      };
+      let pf1 = f1("Project Added");
+      console.log(pf1);
       setOptionChart(pf1);
     } catch (error) {
       console.log(error);
@@ -560,7 +557,6 @@ function Dashboard(props) {
   const [dronedataChart, setDronedataChart] = useState([]);
 
   useEffect(() => {
- 
     const labels = [
       "January",
       "February",
@@ -594,7 +590,6 @@ function Dashboard(props) {
       { name: "Sep 2023", year: 2023, Projects_Added: 0, Drones_Added: 3 },
       { name: "Oct 2023", year: 2023, Projects_Added: 5, Drones_Added: 2 },
     ];
-   
   }, []);
   const processDataForTimeRange = (data, data2, timeRange) => {
     // Check if data is provided; if not, use an empty array
