@@ -449,6 +449,8 @@ function Dashboard(props) {
       // console.log(response.data[0].folder_structure, "All Projects Charts====>");
       const allProjectData = response.data[0].folder_structure;
 
+      console.log(allProjectData);
+
       let response2 = await axios.get(
         "https://fibregrid.amxdrones.com/dronecount/addDrone/",
         config
