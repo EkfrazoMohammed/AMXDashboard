@@ -7339,7 +7339,9 @@ table.footable-paging-center > tfoot > tr.footable-paging > td {
 /**  =====================
       Authentication css start
 ==========================  **/
-.auth-wrapper {
+/* .auth-wrapper {
+background: url("https://firebasestorage.googleapis.com/v0/b/amxdrones-70b8a.appspot.com/o/99%2F1%20(e97bfa9e-189c-41e4-a13b-0bb58e0512af)%2FVIDEO%20(0f7b2705-3cc7-4700-a765-ba9ba1519826)%2Fnew%2Floginbg.jpg?alt=media");
+
   position: relative;
   display: -webkit-box;
   display: -ms-flexbox;
@@ -7353,6 +7355,21 @@ table.footable-paging-center > tfoot > tr.footable-paging > td {
   overflow: hidden;
   min-width: 100%;
   min-height: 100vh;
+} */
+
+.auth-wrapper {
+  background: url("https://firebasestorage.googleapis.com/v0/b/amxdrones-70b8a.appspot.com/o/99%2F1%20(e97bfa9e-189c-41e4-a13b-0bb58e0512af)%2FVIDEO%20(0f7b2705-3cc7-4700-a765-ba9ba1519826)%2Fnew%2Floginbg.jpg?alt=media");
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  min-width: 100%;
+  min-height: 100vh;
+  background-position: center;
+  background-origin: border-box;
+  background-size: cover;
+  background-repeat: no-repeat;
 }
 .auth-wrapper a,
 .auth-wrapper p > a {
@@ -7390,7 +7407,10 @@ table.footable-paging-center > tfoot > tr.footable-paging > td {
   background: transparent;
 }
 .auth-wrapper .card {
+  /* backdrop-filter: blur(7px) !important; */
+  opacity: .95 !important;
   margin-bottom: 0;
+
 }
 .auth-wrapper > div {
   z-index: 5;
@@ -7400,6 +7420,7 @@ table.footable-paging-center > tfoot > tr.footable-paging > td {
   width: 390px;
   padding: 15px;
   z-index: 5;
+
 }
 .auth-wrapper .auth-content.multyform, .auth-wrapper .auth-content.subscribe {
   width: 750px;
@@ -10565,7 +10586,7 @@ div.code-toolbar > .toolbar span:hover {
   display: flex;
   justify-content: flex-start;
   font-size: 14px;
-  gap:4px;
+  gap:2px;
   align-items: flex-end;
 }
 /* .MTableToolbar-actions-8 > div>div>span>button[title="Add"]{
@@ -10649,7 +10670,7 @@ min-width:.5rem;
 .buttonGroupContainer{
   display: flex;
   align-items: center;
-  margin-top: 1rem;
+  margin-top: .2rem;
 
 }
 .buttonGroupContainerbutton{
@@ -10744,15 +10765,22 @@ min-width:.5rem;
   /* width: 75vw; */
   width:70vw !important;
 }
-.modal-content {
+/* .modal-content {
   box-shadow: 0 15px 35px rgba(50, 50, 93, 0.2), 0 5px 15px rgba(0, 0, 0, 0.17);
-  /* width: 75vw; */
+  
   width: 70vw !important;
-  /* overflow: scroll; */
   overflow-y: scroll;
   
-  min-height: 680px !important;
+  min-height: 590px !important;
   max-height: 700px !important;
+} */
+
+.modal-content {
+  box-shadow: 0 15px 35px rgba(50,50,93,.2),0 5px 15px rgba(0,0,0,.17);
+  max-height: 700px!important;
+  min-height: calc(80vh) !important;
+  overflow-y: scroll;
+  width: 70vw!important;
 }
 .mission-first-line{
 display: flex !important;

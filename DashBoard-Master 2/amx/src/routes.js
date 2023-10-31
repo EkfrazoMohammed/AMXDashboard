@@ -23,6 +23,8 @@ import NM2 from "views/NM2";
 import LatestNewMap from "views/LatestNewMap";
 import NewViewer from "views/NewViewer";
 import DemoVideoViewer from "views/VideoViewer/DemoVideoViewer";
+import VideoParentProject from "views/VideoViewer/VideoParentProject";
+import RoboFlow from "views/RoboFlow";
 
 var routes = [
   {
@@ -109,18 +111,36 @@ var routes = [
   //   layout: "/amx"
   // },
 
-  {
-    path: "/VideoViewer",
-    name: "Analytics",
-    // rtlName: "خرائط",
-    // icon: "tim-icons icon-pin",
-    icon: "tim-icons icon-support-17",
+  // {
+  //   path: "/VideoViewer",
+  //   name: "Analytics",
+  //   // rtlName: "خرائط",
+  //   // icon: "tim-icons icon-pin",
+  //   icon: "tim-icons icon-support-17",
     
-    component: DemoVideoViewer,
-    layout: "/amx"
-  },
-
+  //   component: DemoVideoViewer,
+  //   layout: "/amx"
+  // },
+  // {
+  //   path: "/videoparentproject",
+  //   name: "New Analytics",
+  //   // rtlName: "خرائط",
+  //   // icon: "tim-icons icon-pin",
+  //   icon: "tim-icons icon-support-17",
+    
+  //   component: VideoParentProject,
+  //   layout: "/amx"
+  // },
   
+
+  {
+    path: "/roboflow",
+    name: "Analytics",
+    // rtlName: "إخطارات",
+    icon: "tim-icons icon-support-17",
+    component: RoboFlow,
+    layout: "/amx",
+  },
   // {
   //   path: "/notifications",
   //   name: "Notifications",

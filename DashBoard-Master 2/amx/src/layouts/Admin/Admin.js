@@ -35,6 +35,8 @@ import ModalFolders from "views/Home/ModalFolders";
 import NewViewer from "views/NewViewer";
 import FolderFolders from "views/Home/FolderFolders";
 import DemoVideoViewer from "views/VideoViewer/DemoVideoViewer";
+import VideoAnalytics from "views/VideoViewer/VideoAnalytics";
+import VideoParentProject from "views/projects/ParentProject";
 
 var ps;
 
@@ -158,6 +160,10 @@ function Admin(props) {
                 
                 <Route from="/amx/newviewer" render={() =><NewViewer />} />
                 <Route from="/amx/folders" render={() => <Folders/>} />
+
+                
+                <Route from="/amx/videoparentproject" render={() => <VideoParentProject />} />
+                <Route from="/amx/vfolders" render={() => <VideoAnalytics />} />
 
                 {/* <Route from="/amx/folders" render={() => <FolderFolders />} /> */}
                 

@@ -221,8 +221,11 @@ const files11 = jsonData.filter(item => {
   return allowedExtensions.includes(extension);
 });
 // Filter folders (remaining items) based on exceptions
-const folders11 = jsonData.filter(item => !files11.includes(item));
-
+// const folders11 = jsonData.filter(item => !files11.includes(item));
+const folders11 = jsonData.filter((item) => {
+  // Check if JSON data of folders is not just a dot (.) and not in the files11 array
+  return item.name !== '.' && !files11.includes(item);
+});
 
 setData(folders11)
       console.log(folders11)
@@ -477,8 +480,29 @@ setData(folders11)
       console.error("error", error);
       
       setSaving(true)
-      if (error.response) {
-        toast.error("Server down, Please try agin later !", {
+      console.error(
+        "error.response.data.message:",
+        error.response.data.message
+      );
+      if (
+        error &&
+        error.response.data.message ===
+          "File name already exists in the specified location"
+      ) {
+        // toast.error("File name already exists!", {
+        //   position: "top-right",
+        //   autoClose: 5000,
+        //   hideProgressBar: false,
+        //   closeOnClick: true,
+        //   pauseOnHover: true,
+        //   draggable: true,
+        //   progress: undefined,
+        //   theme: "light",
+        //   icon: <img src={drone} />,
+        // });
+        console.log(error.response.data.message)
+      } else {
+        toast.error("Failed to upload files, Try again!", {
           position: "top-right",
           autoClose: 5000,
           hideProgressBar: false,
@@ -489,13 +513,26 @@ setData(folders11)
           theme: "light",
           icon: <img src={drone} />,
         });
- 
-        closeAll();
-        setTimeout(()=>{
-          window.location.reload();
-
-        },3000)
       }
+      // if (error.response) {
+      //   toast.error("Server down, Please try agin later !", {
+      //     position: "top-right",
+      //     autoClose: 5000,
+      //     hideProgressBar: false,
+      //     closeOnClick: true,
+      //     pauseOnHover: true,
+      //     draggable: true,
+      //     progress: undefined,
+      //     theme: "light",
+      //     icon: <img src={drone} />,
+      //   });
+ 
+      //   // closeAll();
+      //   // setTimeout(()=>{
+      //   //   window.location.reload();
+
+      //   // },3000)
+      // }
       // Handle catch error...
     }
   };

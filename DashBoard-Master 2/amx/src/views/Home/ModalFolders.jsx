@@ -249,8 +249,11 @@ const files11 = jsonData.filter(item => {
   return allowedExtensions.includes(extension);
 });
 // Filter folders (remaining items) based on exceptions
-const folders11 = jsonData.filter(item => !files11.includes(item));
-
+// const folders11 = jsonData.filter(item => !files11.includes(item));
+const folders11 = jsonData.filter((item) => {
+  // Check if JSON data of folders is not just a dot (.) and not in the files11 array
+  return item.name !== '.' && !files11.includes(item);
+});
 
 setData(folders11)
       console.log(folders11)
@@ -462,6 +465,76 @@ setData(folders11)
   
   const [nameKml,setNameKml]=useState('KML file');
  const [saving,setSaving]=useState(false);
+//  const handleSaveFile = async () => {
+//   try {
+//     setSaving(true);
+//     const kmlDataURL = localStorage.getItem("new_kml_file");
+
+//     // Convert the data URL back to a Blob
+//     const response = await fetch(kmlDataURL);
+//     const kmlBlob = await response.blob();
+
+//     const api_url =
+//       "https://fibregrid.amxdrones.com/dronecount/v2/get-folders/?user_id=" +
+//       userId +
+//       "&folder_name=" +
+//       paramValue_folder_id;
+
+//     const chunkSize = 1024;
+//     const totalChunks = Math.ceil(kmlBlob.size / chunkSize);
+
+//     const headers = {
+//       'Content-Type': 'multipart/form-data',
+//       Authorization: localStorage.getItem("amxtoken").replace(/"/g, ""),
+//     };
+
+//     // Upload each chunk sequentially
+//     for (let chunkIndex = 0; chunkIndex < totalChunks; chunkIndex++) {
+//       const start = chunkIndex * chunkSize;
+//       const end = Math.min(start + chunkSize, kmlBlob.size);
+//       const chunk = kmlBlob.slice(start, end);
+
+//       const formData = new FormData();
+//       formData.append('user_id', userId);
+//       formData.append('folder_name', paramValue_folder_id);
+//       formData.append('upload_file', chunk, `${nameKml}_part_${chunkIndex + 1}.kml`);
+//       formData.append('totalChunks', totalChunks);
+//       formData.append('chunkIndex', chunkIndex + 1); // Add 1 to start index from 1
+
+//       // Send the current chunk to the server
+//       const uploadResponse = await axios.post(api_url, formData, {
+//         headers: headers,
+//       });
+
+//       if (uploadResponse.status !== 200) {
+//         // Handle the upload error here
+//         console.error("File upload failed.");
+//         setSaving(false);
+//         // You can add more error handling logic as needed
+//         // ...
+//         return;
+//       }
+      
+//       console.log(`Chunk ${chunkIndex + 1} uploaded successfully.`);
+//     }
+
+//     // All chunks uploaded successfully
+//     console.log("File uploaded successfully!");
+//     toast.success("File uploaded successfully!", {
+//       // ...
+//     });
+//     setSaving(false);
+//     closeAll();
+
+//     setTimeout(() => {
+//       window.location.reload();
+//     }, 1000);
+//   } catch (error) {
+//     // Handle other errors here
+//     console.error("Error:", error);
+//     // ...
+//   }
+// };
 
   const handleSaveFile = async () => {
     try {
@@ -477,6 +550,7 @@ setData(folders11)
         userId +
         "&folder_name=" +
         paramValue_folder_id;
+        
   
       const formData = new FormData();
       formData.append('user_id', userId);
@@ -496,14 +570,25 @@ setData(folders11)
   
       if (uploadResponse.status === 200) {
         console.log("File uploaded successfully!");
-        
+        toast.success("File uploaded successfully!", {
+          // position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+          icon: <img src={drone} />,
+        });
         setSaving(false)
         closeAll();
       
         setTimeout(()=>{
+                 
+                
                   window.location.reload();
-        
-                },500)
+                },1000)
       } else {
         setSaving(false)
         console.error("File upload failed.");
@@ -528,7 +613,42 @@ setData(folders11)
     } catch (error) {
       setSaving(true)
       console.error("error", error);
+      console.error(
+        "error.response.data.message:",
+        error.response.data.message
+      );
+      if (
+        error &&
+        error.response.data.message ===
+          "File name already exists in the specified location"
+      ) {
+        toast.error("File name already exists!", {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+          icon: <img src={drone} />,
+        });
+        console.log(error.response.data.message)
+      } else {
+        toast.error("Failed to upload files, Try again!", {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+          icon: <img src={drone} />,
+        });
+      }
       if (error.response) {
+        console.log(error)
         closeAll();
         setTimeout(()=>{
           window.location.reload();
@@ -546,7 +666,7 @@ setData(folders11)
       <BackgroundColorContext.Consumer>
         {({ color }) => (
           <>
-            <ToastContainer />
+            {/* <ToastContainer /> */}
          
             <div
               className="content"

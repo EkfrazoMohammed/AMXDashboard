@@ -304,7 +304,7 @@ const Parent = () => {
             ) 
             {
               toast.error(
-                "Project with the same name already exists. Please try again later!",
+                "Project with the same name already exists!",
                 {
                   position: "top-right",
                   autoClose: 5000,

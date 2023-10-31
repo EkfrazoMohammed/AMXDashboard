@@ -25,7 +25,6 @@ import DropFileInput from "views/DropFileInput/DropFileInput";
 
 import axios from "axios";
 
-// import { toast } from "react-toastify";
 import { ToastContainer, toast } from "react-toastify";
 
 import drone from "../../assets/drone.png";
@@ -39,16 +38,21 @@ import { CircularProgressbar } from "react-circular-progressbar";
 
 function Folders() {
   const [loading, setLoading] = useState(false);
+
+  const [uploading, setUploading] = useState(false);
+
+  const [uploadingfolder, setUploadingfolder] = useState(false);
+
   const [tooltipOpen, setTooltipOpen] = useState(false);
-  const toggle = () => setTooltipOpen(!tooltipOpen);
+  const toggleBack = () => setTooltipOpen(!tooltipOpen);
+
+  const [tooltipOpenFile, setTooltipOpenFile] = useState(false);
+  const toggleFile = () => setTooltipOpenFile(!tooltipOpenFile);
+
   let userId = localStorage.getItem("user_id");
   const [folderList, setFolderList] = useState([]);
   let folderIdo = localStorage.getItem("folder_id");
-  // const userIdO = localStorage.getItem("user_id");
-  // const [folderData, setFolderData] = useState({
-  //   name: "",
-  //   user_id: userId,
-  // });
+
   const [folderData, setFolderData] = useState({
     upload_to_folder: folderIdo,
     user_id: userId,
@@ -57,7 +61,6 @@ function Folders() {
   const [errors, setErrors] = useState({
     folder_name: false,
   });
-  // console.log(folderData);
   const [addfolderopen, setaddfolderopen] = React.useState(false);
   const AddFolder = (name) => {
     console.log("AddFolder======");
@@ -73,8 +76,6 @@ function Folders() {
     }));
     setErrors({ ...errors, [e.target.name]: false });
   };
-
-  // console.log(folderData)
   const amxtokenO = localStorage.getItem("amxtoken").replace(/"/g, "");
   const config2 = {
     headers: {
@@ -90,18 +91,10 @@ function Folders() {
       return;
     }
     try {
+      setSaveFolder(true);
       let payload = folderData;
       console.log(payload, "payload=====>");
-      // let data1 = await axios
-      //   .put(
-      //     "https://fibregrid.amxdrones.com/dronecount/projects/" +
-      //       localStorage.getItem("project_id") +
-      //       "/folders/" +
-      //       localStorage.getItem("folder_id") +
-      //       "/",
-      //     folderData,
-      //     config2
-      //   )
+
       let data1 = await axios
         .post(
           "https://fibregrid.amxdrones.com/dronecount/v2/create-folder/",
@@ -110,6 +103,7 @@ function Folders() {
         )
         .then((res) => {
           const data2 = res.data;
+          setSaveFolder(false);
 
           toast.success("New Folder added !", {
             position: "top-right",
@@ -124,14 +118,15 @@ function Folders() {
           });
           CloseFolder();
           fetchData();
-          //           CloseProject();
-          //           GetAllProjects();
-          // GetRecentProjects();
         })
         .catch((err) => {
           console.log(err);
+          setSaveFolder(false);
           if (err.response) {
-            if(err.response.data.message==="Folder name already exists in the specified location"){
+            if (
+              err.response.data.message ===
+              "Folder name already exists in the specified location"
+            ) {
               toast.error("Folder name already exists !", {
                 position: "top-right",
                 autoClose: 5000,
@@ -143,31 +138,23 @@ function Folders() {
                 theme: "light",
                 icon: <img src={drone} />,
               });
-            }else{
-              
-            toast.error("Server down, Please try agin later !", {
-              position: "top-right",
-              autoClose: 5000,
-              hideProgressBar: false,
-              closeOnClick: true,
-              pauseOnHover: true,
-              draggable: true,
-              progress: undefined,
-              theme: "light",
-              icon: <img src={drone} />,
-            });
-            
-          }
-            //             GetAllProjects();
-            // GetRecentProjects();
-            //             CloseProject();
+            } else {
+              setSaveFolder(false);
+              toast.error("Server down, Please try agin later !", {
+                position: "top-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "light",
+                icon: <img src={drone} />,
+              });
+            }
             fetchData();
             CloseFolder();
-            console.log(err.response.status);
-            console.log(err.response.statusText);
-            console.log(err.message);
-            console.log(err.response.headers); // 👉️ {... response headers here}
-            console.log(err.response.data); // 👉️ {... response data here}
+            console.log(err);
           }
         });
     } catch (error) {
@@ -178,8 +165,7 @@ function Folders() {
 
   const goBack = () => {
     window.history.back();
-    // history.push("/amx/folders?folder_id=" + localStorage.getItem('folder_id'));
-    // window.location.reload();
+
     setTimeout(() => {
       window.location.reload();
     }, 100);
@@ -193,9 +179,6 @@ function Folders() {
 
   const paramValue_folder_id = queryParams.get("folder_id");
 
-  // console.log("paramValue_project_id==>", paramValue_project_id);
-  // console.log("paramValue_folder_id==>", paramValue_folder_id);
-
   const [data, setData] = useState([]);
 
   const [project_id, setProjectID] = useState();
@@ -206,124 +189,78 @@ function Folders() {
 
   const [newfolder, setNewFolder] = useState([]);
   const [percentage, setPercentage] = useState(0);
- const [selectedFile, setSelectedFiles] = useState(null);
+  const [selectedFile, setSelectedFiles] = useState(null);
   const [selectedFolder, setSelectedFolder] = useState(null);
   const [selectedFolderName, setSelectedFolderName] = useState(null);
-  // function handleChange(event) {
-  //   setFile(event.target.files[0]);
-  // }
 
-  // const onFileChange = async (files) => {
-  //   console.log(files);
-  //   // setImageData(files)
-  //   setFile(files[0]);
+  const [displayFileButton, setDisplayFileButton] = useState(true);
+  const [displayFolderButton, setDisplayFolderButton] = useState(true);
+
+  // const onFileChange = (files) => {
+  //   console.log(files.length);
+  //   if (files.length === 1 && files[0].type === "") {
+
+  //     setSelectedFolder(files[0]);
+
+  //     setSelectedFiles(null);
+
+  //     setDisplayFolderButton(true);
+  //   } else {
+
+  //     setSelectedFolder(null);
+  //     setSelectedFiles(files);
+  //     setDisplayFolderButton(false);
+  //   }
   // };
- const onFileChange = (files) => {
-    // Check if a single folder is selected
-    if (files.length === 1 && files[0].type === "") {
-      // Handle folder selection
-      setSelectedFolder(files[0]);
-      
-      setSelectedFiles(null); // Clear previously selected files
-    } else {
-      // Handle individual file selection
-      setSelectedFolder(null); // Clear selected folder
-      setSelectedFiles(files); // Store the array of files
-    }
+
+  console.log(selectedFile);
+  console.log(selectedFolder);
+
+  // const onFolderChange = (folder) => {
+  //   // Check if a single folder is selected
+  //   console.log(folder);
+  //   if (folder.length === 1 && folder[0].type === "") {
+  //     // Handle folder selection
+  //     setSelectedFolder(folder[0]);
+
+  //     setSelectedFiles(null); // Clear previously selected files
+  //   } else {
+  //     // Handle individual file selection
+  //     setSelectedFolder(null); // Clear selected folder
+  //     setSelectedFiles(folder); // Store the array of files
+  //   }
+  // };
+
+  const onFileChange = (files) => {
+    // Check if files contain at least one file (not a folder)
+    const hasFiles = files.some((file) => file.type !== "");
+
+    setSelectedFiles(files);
+    setSelectedFolder(hasFiles ? null : files[0]); // Select a folder if it's the only item
+    setSelectedFolder(hasFiles ? null : 0); // Select a folder if it's the only item
+
+    // Show/hide the "Upload Folders" button based on the selection
+    setDisplayFolderButton(!hasFiles);
   };
+
   const onFolderChange = (folder) => {
     // Check if a single folder is selected
     if (folder.length === 1 && folder[0].type === "") {
       // Handle folder selection
-      setSelectedFolder(folder[0]);
-      
+
+      console.log(folder[0]);
+      setSelectedFolder([folder[0]]); // Set selectedFolder as an array containing the selected folder
       setSelectedFiles(null); // Clear previously selected files
     } else {
       // Handle individual file selection
-      setSelectedFolder(null); // Clear selected folder
-      setSelectedFiles(folder); // Store the array of files
+      setSelectedFolder(folder); // Set selectedFolder as an array containing selected files
+      setSelectedFiles(null); // Clear selected files
     }
   };
-  // const handleFolderChange = async (files) => {
-  //   const zip = new JSZip();
 
-  //   // Create a zip file and add each selected file to it
-  //   for (const file of files) {
-  //     const arrayBuffer = await file.arrayBuffer();
-  //     zip.file(file.name, arrayBuffer);
-  //   }
-
-  //   // Generate the zip data
-  //   const zipData = await zip.generateAsync({ type: 'blob' });
-  //   console.log(zipData)
-
-  //   // Create a Blob URL for the zip data
-  //   const blobUrl = URL.createObjectURL(zipData);
-
-  //   console.log(blobUrl)
-  //   // Create a temporary link element for downloading
-  //   // const downloadLink = document.createElement('a');
-  //   // downloadLink.href = blobUrl;
-  //   // downloadLink.download = 'files.zip';
-  //   // downloadLink.click();
-
-  //   // // Clean up the Blob URL
-  //   // URL.revokeObjectURL(blobUrl);
-  // };
-
-  let [totalbytes, setTotalbytes] = useState("");
-
-  const sendBytes = async () => {
-    const Bytedata = {
-      user_id: localStorage.getItem("user_id"),
-      total_bytes: localStorage.getItem("bytes_transferred"),
-    };
-
-    try {
-      const response = await axios.post(
-        "https://fibregrid.amxdrones.com/dronecount/storage/",
-        Bytedata,
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: localStorage.getItem("amxtoken").replace(/"/g, ""),
-          },
-        }
-      );
-
-      // if (response.status === 200) {
-      //   // const data = response.data;
-      //   const data = response.data;
-      //   console.log(`total_bytes_after_upload==> ${data.bytes}`);
-      //   localStorage.setItem("consumed_data", data.bytes);
-
-      //   setTimeout(()=>{
-      //   window.location.reload()
-      //   },2000)
-      //   // localStorage.setItem("consumed_data", "12345"); // Replace "12345" with a specific value for testing
-      // }
-      if (response.status === 200) {
-        // const data = response.data;
-        const tb = localStorage.getItem("bytes_transferred");
-        console.log("bytes_transferred " + tb);
-        console.log(`total_bytes_before_upload==> ${response.data.bytes}`);
-        let sum = JSON.parse(tb) + JSON.parse(response.data.bytes);
-        console.log(`total_bytes_after_upload==> ${sum}`);
-        localStorage.setItem("consumed_data", sum);
-
-        setTimeout(() => {
-          window.location.reload();
-        }, 2000);
-
-        throw new Error("Error occurred during byte data update.");
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  };
   const handleUpload = async () => {
     setProgessState(true);
-
+    console.log(selectedFile);
     if (!selectedFile || selectedFile.length === 0) {
       toast.warn("Upload Files first !", {
         position: "top-right",
@@ -341,6 +278,7 @@ function Folders() {
     let completedUploads = 0; // Counter for completed uploads
     for (let index = 0; index < selectedFile.length; index++) {
       const singleFile = selectedFile[index];
+      console.log(singleFile);
       const new_api_url =
         "https://fibregrid.amxdrones.com/dronecount/v2/upload-file/";
       const formData = new FormData();
@@ -351,7 +289,9 @@ function Folders() {
       formData.append("upload_file", singleFile);
 
       console.log(formData);
+      setUploading(false);
       try {
+        setUploading(true);
         const response = await axios.post(new_api_url, formData, {
           headers: {
             "Content-Type": "multipart/form-data",
@@ -373,6 +313,7 @@ function Folders() {
 
           if (completedUploads === selectedFile.length) {
             // await sendBytes();
+            setUploading(false);
             toast.success("New File added !", {
               // ... (your toast options)
             });
@@ -393,13 +334,115 @@ function Folders() {
             theme: "light",
             icon: <img src={drone} />,
           });
-          setTimeout(() => {
-            window.location.reload();
-          }, 3000);
+          // setTimeout(() => {
+          //   window.location.reload();
+          // }, 3000);
         }
       } catch (error) {
+        setUploading(false);
         console.error("Error:", error);
-        toast.error("Failed to upload files, Try again!", {
+        console.error(
+          "error.response.data.message:",
+          error.response.data.message
+        );
+        if (
+          error &&
+          error.response.data.message ===
+            "File name already exists in the specified location"
+        ) {
+          toast.error("File name already exists!", {
+            position: "top-right",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "light",
+            icon: <img src={drone} />,
+          });
+        } else {
+          toast.error("Failed to upload files, Try again!", {
+            position: "top-right",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "light",
+            icon: <img src={drone} />,
+          });
+        }
+        // setTimeout(() => {
+        //   window.location.reload();
+        // }, 3000);
+      }
+    }
+  };
+
+  const handleFolderChange = (folder, name) => {
+    console.log(folder);
+    console.log(name);
+    setSelectedFolder(folder);
+    setSelectedFolderName(name);
+  };
+
+  const handleUpload2 = async () => {
+    if (!selectedFolder) {
+      // alert("Please select a folder to upload.");
+      toast.info("Please select a folder!", {
+        // ... (your toast options)
+      });
+      return;
+    }
+    console.log(selectedFolder);
+    const new_api_url =
+      "https://fibregrid.amxdrones.com/dronecount/api/upload_folder_zip/";
+    const formData = new FormData();
+
+    // Append the fields to the FormData object
+    formData.append("user_id", userId);
+    formData.append("folder_name", folderIdo);
+    formData.append("folder", selectedFolder);
+
+    console.log(formData);
+    setUploadingfolder(false);
+    try {
+      setUploadingfolder(true);
+
+      const response = await axios.post(new_api_url, formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+          Authorization: localStorage.getItem("amxtoken").replace(/"/g, ""),
+        },
+        // Implement the progress event to calculate and display the percentage
+        onUploadProgress: (progressEvent) => {
+          const percentCompleted = Math.round(
+            (progressEvent.loaded / progressEvent.total) * 100
+          );
+          console.log(`Upload Progress: ${percentCompleted}%`);
+          setPercentage(percentCompleted);
+        },
+      });
+      console.log(response);
+      if (response.status === 200) {
+        console.log(response.data);
+
+        // await sendBytes();
+        setUploadingfolder(false);
+        setSelectedFolder(null);
+        toast.success("New Folder added !", {
+          // ... (your toast options)
+        });
+        setTimeout(() => {
+          window.location.reload();
+        }, 3000);
+      } else {
+        setUploadingfolder(false);
+        setSelectedFolder(null);
+        throw new Error("Error occurred during folder upload.");
+        toast.error("Failed to upload folder!", {
           position: "top-right",
           autoClose: 5000,
           hideProgressBar: false,
@@ -414,117 +457,27 @@ function Folders() {
           window.location.reload();
         }, 3000);
       }
-    }
-  };
-
-
-  const handleFolderChange = (folder,name) => {
-    console.log(folder);
-    console.log(name)
-    setSelectedFolder(folder);
-    setSelectedFolderName(name)
-  };
-  
-  console.log(selectedFolder)
-  
-  const handleUpload2 = async () => {
-    if (!selectedFolder) {
-      alert("Please select a folder to upload.");
-      return;
-    }
-  console.log(selectedFolder)
-  // zip.loadAsync(selectedFolder)
-  // .then(zipFile => {
-  //   // Iterate through each file in the ZIP archive
-  //   zipFile.forEach((relativePath, zipEntry) => {
-  //     // Get the parent folder name
-  //     const parentFolder = relativePath.split('/')[0];
-      
-  //     // Now you can use 'parentFolder' as needed
-  //     console.log("Parent Folder:", parentFolder);
-  //   });
-  // })
-  // .catch(error => {
-  //   console.error("Error reading ZIP file:", error);
-  // });
-  const new_api_url =
-  "https://fibregrid.amxdrones.com/dronecount/api/upload_folder_zip/";
-const formData = new FormData();
-
-// Append the fields to the FormData object
-formData.append("user_id", userId);
-formData.append("folder_name", folderIdo);
-formData.append("folder", selectedFolder);
-
-console.log(formData);
-try {
-  setSelectedFolder(null)
-  const response = await axios.post(new_api_url, formData, {
-    headers: {
-      "Content-Type": "multipart/form-data",
-      Authorization: localStorage.getItem("amxtoken").replace(/"/g, ""),
-    },
-    // Implement the progress event to calculate and display the percentage
-    onUploadProgress: (progressEvent) => {
-      const percentCompleted = Math.round(
-        (progressEvent.loaded / progressEvent.total) * 100
-      );
-      console.log(`Upload Progress: ${percentCompleted}%`);
-      setPercentage(percentCompleted);
-    },
-  });
-  console.log(response)
-  if (response.status === 200) {
-    console.log(response.data);
-   
-
-      // await sendBytes();
-      toast.success("New Folder added !", {
-        // ... (your toast options)
+    } catch (error) {
+      setUploadingfolder(false);
+      setSelectedFolder(null);
+      console.error("Error:", error);
+      toast.error("Failed to upload folder, Try again!", {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+        icon: <img src={drone} />,
       });
       setTimeout(() => {
-        // window.location.reload();
+        window.location.reload();
       }, 3000);
-   
-  } 
-  else {
-    throw new Error("Error occurred during file upload.");
-    toast.error("Failed to upload files!", {
-      position: "top-right",
-      autoClose: 5000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-      theme: "light",
-      icon: <img src={drone} />,
-    });
-    setTimeout(() => {
-      // window.location.reload();
-    }, 3000);
-  }
-} catch (error) {
-  setSelectedFolder(null)
-  console.error("Error:", error);
-  toast.error("Failed to upload files, Try again!", {
-    position: "top-right",
-    autoClose: 5000,
-    hideProgressBar: false,
-    closeOnClick: true,
-    pauseOnHover: true,
-    draggable: true,
-    progress: undefined,
-    theme: "light",
-    icon: <img src={drone} />,
-  });
-  setTimeout(() => {
-    // window.location.reload();
-  }, 3000);
-}
-}
-  
-  
+    }
+  };
+
   const readFileAsArrayBuffer = (file) => {
     return new Promise((resolve, reject) => {
       const reader = new FileReader();
@@ -579,7 +532,8 @@ try {
 
     if (paramValue_folder_id) {
       setFolderID(paramValue_folder_id);
-      console.log(paramValue_folder_id)
+      console.log(paramValue_folder_id);
+      localStorage.setItem("folder_id", paramValue_folder_id);
       setShowfileButton(true);
       setShowfolderButton(true);
       if (paramValue_folder_id.startsWith("KML")) {
@@ -587,20 +541,8 @@ try {
         console.log("Found a folder starting with 'KML'");
         setShowfileButton(false);
       }
-   
+
       try {
-        // const response = await fetch(
-        //   "https://fibregrid.amxdrones.com/dronecount/folders/" +
-        //     paramValue_folder_id +
-        //     "/items/?user_id=" +
-        //     userId,
-        //   {
-        //     headers: {
-        //       Authorization: localStorage.getItem("amxtoken").replace(/"/g, ""),
-        //     },
-        //   }
-        // );
-        // /dronecount/v2/get-folders/?user_id=61&folder_name=PROCESSED DATA (29a3ddff-5c87-4126-bf1c-aa38638a6e60)
         const response = await fetch(
           "https://fibregrid.amxdrones.com/dronecount/v2/get-folders/?user_id=" +
             userId +
@@ -618,13 +560,10 @@ try {
         const jsonData = await response.json();
 
         console.log("json data", jsonData);
-        const excludedPatterns = [
-          /\(\w+-\w+\)/, // Matches patterns like "(49cb3faf-f3...)"
-        ];
 
-        //       const allowedExtensions = ['jpg', 'jpeg', 'mp3', 'mp4', 'zip', 'laz'];
+        // Matches patterns like "(49cb3faf-f3...)"
+        const excludedPatterns = [/\(\w+-\w+\)/];
 
-       
         const allowedExtensions = [
           "html",
           "css",
@@ -640,44 +579,38 @@ try {
           "js",
           "md",
           "kml",
+          "kmz",
+          "xml",
           "svg",
           "json",
-          "xml",
+          "bin",
+          "txt"
         ];
 
-        // Filter files based on extensions
-        // const files11 = jsonData.filter(item => allowedExtensions.includes(getFileExtension(item.name)));
-        // const files11 = jsonData.filter((item) => {
-        //   console.log("files11=>",item.name.replace(/\s\([^)]*\)/, ''))
-        //   const extension = getFileExtension(item.name.replace(/\s\([^)]*\)/, ''));
-        //   console.log(extension)
-        //   return allowedExtensions.includes(extension);
-        // });
-        // Filter files based on extensions
-const files11 = jsonData.filter((item) => {
-  const match = item.name.match(/^(.*?)\s*\([^)]*\)\s*$/);
-  const filename = match ? match[1] : item.name;
-  // console.log("files11=>", filename);
-  const extensionMatch = filename.match(/\.([^.]+)$/);
-  const extension = extensionMatch ? extensionMatch[1] : '';
-  // console.log(extension)
-  return allowedExtensions.includes(extension.toLowerCase()); // Convert to lowercase for case-insensitive comparison
-});
+        const files11 = jsonData.filter((item) => {
+          const match = item.name.match(/^(.*?)\s*\([^)]*\)\s*$/);
+          const filename = match ? match[1] : item.name;
+          // console.log("files11=>", filename);
+          const extensionMatch = filename.match(/\.([^.]+)$/);
+          const extension = extensionMatch ? extensionMatch[1] : "";
+          // console.log(extension)
+          // Exclude items with empty or only a dot (.) in the name
+          if (!filename || filename.trim() === ".") {
+            return false;
+          }
 
+          return allowedExtensions.includes(extension.toLowerCase()); // Convert to lowercase for case-insensitive comparison
+        });
 
-        // Filter folders (remaining items) based on exceptions
-        const folders11 = jsonData.filter((item) => !files11.includes(item));
+        const folders11 = jsonData.filter((item) => {
+          // Check if JSON data of folders is not just a dot (.) and not in the files11 array
+          return item.name !== "." && !files11.includes(item);
+        });
 
         setData(folders11);
-        console.log(folders11);
+        // console.log(folders11);
         setFileList(files11);
-        console.log(files11);
-        // // Filter folders and files based on their extension names
-        // const folders11 = jsonData.filter(item => shouldRenderFolder(item.name));
-        // const files11 = jsonData.filter(item => shouldRenderFile(item.name));
-
-        // dataArr = jsonData
-        // setLoading(false);
+        // console.log(files11);
       } catch (error) {
         console.error("Error fetching data:", error);
       } finally {
@@ -698,6 +631,8 @@ const files11 = jsonData.filter((item) => {
 
   const [folder_list1, setfolder_list] = React.useState([]);
 
+  const [saveFolder, setSaveFolder] = useState(false);
+
   const PushToCreateProject = (item) => {
     history.push("/amx/child", { all_data: item });
   };
@@ -712,6 +647,8 @@ const files11 = jsonData.filter((item) => {
 
   let CloseProject = async (e) => {
     setFileOpen(false);
+
+    window.location.reload();
   };
 
   const reloadAndGetData = (item) => {
@@ -720,7 +657,6 @@ const files11 = jsonData.filter((item) => {
     localStorage.setItem("folder_id", item.name);
     window.location.reload();
   };
- 
 
   const getFileExtension = (fileName) => {
     if (fileName) {
@@ -729,51 +665,67 @@ const files11 = jsonData.filter((item) => {
     }
     return "";
   };
-  const downloadFileAtUrl = (url) => {
-    console.log(url)
-    fetch(url)
-      .then((response) => response.blob())
-      .then((blob) => {
-        const blobURL = window.URL.createObjectURL(new Blob([blob]));
-        console.log(blobURL)
-
-        const fileName = url.split("/").pop();
-        const aTag = document.createElement("a");
-        aTag.href = blobURL;
-        aTag.setAttribute("download", fileName);
-        document.body.appendChild(aTag);
-        aTag.click();
-        aTag.remove();
-      });
-  };
 
   const renderFileElement = (name, item) => {
-    const url=item.url;
-   
+    const url = item.url;
+
     // console.log(item.url)
-    const extension = getFileExtension(name.replace(/\s\([^)]*\)/, ''));
+    const extension = getFileExtension(name.replace(/\s\([^)]*\)/, ""));
 
     const downloadFile = (name, url) => {
-      console.log(url);
       axios({
         url: url,
         method: "GET",
         responseType: "blob",
+      }) .then(response => {
+        const blob = new Blob([response.data]);
+        const objectURL = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = objectURL;
+        a.download = name;
+        a.style.display = 'none';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(objectURL);
       })
-        .then((response) => {
-          const url = window.URL.createObjectURL(new Blob([response.data]));
-          const link = document.createElement("a");
-          link.href = url;
-          link.setAttribute("download", name);
-          document.body.appendChild(link);
-          link.click();
-          document.body.removeChild(link);
-        })
-        .catch((error) => {
-          console.error("Error downloading file:", error);
-        });
+      .catch(error => console.error('Error downloading file:', error));
+        // .then((response) => {
+        //   const blob = new Blob([response.data]);
+        //   const link = document.createElement("a");
+        //   link.href = window.URL.createObjectURL(blob);
+        //   link.setAttribute("download", name);
+        //   link.style.display = "none";
+        //   document.body.appendChild(link);
+        //   link.click();
+        //   document.body.removeChild(link);
+        // })
+        // .catch((error) => {
+        //   console.error("Error downloading file:", error);
+        // });
     };
-    
+
+    // const downloadFile = (name, url) => {
+    //   console.log(name);
+    //   console.log(url);
+    //   axios({
+    //     url: url,
+    //     method: "GET",
+    //     responseType: "blob",
+    //   })
+    //     .then((response) => {
+    //       const url = window.URL.createObjectURL(new Blob([response.data]));
+    //       const link = document.createElement("a");
+    //       link.href = url;
+    //       link.setAttribute("download", name);
+    //       document.body.appendChild(link);
+    //       link.click();
+    //       document.body.removeChild(link);
+    //     })
+    //     .catch((error) => {
+    //       console.error("Error downloading file:", error);
+    //     });
+    // };
 
     const handleView = () => {
       window.open(url, "_blank");
@@ -781,36 +733,42 @@ const files11 = jsonData.filter((item) => {
 
     const deleteFile = async () => {
       try {
-        console.log('Deleting file:', item.name);
-    
+        console.log("Deleting file:", item.name);
+
         const payload = {
           user_id: userId,
-          file_name: item.name
+          file_name: item.name,
         };
-    
-        const response = await axios.delete("https://fibregrid.amxdrones.com/dronecount/delete/", {
-  data: payload
-});
 
-        console.log('File deletion response:', response.data);
-        toast.success(item.name.replace(/\s\([^)]*\)/, '')+ " deleted successfully!", {
-          position: "top-right",
-          autoClose: 5000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "light",
-          icon: <img src={drone} />,
-        });
-        setTimeout(()=>{
-          window.location.reload()
-        },1000)
+        const response = await axios.delete(
+          "https://fibregrid.amxdrones.com/dronecount/delete/",
+          {
+            data: payload,
+          }
+        );
+
+        console.log("File deletion response:", response.data);
+        toast.success(
+          item.name.replace(/\s\([^)]*\)/, "") + " deleted successfully!",
+          {
+            position: "top-right",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "light",
+            icon: <img src={drone} />,
+          }
+        );
+        setTimeout(() => {
+          window.location.reload();
+        }, 1000);
       } catch (err) {
-        console.error('Error deleting file:', err);
-        if(err.response.data.message){
-          toast.error(err.response.data.message+"!", {
+        console.error("Error deleting file:", err);
+        if (err.response.data.message) {
+          toast.error(err.response.data.message + "!", {
             position: "top-right",
             autoClose: 5000,
             hideProgressBar: false,
@@ -821,23 +779,21 @@ const files11 = jsonData.filter((item) => {
             theme: "light",
             icon: <img src={drone} />,
           });
-        }else{
-          
-        toast.error("Server down, Please try agin later !", {
-          position: "top-right",
-          autoClose: 5000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "light",
-          icon: <img src={drone} />,
-        });
-      }
+        } else {
+          toast.error("Server down, Please try agin later !", {
+            position: "top-right",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "light",
+            icon: <img src={drone} />,
+          });
+        }
       }
     };
-    
 
     if (extension.split("?")[0] === "pdf") {
       return (
@@ -847,9 +803,8 @@ const files11 = jsonData.filter((item) => {
               <img src={pdfImage} alt="PDF" />
             </DropdownToggle>
             <DropdownMenu style={{ width: "auto" }}>
-            <DropdownItem onClick={handleView}>View</DropdownItem>
+              <DropdownItem onClick={handleView}>View</DropdownItem>
               <DropdownItem onClick={() => downloadFile(name, url)}>
-             
                 Download
               </DropdownItem>
               <DropdownItem onClick={() => deleteFile()}>Delete</DropdownItem>
@@ -866,16 +821,19 @@ const files11 = jsonData.filter((item) => {
       return (
         <>
           <UncontrolledDropdown className="myCustomDropdown" direction="down">
-            <DropdownToggle data-toggle="dropdown" tag="span">
+            <DropdownToggle
+              data-toggle="dropdown"
+              tag="span"
+              className="text-info"
+            >
               <img src={imageLogo} alt="png" />
             </DropdownToggle>
             <DropdownMenu style={{ width: "auto" }}>
+              <DropdownItem onClick={handleView}>View</DropdownItem>
               <DropdownItem onClick={() => downloadFile(name, url)}>
-                       
                 Download
               </DropdownItem>
-              <DropdownItem onClick={handleView}>View</DropdownItem>
-               
+
               <DropdownItem onClick={() => deleteFile()}>Delete</DropdownItem>
             </DropdownMenu>
           </UncontrolledDropdown>
@@ -889,11 +847,11 @@ const files11 = jsonData.filter((item) => {
               <img src={mp4Logo} alt="MP4" />
             </DropdownToggle>
             <DropdownMenu style={{ width: "auto" }}>
-                          <DropdownItem onClick={handleView}>View</DropdownItem>
+              <DropdownItem onClick={handleView}>View</DropdownItem>
               <DropdownItem onClick={() => downloadFile(name, url)}>
                 Download
               </DropdownItem>
-              
+
               <DropdownItem onClick={() => deleteFile()}>Delete</DropdownItem>
             </DropdownMenu>
           </UncontrolledDropdown>
@@ -907,11 +865,11 @@ const files11 = jsonData.filter((item) => {
               <img src={fileImageLogo} alt="fileImageLogo" />
             </DropdownToggle>
             <DropdownMenu style={{ width: "auto" }}>
-                          <DropdownItem onClick={handleView}>View</DropdownItem>
+              <DropdownItem onClick={handleView}>View</DropdownItem>
               <DropdownItem onClick={() => downloadFile(name, url)}>
                 Download
               </DropdownItem>
-              
+
               <DropdownItem onClick={() => deleteFile()}>Delete</DropdownItem>
             </DropdownMenu>
           </UncontrolledDropdown>
@@ -919,7 +877,7 @@ const files11 = jsonData.filter((item) => {
       );
     }
   };
-  
+
   return (
     <div>
       {/* <p>Data: {JSON.stringify(data)}</p> */}
@@ -944,15 +902,7 @@ const files11 = jsonData.filter((item) => {
                       {/* <span className="profession">Web & Web Designer</span> */}
                     </div>
                   </div>
-                  {/* <form> */}
-                  {/* <div className="wraper-dashboard"> */}
-                  {/* <div className="wraper-card-content-dashboard">
-                    <header>Upload files </header>
-                    <DropFileInput
-                      onFileChange={(files) => onFileChange(files)}
-                    />
-                  </div> */}
-                  {/* </div> */}
+
                   <span className="form-labels">
                     <span className="asterisk-symbol">*</span>Enter Folder Name:{" "}
                   </span>
@@ -979,17 +929,42 @@ const files11 = jsonData.filter((item) => {
                     placeholder="user_id"
                     onChange={handleChange2}
                   />
-                  {/* <textarea
-                  spellcheck="false"
-                  placeholder="Enter your message"
-                ></textarea> */}
+
                   <div className="button">
                     <button id="close" onClick={CloseFolder} className="cancel">
                       Cancel
                     </button>
-                    <button className="send" onClick={handleSubmit2}>
-                      Create
-                    </button>
+                    {saveFolder ? (
+                      <>
+                        <button
+                          color="secondary"
+                          disabled
+                          className="send"
+                          style={{
+                            display: "flex",
+                            justifyContent: "center",
+                            alignItems: "center",
+                            gap: "5px",
+                          }}
+                        >
+                          <Spinner
+                            size="md"
+                            color="secondary"
+                            style={{
+                              height: "12px",
+                              width: "12px",
+                            }}
+                          ></Spinner>
+                          <span> Creating Folder</span>
+                        </button>
+                      </>
+                    ) : (
+                      <>
+                        <button className="send" onClick={handleSubmit2}>
+                          Create Folder
+                        </button>
+                      </>
+                    )}
                   </div>
                   {/* </form> */}
                 </div>
@@ -1032,163 +1007,187 @@ const files11 = jsonData.filter((item) => {
                       flip={true}
                       isOpen={tooltipOpen}
                       target="TooltipExample"
-                      toggle={toggle}
+                      toggle={toggleBack}
                       placement="top"
                     >
                       <div>Go Back</div>
                     </Tooltip>
-                      {showfolderButton ? (
-                        <div>
-                          <button
-                            type="button"
-                            className="btn btn-primary"
-                            onClick={AddFolder}
-                          >
-                            Add Folder
-                          </button>
-                        </div>
-                      ) : (
-                        ""
-                      )}
-                    </div>
-                    {loading ? (
-                      <>
-                        <Spinner
-                          size="md"
-                          color="primary"
-                          style={{
-                            height: "2rem",
-                            width: "2rem",
-                          }}
-                        ></Spinner>
+                    {showfolderButton ? (
+                      <div>
+                        <button
+                          type="button"
+                          className="btn btn-primary"
+                          onClick={AddFolder}
+                        >
+                          Add Folder
+                        </button>
+                      </div>
+                    ) : (
+                      ""
+                    )}
+                  </div>
+                  {loading ? (
+                    <>
+                      <Spinner
+                        size="md"
+                        color="primary"
+                        style={{
+                          height: "2rem",
+                          width: "2rem",
+                        }}
+                      ></Spinner>
+                      <span style={{ fontSize: "20px" }}>
+                        {" "}
+                        Fetching Folders
+                      </span>
+                    </>
+                  ) : data.length === 0 && fileList.length === 0 ? (
+                    <>
+                      <div style={{}} className="row mt-4">
                         <span style={{ fontSize: "20px" }}>
                           {" "}
-                          Fetching Folders
+                          No Folders / Files
                         </span>
-                      </>
-                    ) : data.length === 0 && fileList.length === 0 ? (
-                      <>
-                        <div style={{}} className="row mt-4">
-                          <span style={{ fontSize: "20px" }}>
-                            {" "}
-                            No Folders / Files
-                          </span>
-                          <div>
-                            {showfileButton ? (
-                              <div className="p-4">
-                                <button
-                                  data={color}
-                                  type="file"
-                                  className="header-content-btn1"
-                                  onClick={openFIlePopUp}
-                                >
-                                  +
-                                </button>
-                              </div>
-                            ) : (
-                              ""
-                            )}
-                          </div>
-                        </div>
-                      </>
-                    ) : (
-                      <>
-                        {/* data.length > 0 && ( */}
-                        <div style={{}} className="row mt-4">
-                          {data.length === 0 ? (
-                            <p></p>
-                          ) : (
-                            data.map((item) => (
-                              
-                              //  <div  className="row">
-                              <>
-                                {/* <Link to={item.link}> */}
-
-                                <div onClick={reloadAndGetData.bind(null, item)}>
-                                  <div className="file-cards">
-                                    <div
-                                      style={{}}
-                                      className="col-lg-2 col-sm-2 col-md-2 mb-5 mt-5"
-                                    >
-                                      {/* <div style={{justifyContent:"center"}} className="col-lg-2 col-sm-12 col-md-3"> */}
-                                      <div
-                                        data={color}
-                                        style={{ alignContent: "center" }}
-                                        class="folder"
-                                      >
-                                        {/* <div class="folder-inside" style={{ backgroundColor: item.folder_color }}> */}
-                                        <div
-                                          class="folder-inside"
-                                          style={{}}
-                                        ></div>
-                                      </div>
-
-                                      {/* </div> */}
-                                    </div>
-                                  </div>
-                                  <h4
-                                    style={{
-                                      fontSize: 12,
-                                      textAlign: "center",
-                                      paddingTop: "10px",
-                                    }}
-                                  >
-                                    {item.name.split("(")[0].trim()}
-                                  </h4>
-                                </div>
-                              </>
-                            ))
-                          )}
-                        
-
-                          {fileList.map((item) => (
-                            <div key={item.id}>
-                              {" "}
-                              {/* Assuming item has a unique ID */}
-                              <div className="file-cards">
-                                <div className="col-lg-1 col-sm-2 col-md-2 mb-5 mt-5 w-100">
-                                  <div className="file">
-                                    {item.name &&
-                                      renderFileElement(
-                                        getFileExtension(item.name)
-                                        ,
-                                        item
-                                      )}
-                                  </div>
-                                </div>
-                              </div>
-                              <h4
-                                style={{
-                                  fontSize: 12,
-                                  textAlign: "center",
-                                  paddingTop: "10px",
-                                }}
-                              >
-                                {item.name.replace(/\s\([^)]*\)/, '') && item.name.replace(/\s\([^)]*\)/, '').length > 15
-                                  ? `${item.name.replace(/\s\([^)]*\)/, '').slice(0, 15)}...`
-                                  : item.name.replace(/\s\([^)]*\)/, '')}
-                              </h4>
-                            </div>
-                          ))}
-
+                        <div>
                           {showfileButton ? (
                             <div className="p-4">
                               <button
                                 data={color}
                                 type="file"
+                                id="TooltipExampleFile2"
                                 className="header-content-btn1"
                                 onClick={openFIlePopUp}
                               >
                                 +
                               </button>
+                              <Tooltip
+                                autohide={true}
+                                flip={true}
+                                isOpen={tooltipOpenFile}
+                                target="TooltipExampleFile2"
+                                toggle={toggleFile}
+                                placement="top"
+                              >
+                                <div>Add folders/files</div>
+                              </Tooltip>
                             </div>
                           ) : (
                             ""
                           )}
                         </div>
-                        {/* ) */}
-                      </>
-                    )}
+                      </div>
+                    </>
+                  ) : (
+                    <>
+                      {/* data.length > 0 && ( */}
+                      <div style={{}} className="row mt-4">
+                        {data.length === 0 ? (
+                          <p></p>
+                        ) : (
+                          data.map((item) => (
+                            //  <div  className="row">
+                            <>
+                              {/* <Link to={item.link}> */}
+
+                              <div onClick={reloadAndGetData.bind(null, item)}>
+                                <div className="file-cards">
+                                  <div
+                                    style={{}}
+                                    className="col-lg-2 col-sm-2 col-md-2 mb-5 mt-5"
+                                  >
+                                    {/* <div style={{justifyContent:"center"}} className="col-lg-2 col-sm-12 col-md-3"> */}
+                                    <div
+                                      data={color}
+                                      style={{ alignContent: "center" }}
+                                      class="folder"
+                                    >
+                                      {/* <div class="folder-inside" style={{ backgroundColor: item.folder_color }}> */}
+                                      <div
+                                        class="folder-inside"
+                                        style={{}}
+                                      ></div>
+                                    </div>
+
+                                    {/* </div> */}
+                                  </div>
+                                </div>
+                                <h4
+                                  style={{
+                                    fontSize: 12,
+                                    textAlign: "center",
+                                    paddingTop: "10px",
+                                  }}
+                                >
+                                  {item.name.split("(")[0].trim()}
+                                </h4>
+                              </div>
+                            </>
+                          ))
+                        )}
+
+                        {fileList.map((item) => (
+                          <div key={item.id}>
+                            {" "}
+                            {/* Assuming item has a unique ID */}
+                            <div className="file-cards">
+                              <div className="col-lg-1 col-sm-2 col-md-2 mb-5 mt-5 w-100">
+                                <div className="file">
+                                  {item.name &&
+                                    renderFileElement(
+                                      getFileExtension(item.name),
+                                      item
+                                    )}
+                                </div>
+                              </div>
+                            </div>
+                            <h4
+                              style={{
+                                fontSize: 12,
+                                textAlign: "center",
+                                paddingTop: "10px",
+                              }}
+                            >
+                              {/* {item.name.replace(/\s\([^)]*\)/, '') && item.name.replace(/\s\([^)]*\)/, '').length > 15
+                                  ? `${item.name.replace(/\s\([^)]*\)/, '').slice(0, 15)}...`
+                                  : item.name.replace(/\s\([^)]*\)/, '')} */}
+                              {item.name.replace(/\s\([^)]*\)/g, "").length > 15
+                                ? `${item.name
+                                    .replace(/\s\([^)]*\)/g, "")
+                                    .slice(0, 15)}...`
+                                : item.name.replace(/\s\([^)]*\)/g, "")}
+                            </h4>
+                          </div>
+                        ))}
+
+                        {showfileButton ? (
+                          <div className="p-4">
+                            <button
+                              data={color}
+                              type="file"
+                              id="TooltipExampleFile2"
+                              className="header-content-btn1"
+                              onClick={openFIlePopUp}
+                            >
+                              +
+                            </button>
+                            <Tooltip
+                              autohide={true}
+                              flip={true}
+                              isOpen={tooltipOpenFile}
+                              target="TooltipExampleFile2"
+                              toggle={toggleFile}
+                              placement="top"
+                            >
+                              <div>Add folders/files</div>
+                            </Tooltip>
+                          </div>
+                        ) : (
+                          ""
+                        )}
+                      </div>
+                      {/* ) */}
+                    </>
+                  )}
                   {/* <FolderUploadComponent /> */}
                   <div
                     className={
@@ -1218,7 +1217,9 @@ const files11 = jsonData.filter((item) => {
                             {/* <input type="file" onChange={handleChange} /> */}
                             <DropFileInput
                               onFileChange={(files) => onFileChange(files)}
-                              onFolderChange={(folder,name) => handleFolderChange(folder,name)}
+                              onFolderChange={(folder, name) =>
+                                handleFolderChange(folder, name)
+                              }
                             />
                             {is_true_progress ? (
                               <CircularProgressbar
@@ -1234,6 +1235,86 @@ const files11 = jsonData.filter((item) => {
                           </div>
                         </div>
                         <div className="button">
+                          {/* <button className="send" onClick={handleUpload}>
+                            Upload Files
+                          </button> */}
+
+                          {selectedFile != null && selectedFile.length > 0 ? (
+                            <>
+                              {uploading ? (
+                                <>
+                                  <button
+                                    color="primary"
+                                    disabled
+                                    style={{
+                                      display: "flex",
+                                      justifyContent: "center",
+                                      alignItems: "center",
+                                      gap: "5px",
+                                    }}
+                                  >
+                                    <Spinner
+                                      size="md"
+                                      color="secondary"
+                                      style={{
+                                        height: "15px",
+                                        width: "15px",
+                                      }}
+                                    ></Spinner>
+                                    <span>Uploading files</span>
+                                  </button>
+                                </>
+                              ) : (
+                                <>
+                                  <button
+                                    className="send"
+                                    onClick={handleUpload}
+                                  >
+                                    Upload Files
+                                  </button>
+                                </>
+                              )}
+                            </>
+                          ) : null}
+
+                          {selectedFolder !== null ? (
+                            <>
+                              {uploadingfolder ? (
+                                <>
+                                  <button
+                                    color="primary"
+                                    disabled
+                                    style={{
+                                      display: "flex",
+                                      justifyContent: "center",
+                                      alignItems: "center",
+                                      gap: "5px",
+                                    }}
+                                  >
+                                    <Spinner
+                                      size="md"
+                                      color="secondary"
+                                      style={{
+                                        height: "15px",
+                                        width: "15px",
+                                      }}
+                                    ></Spinner>
+                                    <span>Uploading folder</span>
+                                  </button>
+                                </>
+                              ) : (
+                                <>
+                                  <button
+                                    className="send"
+                                    onClick={handleUpload2}
+                                  >
+                                    Upload Folder
+                                  </button>
+                                </>
+                              )}
+                            </>
+                          ) : null}
+
                           <button
                             id="close"
                             onClick={CloseProject}
@@ -1241,16 +1322,16 @@ const files11 = jsonData.filter((item) => {
                           >
                             Cancel
                           </button>
-                          {/* <button className="send" onClick={UploadFile} >Upload</button> */}
-                          <button className="send" onClick={handleUpload}>
-                            Upload Files
-                          </button>
 
-                          <button className="send" onClick={handleUpload2}>
-                            Upload Folders
-                          </button>
+                          {/* {displayFolderButton ||
+                          fileList.length === 0 ? (
+                            <>
+                              <button className="send" onClick={handleUpload2}>
+                                Upload Folders
+                              </button>
+                            </>
+                          ) : null} */}
                         </div>
-                        {/* </form> */}
                       </div>
                     </div>
                   </div>

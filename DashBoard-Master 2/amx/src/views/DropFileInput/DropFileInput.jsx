@@ -40,6 +40,7 @@ const DropFileInput = ({ onFileChange ,onFolderChange}) => {
  
   // Handles the file drop event
   const handleFiles = (files) => {
+    console.log(files)
     const updatedList = [...fileList];
     for (let i = 0; i < files.length; i++) {
       updatedList.push(files[i]);
@@ -52,7 +53,57 @@ const DropFileInput = ({ onFileChange ,onFolderChange}) => {
     onFileChange(updatedList);
   };
 
-    // Handles the file drop event
+  const [folderPreview, setFolderPreview] = useState([]);
+
+  const handleFolders = async (filess) => {
+    console.log(filess)
+    const selectedFolderName = filess[0].webkitRelativePath.split('/')[0]; // Assuming you selected only one folder
+  
+    // Filter out files that are not in the selected folder
+    const folderData = Array.from(filess).filter((file) => {
+      return file.webkitRelativePath.startsWith(selectedFolderName + '/');
+    });
+    console.log(folderData);
+    setFolderList(folderData)
+    const folderName = folderData[0].webkitRelativePath.split('/')[0];
+    console.log('Selected Folder Name:', folderName);
+
+ 
+   
+    const zip = new JSZip();
+  
+    // Create a zip file and add each selected file to it
+    for (const file of folderData) {
+      const arrayBuffer = await file.arrayBuffer();
+      zip.file(file.name, arrayBuffer);
+    }
+  
+    // Generate the zip data
+    const zipData = await zip.generateAsync({ type: 'blob' });
+    console.log(zipData,"=>zipData");
+  
+    // Create a File object from the Blob data
+    // const zipFile = new File([zipData], `${folderName}.zip`, { type: 'application/zip' });
+  
+    // const zipFile = new File([zipData], `${folderName}.zip`, { type: 'application/x-zip-compressed' });
+  
+    const zipFile = new File([zipData], `${folderName}`, { type: 'application/x-zip-compressed' });
+  
+
+    console.log("zipfile=>",zipFile)
+  //   // Create a temporary link element for downloading
+    const downloadLink = document.createElement('a');
+    downloadLink.href = URL.createObjectURL(zipData); // Use Blob URL here
+    downloadLink.download = `${folderName}`;
+  
+  //   // Simulate a click on the link to trigger the download
+    // downloadLink.click();
+  
+    // Here you can call the onFolderChange callback with the created File object
+    if (typeof onFolderChange === 'function') {
+      onFolderChange(zipFile, folderName);
+    }
+  };
     // const handleFolders = (files) => {
     //   const updatedList = [...fileList];
     //   for (let i = 0; i < files.length; i++) {
@@ -243,45 +294,45 @@ const DropFileInput = ({ onFileChange ,onFolderChange}) => {
 //   }
 // };
 
-const handleFolders = async (filess) => {
-  const selectedFolderName = filess[0].webkitRelativePath.split('/')[0]; // Assuming you selected only one folder
+// const handleFolders = async (filess) => {
+//   const selectedFolderName = filess[0].webkitRelativePath.split('/')[0]; // Assuming you selected only one folder
 
-  // Filter out files that are not in the selected folder
-  const folderData = Array.from(filess).filter((file) => {
-    return file.webkitRelativePath.startsWith(selectedFolderName + '/');
-  });
-  console.log(folderData);
-  const folderName = folderData[0].webkitRelativePath.split('/')[0];
-  console.log('Selected Folder Name:', folderName);
-  const zip = new JSZip();
+//   // Filter out files that are not in the selected folder
+//   const folderData = Array.from(filess).filter((file) => {
+//     return file.webkitRelativePath.startsWith(selectedFolderName + '/');
+//   });
+//   console.log(folderData);
+//   const folderName = folderData[0].webkitRelativePath.split('/')[0];
+//   console.log('Selected Folder Name:', folderName);
+//   const zip = new JSZip();
 
-  // Create a zip file and add each selected file to it
-  for (const file of folderData) {
-    const arrayBuffer = await file.arrayBuffer();
-    zip.file(file.name, arrayBuffer);
-  }
+//   // Create a zip file and add each selected file to it
+//   for (const file of folderData) {
+//     const arrayBuffer = await file.arrayBuffer();
+//     zip.file(file.name, arrayBuffer);
+//   }
 
-  // Generate the zip data
-  const zipData = await zip.generateAsync({ type: 'blob' });
-  console.log(zipData);
+//   // Generate the zip data
+//   const zipData = await zip.generateAsync({ type: 'blob' });
+//   console.log(zipData);
 
-  // Create a File object from the Blob data
-  const zipFile = new File([zipData], `${folderName}.zip`, { type: 'application/zip' });
+//   // Create a File object from the Blob data
+//   const zipFile = new File([zipData], `${folderName}.zip`, { type: 'application/zip' });
 
   
-//   // Create a temporary link element for downloading
-  const downloadLink = document.createElement('a');
-  downloadLink.href = URL.createObjectURL(zipData); // Use Blob URL here
-  downloadLink.download = `zip-${folderName}.zip`;
+// //   // Create a temporary link element for downloading
+//   const downloadLink = document.createElement('a');
+//   downloadLink.href = URL.createObjectURL(zipData); // Use Blob URL here
+//   downloadLink.download = `zip-${folderName}.zip`;
 
-//   // Simulate a click on the link to trigger the download
-  downloadLink.click();
+// //   // Simulate a click on the link to trigger the download
+//   downloadLink.click();
 
-  // Here you can call the onFolderChange callback with the created File object
-  if (typeof onFolderChange === 'function') {
-    onFolderChange(zipFile, folderName);
-  }
-};
+//   // Here you can call the onFolderChange callback with the created File object
+//   if (typeof onFolderChange === 'function') {
+//     onFolderChange(zipFile, folderName);
+//   }
+// };
 
   // Removes a file from the list
  
@@ -295,7 +346,7 @@ const handleFolders = async (filess) => {
   return (
     <>
       <ToastContainer />
-      <div style={{display:"flex",gap:"1rem",margin:"0 auto"}}>
+      <div style={{display:"flex",gap:"1rem",margin:"0 auto",justifyContent:"center",alignItems:"center"}}>
         {/* <div> */}
       <div
         ref={wrapperRef}
@@ -311,13 +362,13 @@ const handleFolders = async (filess) => {
             size="2xl"
             style={{ color: '#3670ce' }}
           />
-          <p>Drag & Drop your files here</p>
+          <p>Upload your files here</p>
         </div>
        
      
         <input type="file" name="file" multiple onChange={(e) => handleFiles(e.target.files)} />
       </div>
-      <div
+      {/* <div
         ref={wrapperRef}
         className="drop-file-input"
         onDragEnter={onDragEnter}
@@ -331,7 +382,7 @@ const handleFolders = async (filess) => {
             size="2xl"
             style={{ color: '#3670ce' }}
           />
-          <p>Drag & Drop your Folder here</p>
+          <p>Upload your Folder here</p>
         </div>
         <input 
          type="file"
@@ -341,12 +392,12 @@ const handleFolders = async (filess) => {
         multiple
          onChange={(e) => handleFolders(e.target.files)} />
      
-       </div>
+       </div> */}
       </div>
       {fileList.length > 0 && (
         <div className="drop-file-preview">
           <p style={{ color: 'white' }} className="drop-file-preview__title">
-            Ready to upload
+            Ready to upload File Data
           </p>
           {fileList.map((item, index) => (
             <div key={index} className="drop-file-preview__item">
@@ -370,6 +421,33 @@ const handleFolders = async (filess) => {
           ))}
         </div>
       )}
+
+{/* // Render the folder preview within your component's JSX */}
+<div className="folder-preview"> 
+
+{folderList.length > 0 && (
+        <div className="drop-file-preview">
+          <p style={{ color: 'white' }} className="drop-file-preview__title">
+            Ready to upload Folder Data
+          </p>
+          {folderList.map((item, index) => (
+            <div key={index} className="drop-file-preview__item">
+              <img
+                src={URL.createObjectURL(item)}
+                alt=""
+                className="drop-file-preview__item__image"
+              />
+              <div className="drop-file-preview__item__info">
+                <p>{item.name}</p>
+                {/* <p>{item.size}B</p> */}
+                <p>{(item.size/1024).toFixed(2)}KB</p>
+              </div>
+              
+            </div>
+          ))}
+        </div>
+      )}
+</div>
     </>
   );
 };

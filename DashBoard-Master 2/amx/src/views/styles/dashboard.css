@@ -289,7 +289,7 @@
     display: flex;
     align-items: center;
     background-color: white;
-    text-transform: uppercase;
+    /* text-transform: uppercase; */
     cursor: pointer;
     font-size: 0.62475rem;
     padding: 10px 20px;
@@ -880,9 +880,9 @@ section.active .profile{
   justify-content: center;
   min-height: 100%;
   /* min-width: 50vh; */
-  max-height: 70vh !important;
-  overflow-y: scroll !important;
-  overflow-x: hidden !important;
+   max-height: 70vh !important;
+  /*overflow-y: scroll !important;
+  overflow-x: hidden !important; */
 }
 /* .wraper-dashboard {
   display: flex;
@@ -953,5 +953,16 @@ section.active .profile{
     text-overflow: ellipsis; 
     width: 80px;
     height: 20px !important;
+  }
+
+  .wraper-dashboard {
+    display: flex;
+    /* align-items: center; */
+    justify-content: center;
+    min-height: 100%;
+    /* min-width: 50vh; */
+    max-height: 70vh !important;
+    overflow-y: scroll !important;
+    overflow-x: hidden !important;
   }
 }

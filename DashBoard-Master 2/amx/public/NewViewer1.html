@@ -9,6 +9,15 @@
 </head>
 <body>
   <style>
+
+    
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700;800&display=swap');
+
+*{
+ padding: 0;
+ margin: 0;
+ box-sizing: border-box;
+}
     .folder::after {
      width: 92px;
      height: 60px;
@@ -98,13 +107,6 @@ transform: rotate(-7deg) translateY(-15%);
 }
 /* hover over the folder to see the effect in action */
  
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700;800&display=swap');
-
-*{
- padding: 0;
- margin: 0;
- box-sizing: border-box;
-}
 
 body th,tr,hr{
  display: none !important;
@@ -751,7 +753,7 @@ function extractPathBeforeLastSegment(url) {
 
   for (let i = 0; i < urlParts.length; i++) {
     const part = urlParts[i];
-    if (part.endsWith(".html") || part.endsWith(".jpg")) {
+    if (part.endsWith(".html") || part.endsWith(".jpg")|| part.endsWith(".kml")|| part.endsWith(".jpeg")) {
       break;
     }
     pathSegments.push(part);
@@ -779,8 +781,11 @@ async function getProjects() {
 
     const data = await response.json();
     console.log(data[0].folder_structure);
+    console.log(data[0].folder_structure.length)
+
     // displayProjects(data);
    // Display loader/spinner while waiting for the data
+
 
 
         displayProjects(data[0].folder_structure);
@@ -794,7 +799,10 @@ async function getProjects() {
 
   function displayProjects(data) {
 
+ 
     const projectWrapper = document.createElement("div");
+
+   
     const outputDiv = document.getElementById('output');
     
   const modalBodiesDiv = document.getElementById('modalBodies');
@@ -857,8 +865,9 @@ closeButtons.appendChild(closeAllButton)
   const projectDiv = document.createElement("div");
   projectDiv.classList.add("row");
       projectDiv.style.display="flex"
-      // projectDiv.style.gap="1rem"
-
+      projectDiv.style.gap="1rem"
+      projectDiv.style.margin="1rem"
+          
     
     data.forEach((project, index) => {
      
@@ -1177,12 +1186,54 @@ closeButtons.appendChild(closeAllButton)
 
       if (folder.children && folder.children.length > 0) {
         folder.children.forEach((childFolder, index) => {
-            const allowedExtensions = ["html","css",'csv', 'pdf', 'jpg', 'png', 'jpeg', 'mp3', 'mp4', 'zip', 'laz', 'js', 'md', 'kml', 'svg', 'json', 'xml'];
+        const allowedExtensions = ["html","css",'csv', 'pdf', 'jpg', 'png', 'jpeg', 'mp3', 'mp4', 'zip', 'laz', 'js', 'md', 'kml', 'svg', 'json', 'xml'];
 
-function hasAllowedExtension(folderName) {
-  const folderExtension = folderName.split('.').pop().toLowerCase();
-  return allowedExtensions.includes(folderExtension);
+            function hasAllowedExtension(folderName) {
+  console.log("foldername", folderName);
+  const parts = folderName.split('.');
+  const lastPart = parts.pop();
+  const folderExtension = lastPart.replace(/\([^)]+\)/, '').toLowerCase().trim();
+  console.log("folderExtension", folderExtension);
+  
+  const final = allowedExtensions.includes(folderExtension);
+  console.log(final);
+  
+  return final;
 }
+
+// function hasAllowedExtension(folderName) {
+
+//   console.log("foldername", folderName);
+
+//   // Check if folderName is empty or contains only whitespace
+//   if (!folderName || !folderName.trim()) {
+//     console.log("folderName is empty or contains only whitespace");
+//     return false;
+//   }
+
+//   // Extract the extension from the folder name (last part after dot)
+//   const lastDotIndex = folderName.lastIndexOf('.');
+//   if (lastDotIndex === -1 || folderName===".") {
+//     console.log("folderName has no extension");
+//     return false;
+//   }
+
+//   const folderExtension = folderName.substring(lastDotIndex + 1).toLowerCase();
+//   console.log("folderExtension", folderExtension);
+
+//   const final = allowedExtensions.includes(folderExtension);
+
+//   // Invert the result
+//   const invertedResult = !final;
+//   console.log(invertedResult);
+
+//   if (invertedResult) {
+//     return true;
+//   } else {
+//     return false;
+//   }
+// }
+
 
 if (hasAllowedExtension(childFolder.name)) {
   const button = document.createElement("button");
@@ -1295,7 +1346,11 @@ else{
   // Set the iframe source to the HTML file
   const pathBeforeLastSegment = extractPathBeforeLastSegment(HtmlFile.url);
   console.log(pathBeforeLastSegment)
-  iframe.src = pathBeforeLastSegment+"/"+HtmlFile.name;
+  console.log("file url==>",pathBeforeLastSegment+"/"+HtmlFile.name+"?alt=media")
+  // iframe.src = pathBeforeLastSegment+"/"+HtmlFile.name+"?alt=media"
+  
+  iframe.src = pathBeforeLastSegment;
+  // lksdsk
 
   // Add a load event listener to the iframe
   iframe.addEventListener("load", () => {

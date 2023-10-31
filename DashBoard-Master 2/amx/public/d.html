@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Webcam Viewer</title>
+</head>
+<body>
+    <h1>Webcam Viewer</h1>
+    <div>
+    <button id="toggleButton">Turn On Webcam</button>
+    </div>
+    <video id="webcam" autoplay playsinline></video>
+   
+    
+    <script>
+        let webcamStream = null;
+        const webcamVideo = document.getElementById('webcam');
+        const toggleButton = document.getElementById('toggleButton');
+        let isWebcamOn = false;
+
+        // Function to start or stop the webcam stream
+        function toggleWebcam() {
+            if (isWebcamOn) {
+                // Turn off the webcam
+                webcamStream.getTracks().forEach(track => track.stop());
+                webcamVideo.srcObject = null;
+                toggleButton.textContent = 'Turn On Webcam';
+            } else {
+                // Turn on the webcam
+                navigator.mediaDevices.getUserMedia({ video: true })
+                    .then(function (stream) {
+                        webcamStream = stream;
+                        webcamVideo.srcObject = stream;
+                        toggleButton.textContent = 'Turn Off Webcam';
+                    })
+                    .catch(function (error) {
+                        console.error('Error accessing the webcam:', error);
+                    });
+            }
+            isWebcamOn = !isWebcamOn;
+        }
+
+        // Attach the click event listener to the button
+        toggleButton.addEventListener('click', toggleWebcam);
+    </script>
+</body>
+</html>

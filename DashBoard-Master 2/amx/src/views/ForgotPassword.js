@@ -3,6 +3,7 @@ import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import { faEye, faEyeSlash } from "react-icons/fa";
 
+import { Spinner } from "reactstrap";
 import { BsFillEyeFill, BsFillEyeSlashFill } from "react-icons/bs";
 
 import "./assets/images/favicon.ico";
@@ -15,6 +16,8 @@ import { Link, useHistory } from "react-router-dom";
 import drone from "../assets/drone.png";
 
 const ForgotPassword = () => {
+
+  const [sendLoading,setSendLoading]=useState(false)
   
   const [showPassword, setShowPassword] = useState(false);
   const [data, setData] = useState({
@@ -44,6 +47,7 @@ const ForgotPassword = () => {
       return;
     }
     try {
+      setSendLoading(true)
       let payload = {
         mail: data.mail,
       };
@@ -53,9 +57,9 @@ const ForgotPassword = () => {
         .then((res) => {
           const data2 = res.data;
           console.log(res.data);
-          
+          setSendLoading(false)
           toast.success(
-            "Welcome " ,
+            "OTP send to the Mobile Number " ,
             {
               position: "top-right",
               autoClose: 50000,
@@ -73,6 +77,7 @@ const ForgotPassword = () => {
         })
         .catch((err) => {
           if (err.response) {
+            setSendLoading(false)
             toast.error("Please check your credentials!", {
               position: "top-right",
               autoClose: 5000,
@@ -94,6 +99,7 @@ const ForgotPassword = () => {
         });
     } catch (error) {
       console.log(error);
+      setSendLoading(false)
     }
   };
 
@@ -118,7 +124,7 @@ const ForgotPassword = () => {
               <div className="mb-4">
                 <img style={{ maxWidth: "66px" }} src={amxlogin} alt="" />
               </div>
-              <h3 className="mb-4">ForgotPassword</h3>
+              <h3 className="mb-4">Forgot Password</h3>
               <span className="form-labels"><span className="asterisk-symbol">*</span>Email </span>
             
                 <input
@@ -134,14 +140,37 @@ const ForgotPassword = () => {
           
 
              
+              
+              {sendLoading ? <> 
+                <button disabled
+                className="btn btn-primary shadow-2 mb-4"
+                style={{display:'flex',justifyContent:'center',alignItems:'center',gap:'5px'}}
+              >
+                <Spinner
+                          size="md"
+                          color="secondary"
+                          style={{
+                            height: "12px",
+                            width: "12px",
+                          }}
+                        ></Spinner>
+                        <span >
+                          {" "}
+                Sending OTP 
+                      </span>
+              </button>
+              </> : <>
               <button
                 onClick={ForgotPasswordClick}
                 className="btn btn-primary shadow-2 mb-4"
               >
-                ForgotPassword
+                Send OTP
               </button>
+              
+              </>}
+              
               <p className="mb-0 text-muted">
-              Allready have an account? {" "}
+              Already have an account? {" "}
               {/* <a href="auth-signin.html"> Log in</a> */}
               <b onClick={LoginClick}>Log in</b>
             </p>

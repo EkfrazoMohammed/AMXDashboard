@@ -1,13 +1,15 @@
 import React, { useState, useEffect, useMemo } from "react";
 import { Card, CardHeader, CardBody, Row, Col } from "reactstrap";
-import {
-  GoogleMap,
-  useJsApiLoader,
-  Marker,
-  useLoadScript,
-  Polygon,
-  Autocomplete
-} from "@react-google-maps/api";
+// import {
+//   google,
+//   GoogleMap,
+//   useJsApiLoader,
+//   Marker,
+//   useLoadScript,
+//   Polygon,
+//   Autocomplete
+// } from "@react-google-maps/api";
+import {Autocomplete, BicyclingLayer, BicyclingLayerF, Circle, CircleF, Data, DataF, DirectionsRenderer, DirectionsService, DistanceMatrixService, DrawingManager, DrawingManagerF, FLOAT_PANE, GoogleMap, GoogleMapsMarkerClusterer, GoogleMarkerClusterer, GroundOverlay, GroundOverlayF, HeatmapLayer, HeatmapLayerF, InfoBox, InfoBoxF, InfoWindow, InfoWindowF, KmlLayer, LoadScript, LoadScriptNext, MAP_PANE, MARKER_LAYER, MapContext, Marker, MarkerClusterer, MarkerClustererF, MarkerF, OVERLAY_LAYER, OVERLAY_MOUSE_TARGET, OverlayView, OverlayViewF, Polygon, PolygonF, Polyline, PolylineF, Rectangle, RectangleF, StandaloneSearchBox, StreetViewPanorama, StreetViewService, TrafficLayer, TrafficLayerF, TransitLayer, TransitLayerF, useGoogleMap, useJsApiLoader, useLoadScript} from "@react-google-maps/api";
 import {useRef } from 'react';
 
 
@@ -16,7 +18,7 @@ import PlacesAutocomplete, {
   getLatLng,
 } from 'react-places-autocomplete';
 
-const libraries = ['places'];
+const libraries = ['places','elevation'];
 
 // const MapWithSearchBox = () => {
 //   const mapRef = useRef(null);
@@ -72,7 +74,7 @@ const libraries = ['places'];
 const MapWithSearchBox = () => {
   const mapRef = useRef(null);
   const autocompleteRef = useRef(null);
-
+  // AIzaSyD-ww6ewKJkrhAZNRQRwITZRpSMnziHdc0
   const { isLoaded, loadError } = useLoadScript({
     googleMapsApiKey: "AIzaSyD-ww6ewKJkrhAZNRQRwITZRpSMnziHdc0", // Replace with your API key
     libraries,
@@ -121,6 +123,7 @@ const DroneMap = () => {
   const [polygonCoordinates, setPolygonCoordinates] = useState([]);
   const [markers, setMarkers] = useState([]);
   const [latestCoordinate, setLatestCoordinate] = useState(null);
+  const [elevationData, setElevationData] = useState(null);
 
   const handlePolygonClick = (event) => {
     const { latLng } = event;
@@ -151,7 +154,8 @@ const DroneMap = () => {
       position: latLng,
     };
     setMarkers((prevMarkers) => [...prevMarkers, newMarker]);
-
+  // Fetch elevation data for the new marker
+  fetchElevationData(newMarker.position);
     // Update polygon coordinates with markers
     setPolygonCoordinates((prevCoordinates) => [
       ...prevCoordinates,
@@ -167,7 +171,51 @@ const DroneMap = () => {
       lng: latLng.lng(),
     });
   };
-
+  const fetchElevationData = (position, setElevationData) => {
+    if (!window.google || !window.google.maps) {
+      console.error("Google Maps JavaScript API not loaded");
+      return;
+    }
+  
+    const elevationService = new window.google.maps.ElevationService();
+  
+    elevationService.getElevationForLocations(
+      {
+        locations: [position],
+      },
+      (results, status) => {
+        if (status === "OK" && results && results.length > 0) {
+          const elevation = results[0].elevation;
+          setElevationData(elevation);
+          console.log("Elevation data:", elevation);
+        } else {
+          setElevationData(null);
+          console.error("Error fetching elevation data:", status);
+        }
+      }
+    );
+  };
+  
+  console.log(elevationData)
+  
+  // const fetchElevationData = (position) => {
+  //   const elevationService = new google.maps.ElevationService();
+  
+  //   elevationService.getElevationForLocations(
+  //     {
+  //       locations: [position],
+  //     },
+  //     (results, status) => {
+  //       if (status === "OK" && results[0]) {
+  //         setElevationData(results[0].elevation);
+  //       } else {
+  //         setElevationData(null);
+  //         console.error("Error fetching elevation data:", status);
+  //       }
+  //     }
+  //   );
+  // };
+  
   const handleExportKML = () => {
     const kmlString = generateKML(polygonCoordinates);
 

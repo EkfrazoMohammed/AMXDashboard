@@ -457,5 +457,16 @@ a {
   background: #275df1;
 }
 
-
+@media (max-width:767px){
+  .overlay .popup-outer-adddrone {
+    margin: 10px;
+    position: relative;
+      padding: 10px;
+      height: auto;
+      /* max-width: 734px; */
+      width: auto;
+      background: #fff;
+      border-radius: 12px;
+  }
+}
 

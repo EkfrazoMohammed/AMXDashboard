@@ -473,12 +473,17 @@
 
   > .content {
     padding: 78px 30px 30px 280px;
-    min-height: calc(100vh - 70px);
+    min-height: calc(99vh);
+    overflow-y: scroll;
+    height: 100% !important;
   }
 
-  > .content.mycustompadding{
-    padding:0 0px 10px 250px;
-    z-index:2000 !important;
+  > .content.mycustompadding {
+      padding: 0 0px 10px 250px;
+      overflow: hidden;
+      max-height: calc(100vh) !important;
+      z-index: 2000 !important;
+ 
   }
 
   > .navbar {

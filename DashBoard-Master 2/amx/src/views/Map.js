@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useMemo } from "react";
 import axios from "axios";
 import { Card, CardHeader, CardBody, Row, Col } from "reactstrap";
@@ -63,14 +62,27 @@ function DroneMap(props) {
         config
       );
       console.log(data.data.length, "dronedata====>");
-      console.log(data.data)
-      setMapStatus(data.data)
-     
+      console.log(data.data);
+      setMapStatus(data.data);
     } catch (error) {
       console.log(error);
     }
   };
+  // useEffect(() => {
+  //   console.log("navigator", navigator.geolocation);
 
+  //   if (navigator.geolocation) {
+  //     console.log("hello");
+  //     navigator.geolocation.getCurrentPosition(function (position) {
+  //       const latitude = position.coords.latitude;
+  //       const longitude = position.coords.longitude;
+  //       //  setUserLocation({ lat: latitude, lng: longitude });
+  //       console.log("geolocation", latitude, longitude);
+  //     });
+  //   } else {
+  //     console.log("Geolocation is not supported by this browser.");
+  //   }
+  // }, []);
   useEffect(() => {
     // Call GetAllDrone initially when the component mounts
     GetAllDrone();
@@ -90,26 +102,29 @@ function DroneMap(props) {
   //     console.table(response.data);
   //     console.log(Object.keys(response.data).length)
   //     setMapStatus(response.data);
-      
+
   //   };
   //   getAllDroneStatus();
   // }, []);
   const [clickedMarkerInfo, setClickedMarkerInfo] = useState(null);
   const [isInfoWindowOpen, setIsInfoWindowOpen] = useState(false);
-  
+
   const handleMarkerClick = (drone) => {
     // alert(drone.model_name)
-    toast.info( `Model: ${drone.model_name}\nConnection ID: ${drone.connection_id}`, {
-      position: "top-right",
-      autoClose: 2000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-      theme: "light",
-      icon: <img src={dronelogo} />,
-    });
+    toast.info(
+      `Model: ${drone.model_name}\nConnection ID: ${drone.connection_id}`,
+      {
+        position: "top-right",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+        icon: <img src={dronelogo} />,
+      }
+    );
     if (clickedMarkerInfo === drone) {
       // If the marker is already clicked, close the InfoWindow
       setClickedMarkerInfo(drone);
@@ -118,10 +133,7 @@ function DroneMap(props) {
       setClickedMarkerInfo(null);
     }
   };
-  
-  
-  
-  
+
   // [{
   //   aircraft_type:"",
   //   connection_id:"",
@@ -138,10 +150,12 @@ function DroneMap(props) {
   const dron_state_icon = {
     red: "https://img.icons8.com/color/48/marker--v1.png",
     green: "https://img.icons8.com/color/48/000000/marker--v1.png",
-    one:"https://aactxg.stripocdn.email/content/guids/CABINET_f37167ea2322984dfeb6a0a05e92d2480b49356b15fb055bb2ce2e84131a12e4/images/icons8drone64.png",
-    two:"https://aactxg.stripocdn.email/content/guids/CABINET_f37167ea2322984dfeb6a0a05e92d2480b49356b15fb055bb2ce2e84131a12e4/images/icons8drone64_1.png",
-    active:"https://aactxg.stripocdn.email/content/guids/CABINET_f37167ea2322984dfeb6a0a05e92d2480b49356b15fb055bb2ce2e84131a12e4/images/icons8drone50.png",
-    inactive:"https://aactxg.stripocdn.email/content/guids/CABINET_f37167ea2322984dfeb6a0a05e92d2480b49356b15fb055bb2ce2e84131a12e4/images/icons8drone50_1.png"
+    one: "https://aactxg.stripocdn.email/content/guids/CABINET_f37167ea2322984dfeb6a0a05e92d2480b49356b15fb055bb2ce2e84131a12e4/images/icons8drone64.png",
+    two: "https://aactxg.stripocdn.email/content/guids/CABINET_f37167ea2322984dfeb6a0a05e92d2480b49356b15fb055bb2ce2e84131a12e4/images/icons8drone64_1.png",
+    active:
+      "https://aactxg.stripocdn.email/content/guids/CABINET_f37167ea2322984dfeb6a0a05e92d2480b49356b15fb055bb2ce2e84131a12e4/images/icons8drone50.png",
+    inactive:
+      "https://aactxg.stripocdn.email/content/guids/CABINET_f37167ea2322984dfeb6a0a05e92d2480b49356b15fb055bb2ce2e84131a12e4/images/icons8drone50_1.png",
   };
 
   useEffect(() => {
@@ -150,94 +164,98 @@ function DroneMap(props) {
       setIsInfoWindowOpen(false);
     }
   }, [clickedMarkerInfo]);
-  
+
   const renderMap = () => {
     if (!isLoaded) {
       return <div>Loading map...</div>;
     }
     const mapOptions = {
       // Basic options
-      mapTypeId: "hybrid",     // Set the map type (e.g., "roadmap", "terrain", "satellite", "hybrid")
-      // zoomControl: true,          // Display zoom control
-      streetViewControl: false,   // Display street view control
+      mapTypeId: "hybrid", // Set the map type (e.g., "roadmap", "terrain", "satellite", "hybrid")
+      zoomControl: false, // Display zoom control
+      streetViewControl: false, // Display street view control
       // fullscreenControl: true,    // Display fullscreen control
 
-      mapTypeControl: false,   // Disable map type control
-    
+      mapTypeControl: false, // Disable map type control
+      fullscreenControl: false,
       // Display options
       backgroundColor: "#f2f2f2", // Background color of the map
-      disableDefaultUI: false,    // Disable default UI components (zoom, map type, etc.)
-      draggable: true,            // Make the map draggable
-      scrollwheel: true,          // Enable zoom via mouse scrollwheel
+      disableDefaultUI: false, // Disable default UI components (zoom, map type, etc.)
+      draggable: true, // Make the map draggable
+      scrollwheel: true, // Enable zoom via mouse scrollwheel
       disableDoubleClickZoom: false, // Disable zoom on double click
-    
+
       // Interaction options
-      gestureHandling: "auto",    // Define how the map responds to user gestures ("cooperative", "greedy", "auto")
+      gestureHandling: "auto", // Define how the map responds to user gestures ("cooperative", "greedy", "auto")
       draggableCursor: "pointer", // Set the cursor type when dragging the map
       draggingCursor: "grabbing", // Set the cursor type when the map is being dragged
       minZoom: 2, // Set the minimum zoom level to show the whole world map
-  // maxZoom: 6, 
+      // maxZoom: 6,
       // Custom map styles
       styles: [
         // Define custom map styles as an array of objects
         // Refer to the Google Maps Styling Wizard for generating styles: https://mapstyle.withgoogle.com/
       ],
-    
+
       // ... other map options
     };
-    
+
     return (
       <GoogleMap
         center={center}
         zoom={10}
-        mapContainerStyle={{ width: "100%", height: "calc(100vh - 22px)",position:"relative",zIndex:"2000" }}
-      
+        mapContainerStyle={{
+          width: "100%",
+          height: "calc(100vh - 22px)",
+          position: "relative",
+          zIndex: "2000",
+        }}
         // mapContainerStyle={{ width: "100%", height: "97vh",position:"relative",zIndex:"2000" }}
         options={mapOptions}
       >
-     
-
-{mapStatus.map((drone) => (
-        <Marker
-          key={drone.id}
-          position={{ lat: parseFloat(drone.latitude), lng: parseFloat(drone.longitude) }}
-          onClick={() => handleMarkerClick(drone)}
-          icon={drone.Status ? dron_state_icon.one : dron_state_icon.two}
-        >
-          {clickedMarkerInfo===drone?
-        <>
-          <InfoWindow
-           
-           position={{ lat: parseFloat(drone.latitude), lng: parseFloat(drone.longitude) }}
-           onCloseClick={() => {
-             setClickedMarkerInfo(null);
-           }}
-         >
-           {<div>
-             <p>{drone.id}</p>
-           </div>}
-         </InfoWindow>
-        </>  
-        :
-        <>
-        
-        </>}
-          
-        
-        </Marker>
-      ))}
-
-
+        {mapStatus.map((drone) => (
+          <Marker
+            key={drone.id}
+            position={{
+              lat: parseFloat(drone.latitude),
+              lng: parseFloat(drone.longitude),
+            }}
+            onClick={() => handleMarkerClick(drone)}
+            icon={drone.Status ? dron_state_icon.one : dron_state_icon.two}
+          >
+            {clickedMarkerInfo === drone ? (
+              <>
+                <InfoWindow
+                  position={{
+                    lat: parseFloat(drone.latitude),
+                    lng: parseFloat(drone.longitude),
+                  }}
+                  onCloseClick={() => {
+                    setClickedMarkerInfo(null);
+                  }}
+                >
+                  {
+                    <div>
+                      <p>{drone.id}</p>
+                    </div>
+                  }
+                </InfoWindow>
+              </>
+            ) : (
+              <></>
+            )}
+          </Marker>
+        ))}
       </GoogleMap>
     );
   };
-  
+
   const renderedMap = useMemo(() => {
     return isLoaded ? renderMap() : <div>Map loading...</div>;
   }, [isLoaded, mapStatus]);
 
   return renderedMap;
-};
+}
 
 const defaultProps = {
   center: {
@@ -250,7 +268,7 @@ const defaultProps = {
 function Maps() {
   return (
     <>
-     <ToastContainer />
+      <ToastContainer />
       <div className="content mycustompadding">
         <Row>
           <Col md="12">
@@ -261,11 +279,7 @@ function Maps() {
                   className="map"
                   style={{ position: "relative", overflow: "hidden" }}
                 > */}
-                 <div
-                  id="map"
-                  className="map"
-                  style={{ position: "relative"}}
-                >
+                <div id="map" className="map" style={{ position: "relative" }}>
                   <DroneMap />
                 </div>
               </CardBody>

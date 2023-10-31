@@ -94,7 +94,18 @@ const Register = () => {
     const { name, value } = e.target;
     setData({ ...data, [name]: value });
     setErrors({ ...errors, [name]: false });
-    if (name === 'mail') {
+    if (name === "user_name" || name === "password" || name==="first_name") {
+      const alphaNumericWithSpecialPattern = /^[^\s]+$/;
+
+      setErrors({
+        ...errors,
+
+        // [name]: value.trim() === '', // Check if the value is empty or contains non-alphanumeric characters
+
+        [name]:
+          !alphaNumericWithSpecialPattern.test(value) || value.trim() === "", // Check if the value is empty or contains non-alphanumeric characters
+      });
+    } else if (name === 'mail') {
       const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
       setErrors({
         ...errors,
@@ -136,6 +147,80 @@ const Register = () => {
       });
       return;
     }
+
+     // Trim the values to remove leading and trailing spaces
+     const trimmedUserName = data.user_name.trim();
+
+     const trimmedmail = data.mail.trim();
+     const trimmedFirstName = data.first_name.trim();
+ 
+     if (!trimmedUserName || !trimmedmail || !trimmedFirstName) {
+       setErrors({
+         user_name: !trimmedUserName,
+         mail: !trimmedmail,
+         first_name: !trimmedFirstName,
+       });
+       return;
+     }
+     // Check if user_name contains non-alphanumeric characters (including spaces)
+     // Check if user_name starts with a white space or special character
+     if (/^\s/.test(data.user_name)) {
+       // Check if user_name starts with white space
+       setErrors({
+         user_name: !data.user_name,
+       });
+       toast.error("User Name cannot start with a white space", {
+         position: "top-right",
+         autoClose: 5000,
+         hideProgressBar: false,
+         closeOnClick: true,
+         pauseOnHover: true,
+         draggable: true,
+         progress: undefined,
+         theme: "light",
+       });
+ 
+       return;
+     }
+ 
+     // Check if user_name starts with a white space or special character
+     if (/^\s/.test(data.mail)) {
+       // Check if user_name starts with white space
+       setErrors({
+         mail: !data.mail,
+       });
+       toast.error("Mail cannot start with a white space", {
+         position: "top-right",
+         autoClose: 5000,
+         hideProgressBar: false,
+         closeOnClick: true,
+         pauseOnHover: true,
+         draggable: true,
+         progress: undefined,
+         theme: "light",
+       });
+ 
+       return;
+     }
+     // Check if user_name starts with a white space or special character
+     if (/^\s/.test(data.first_name)) {
+       // Check if user_name starts with white space
+       setErrors({
+         first_name: !data.first_name,
+       });
+       toast.error("First Name cannot start with a white space", {
+         position: "top-right",
+         autoClose: 5000,
+         hideProgressBar: false,
+         closeOnClick: true,
+         pauseOnHover: true,
+         draggable: true,
+         progress: undefined,
+         theme: "light",
+       });
+ 
+       return;
+     }
     try {
       let payload = {
         user_name: data.user_name,
@@ -267,7 +352,14 @@ const Register = () => {
                 required
               />
                {errors.user_name && (
-      <span className="error-message">Username is required</span>
+      // <span className="error-message">Username is required</span>
+      <span className="error-message">
+      {/* User Name is required */}
+
+      {data.user_name.trim() === ""
+        ? "User Name is required"
+        : "User Name should not start with space"}
+    </span>
     )}
           </div>
               </div> 
@@ -337,12 +429,20 @@ const Register = () => {
             className={`password-toggle ${showPassword ? 'show' : ''}`}
             onClick={togglePasswordVisibility}
           >
-            {showPassword ? <BsFillEyeFill /> : <BsFillEyeSlashFill />}
+            {/* {showPassword ? <BsFillEyeFill /> : <BsFillEyeSlashFill />} */}
+            {showPassword ?<BsFillEyeSlashFill />  : <BsFillEyeFill />}
           </div>
         </div>
 
         {errors.password && (
-          <span className="error-message">Password is required</span>
+          // <span className="error-message">Password is required</span>
+          <span className="error-message">
+          {/* User Name is required */}
+
+          {data.password.trim() === ""
+            ? "Password is required"
+            : "Password should not start with space"}
+        </span>
         )}
       </div>
     </div>
@@ -372,7 +472,14 @@ const Register = () => {
                 required
               />
               {errors.first_name && (
-          <span className="error-message">First Name is required</span>
+          // <span className="error-message">First Name is required</span>
+          <span className="error-message">
+          {/* User Name is required */}
+
+          {data.first_name.trim() === ""
+            ? "First Name is required"
+            : "First Name should not start with space"}
+        </span>
         )}
           </div>
                <div className="mb-3">

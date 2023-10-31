@@ -346,7 +346,7 @@ null
                       class="col-form-label col-sm-3"
                     >
                       <span className="Add-drone-form-lable">
-                        Purchase year:
+                        Purchase Year:
                       </span>
                     </label>
                     <div class="col-sm-3">
@@ -407,7 +407,7 @@ null
                       class="col-form-label col-sm-3"
                     >
                       <span className="Add-drone-form-lable">
-                        Next Maintainance:
+                        Next Maintenance:
                       </span>
                     </label>
                     <div class="col-sm-3">

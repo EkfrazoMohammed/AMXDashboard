@@ -315,7 +315,7 @@ function AdminNavbar(props) {
                   <NavLink tag="li">
                   <DropdownItem
                       
-                      className="nav-item"
+                      className="nav-item text-info"
                       onClick={UserProfileClick}
                     >
                       Profile
@@ -324,6 +324,7 @@ function AdminNavbar(props) {
                       // onClick={LogOutClick}
                       className="nav-item text-danger"
                       onClick={openConfirmBox}
+                      style={{color:"red"}}
                     >
                        {/* <button onClick={openConfirmBox}>Open Confirm Box</button> */}
                       Log out

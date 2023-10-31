@@ -47,8 +47,7 @@ function AddDrone() {
     time_in_service: "",
     Next_maintainance: "",
     user_id: userIdO,
-    Status:true
-
+    Status: true,
   });
 
   const [errors, setErrors] = useState({
@@ -59,7 +58,7 @@ function AddDrone() {
     UIN: false,
     time_in_service: false,
     Next_maintainance: false,
-    Status:false
+    Status: false,
   });
   let {
     aircraft_type,
@@ -72,11 +71,32 @@ function AddDrone() {
     user_id,
     Status,
   } = state;
+  // let handleChange = (e) => {
+  //   let { name, value } = e.target;
+  //   setState({ ...state, [name]: value });
+  //   setErrors({ ...errors, [name]: false });
+  // };
   let handleChange = (e) => {
     let { name, value } = e.target;
+
+    // Validate date inputs against purchase_year
+    if (name === "purchase_year") {
+      setErrors({ ...errors, [name]: false });
+    } else if (name === "time_in_service" || name === "Next_maintainance") {
+      if (new Date(value) < new Date(state.purchase_year)) {
+        // Handle validation error for time_in_service and Next_maintainance
+        setErrors({ ...errors, [name]: true });
+      } else {
+        setErrors({ ...errors, [name]: false });
+      }
+    } else {
+      // Handle other inputs
+      setErrors({ ...errors, [name]: false });
+    }
+
     setState({ ...state, [name]: value });
-    setErrors({ ...errors, [name]: false });
   };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (
@@ -102,15 +122,11 @@ function AddDrone() {
     try {
       console.log(state, "state==>");
       let data = await axios
-        .post(
-          "https://fibregrid.amxdrones.com/dronecount/addDrone/",
-          state,
-          {
-            headers: {
-              Authorization: localStorage.getItem("amxtoken").replace(/"/g, ""),
-            },
-          }
-        )
+        .post("https://fibregrid.amxdrones.com/dronecount/addDrone/", state, {
+          headers: {
+            Authorization: localStorage.getItem("amxtoken").replace(/"/g, ""),
+          },
+        })
         .then((res) => {
           console.log(res);
           toast.success("New Drone added !", {
@@ -126,13 +142,29 @@ function AddDrone() {
           });
           console.log(data);
           CloseProject();
-          setTimeout(()=>{
-          window.location.reload();
-          },2000)
+          setTimeout(() => {
+            window.location.reload();
+          }, 2000);
         })
         .catch((err) => {
           console.log(err);
-          if (err.response) {
+          if (
+            err &&
+            err.response.data.message === "UIN number is already in use"
+          ) {
+            toast.error("UIN number is already in use", {
+              position: "top-right",
+              autoClose: 5000,
+              hideProgressBar: false,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true,
+              progress: undefined,
+              theme: "light",
+              icon: <img src={drone} />,
+            });
+          } else {
+            console.log(err);
             toast.error("Invalid Data, Please try agin later !", {
               position: "top-right",
               autoClose: 5000,
@@ -144,16 +176,18 @@ function AddDrone() {
               theme: "light",
               icon: <img src={drone} />,
             });
-          
+
             console.log(data);
             CloseProject();
-            window.location.reload();
+            setTimeout(() => {
+              window.location.reload();
+            }, 5000);
 
             console.log(err.response.status);
             console.log(err.response.statusText);
             console.log(err.message);
             console.log(err.response.headers); // 👉️ {... response headers here}
-            console.log(err.response.data); // 👉️ {... response data here}
+            console.log(err.response.data.message); // 👉️ {... response data here}
           }
         });
     } catch (error) {
@@ -170,8 +204,10 @@ function AddDrone() {
           theme: "light",
           icon: <img src={drone} />,
         });
-        
       }
+      setTimeout(() => {
+        window.location.reload();
+      }, 5000);
     }
   };
 
@@ -194,6 +230,9 @@ function AddDrone() {
   const CloseProject = () => {
     console.log("CloseProject");
     setaddprojectopen(false);
+    setTimeout(() => {
+      window.location.reload();
+    }, 2000);
   };
 
   const onFileChange = (files) => {
@@ -205,26 +244,22 @@ function AddDrone() {
       {({ color }) => (
         <>
           <ToastContainer />
-        
 
           <div className={addprojectopen == true ? "overlay show" : "overlay"}>
             {/* <!-- popup box start --> */}
             <div className="popup-outer-adddrone">
               <div className="popup-box-adddrone">
-             
                 <FontAwesomeIcon
                   onClick={CloseProject}
                   className="close"
                   icon={faClose}
                 />
                 <div className="profile-text-adddrone">
-                 
                   <div className="text-adddrone">
                     <span className="name">Add Drone</span>
-                   
                   </div>
                 </div>
-           
+
                 <div className="wraper-dashboard">
                   <div className="container">
                     <div class="form-group row">
@@ -246,7 +281,7 @@ function AddDrone() {
                         />
                         {errors.aircraft_type && (
                           <span className="error-message">
-                            Aircraft type is required
+                            Aircraft Type is required
                           </span>
                         )}
                       </div>
@@ -273,7 +308,6 @@ function AddDrone() {
                         )}
                       </div>
                     </div>
-                
 
                     <div class="form-group row">
                       <label for="staticEmail" class="col-form-label col-sm-3">
@@ -301,7 +335,7 @@ function AddDrone() {
                       <label for="staticEmail" class="col-form-label col-sm-3">
                         <span className="Add-drone-form-lable">
                           <span className="asterisk-symbol">*</span> Purchase
-                          year:
+                          Year:
                         </span>
                       </label>
                       <div class="col-sm-3">
@@ -316,7 +350,7 @@ function AddDrone() {
                         />
                         {errors.purchase_year && (
                           <span className="error-message">
-                            Purchase Year is required
+                            Purchase Year date is required
                           </span>
                         )}
                       </div>
@@ -339,9 +373,7 @@ function AddDrone() {
                           onChange={handleChange}
                         />
                         {errors.UIN && (
-                          <span className="error-message">
-                            UIN is required
-                          </span>
+                          <span className="error-message">UIN is required</span>
                         )}
                       </div>
 
@@ -352,18 +384,29 @@ function AddDrone() {
                         </span>
                       </label>
                       <div class="col-sm-3">
-                      <input
+                        <input
                           type="date"
                           class="form-control addDrone-input"
                           id="text"
                           placeholder="Time in Service"
                           name="time_in_service"
                           value={time_in_service}
+                          min={purchase_year}
                           onChange={handleChange}
                         />
+                        {/* {errors.time_in_service && (
+                          <span className="error-message">
+                            Time in service date is required
+                          </span>
+                        )} */}
+
                         {errors.time_in_service && (
                           <span className="error-message">
-                            Time in service is required
+                            {state.time_in_service
+                              ? state.time_in_service < state.purchase_year
+                                ? "Time In Service date should be later than Purchase Year."
+                                : ""
+                              : "Time In Service date is required."}
                           </span>
                         )}
                       </div>
@@ -372,7 +415,7 @@ function AddDrone() {
                       <label for="staticEmail" class="col-form-label col-sm-3">
                         <span className="Add-drone-form-lable">
                           <span className="asterisk-symbol">*</span> Next
-                          Maintainance:
+                          Maintenance:
                         </span>
                       </label>
                       <div class="col-sm-3">
@@ -384,16 +427,31 @@ function AddDrone() {
                           name="Next_maintainance"
                           value={Next_maintainance}
                           onChange={handleChange}
+                          min={purchase_year}
                         />
+                        {/* {errors.Next_maintainance && (
+                          <span className="error-message">
+                           Next maintainance date is required
+                          </span>
+                        )} */}
                         {errors.Next_maintainance && (
                           <span className="error-message">
-                           Next maintainance is required
+                            {state.Next_maintainance
+                              ? state.Next_maintainance < state.purchase_year
+                                ? "Next Maintenance date should  be later than Purchase Year."
+                                : ""
+                              : "Next Maintenance date is required."}
                           </span>
                         )}
                       </div>
 
                       <div class="col-sm-6">
-                        <input type="hidden"   class="form-control addDrone-input" name="user_id" value={userIdO} />
+                        <input
+                          type="hidden"
+                          class="form-control addDrone-input"
+                          name="user_id"
+                          value={userIdO}
+                        />
                       </div>
                     </div>
                   </div>
@@ -412,21 +470,16 @@ function AddDrone() {
             </div>
           </div>
 
-          <div 
-
-          
-          >
-            
-        <Col md={12}>
-            <button
-              type="button"
-              onClick={AddProject}
-              className="btn btn-primary"
-            >
-              Add Drone
-            </button>
+          <div>
+            <Col md={12}>
+              <button
+                type="button"
+                onClick={AddProject}
+                className="btn btn-primary"
+              >
+                Add Drone
+              </button>
             </Col>
-          
           </div>
         </>
       )}
@@ -437,7 +490,7 @@ function DroneList() {
   const [tableData, setTableData] = useState([]);
 
   const [updatingRow, setUpdatingRow] = useState(false);
-  
+
   const userIdO = localStorage.getItem("user_id");
   const amxtokenO = localStorage.getItem("amxtoken").replace(/"/g, "");
   const config = {
@@ -448,31 +501,25 @@ function DroneList() {
       Authorization: amxtokenO,
     },
   };
-  
+
   let GetAllDrone = async () => {
     try {
-    
       let data = await axios.get(
         "https://fibregrid.amxdrones.com/dronecount/addDrone/",
         config
       );
       console.log(data.data.length, "dronedata====>");
-      console.log(data.data)
+      console.log(data.data);
       setTableData(data.data);
-     
     } catch (error) {
       console.log(error);
     }
   };
 
-
   useEffect(() => {
-   
-      // Logic for fetching data when a row is not being updated
-      GetAllDrone();
-   
+    // Logic for fetching data when a row is not being updated
+    GetAllDrone();
   }, []);
-  
 
   const columns = [
     {
@@ -480,7 +527,8 @@ function DroneList() {
       field: "model_name",
       sorting: false,
       filtering: false,
-      cellStyle: { background: "#009688",minWidth: 110 },
+      // cellStyle: { background: "#009688",minWidth: 110 },
+      cellStyle: { minWidth: 110 },
       headerStyle: { color: "#fff" },
       filterPlaceholder: "filter",
       render: (rowData) => <div>{rowData.model_name}</div>,
@@ -495,11 +543,10 @@ function DroneList() {
       filterPlaceholder: "filter",
       searchable: true,
       export: true,
-      cellStyle: {minWidth: 110 },
+      cellStyle: { minWidth: 110, maxWidth: 110, overflow: "hidden" },
 
       filtering: true, // Remove filter option for this column
     },
-   
 
     //   {
     //     title: "Next Maintainance",
@@ -520,17 +567,17 @@ function DroneList() {
 
     // filtering: false, // Remove filter option for this column
     //   },
-   
+
     {
       title: "Aircraft Type",
       field: "aircraft_type",
       filterPlaceholder: "filter",
-      cellStyle: {minWidth: 90 },
+      cellStyle: { minWidth: 110 },
     },
     {
       title: "Connection Id",
       field: "connection_id",
-      cellStyle: {minWidth: 90 },
+      cellStyle: { minWidth: 110, maxWidth: 110 },
       currencySetting: { minimumFractionDigits: 1 },
       // cellStyle: { background: "#009688" },
       // headerStyle: { color: "#fff" },
@@ -539,8 +586,8 @@ function DroneList() {
     //   title: "IP Address",
     //   field: "ip_address",
     //   filterPlaceholder: "filter",
-    // }, 
-    
+    // },
+
     // {
     //   title: "Latitude",
     //   field: "latitude",
@@ -552,22 +599,20 @@ function DroneList() {
     //   filterPlaceholder: "filter",
     //   cellStyle: {minWidth: 110 },
     // },
-    
+
     // {
     //   title: "Location",
     //   field: "location",
     //   filterPlaceholder: "filter",
     //   cellStyle: {minWidth: 310 },
-    // }, 
+    // },
     {
       title: "Status",
       field: "Status",
-      cellStyle: {minWidth: 110 },
+      cellStyle: { minWidth: 30, maxWidth: 50 },
       // lookup: { True: "Active", False: "Inactive" },
       render: (rowData) => {
-     
-    
-        return <div>{rowData.Status?"Active":"Inactive"}</div>;
+        return <div>{rowData.Status ? "Active" : "Inactive"}</div>;
       },
       editComponent: (props) => (
         <select
@@ -578,10 +623,8 @@ function DroneList() {
           <option value="False">Inactive</option>
         </select>
       ),
-    }
-    
-    
-,    
+    },
+
     // {
     //   title: "Status",
     //   field: "status",
@@ -614,10 +657,10 @@ function DroneList() {
       field: "time_in_service",
       align: "center",
       grouping: false,
-      type: 'date',
-      cellStyle: {minWidth: 110 },
+      type: "date",
+      cellStyle: { minWidth: 110, maxWidth: 110 },
       dateSetting: {
-        format: 'dd/MM/yyyy'
+        format: "dd/MM/yyyy",
       },
       render: (rowData) => {
         const purchaseDate = new Date(rowData.time_in_service);
@@ -637,10 +680,10 @@ function DroneList() {
     {
       title: "Next Maintenance",
       field: "Next_maintainance",
-      type: 'date',
-      cellStyle: {minWidth: 110 },
+      type: "date",
+      cellStyle: { minWidth: 110 },
       dateSetting: {
-        format: 'dd/MM/yyyy'
+        format: "dd/MM/yyyy",
       },
       render: (rowData) => {
         const purchaseDate = new Date(rowData.Next_maintainance);
@@ -677,11 +720,11 @@ function DroneList() {
     {
       title: "Purchase Year",
       field: "purchase_year",
-      cellStyle: {minWidth: 110 },
+      cellStyle: { minWidth: 110 },
       // lookup: { M: "2023", F: "2024" },
-      type: 'date',
+      type: "date",
       dateSetting: {
-        format: 'dd/MM/yyyy'
+        format: "dd/MM/yyyy",
       },
       render: (rowData) => {
         const purchaseDate = new Date(rowData.purchase_year);
@@ -706,13 +749,9 @@ function DroneList() {
     //   field: "aircraft_type",
     //   filterPlaceholder: "filter",
     // },
-    
-    
   ];
- 
-  let [state, setState] = React.useState([]);
 
-  
+  let [state, setState] = React.useState([]);
 
   let handleDelete = async (id) => {
     // await axios.delete(`${id}`);
@@ -769,11 +808,25 @@ function DroneList() {
                           setTimeout(() => resolve(), 500);
                         }),
                       onRowUpdate: async (newRow, oldRow) => {
-                      
                         try {
                           const updatedData = [...tableData];
                           updatedData[oldRow.tableData.id] = newRow;
 
+                          // Check if the time_in_service or Next_maintainance is less than purchase_year
+                          if (
+                            new Date(newRow.time_in_service) <
+                              new Date(newRow.purchase_year) ||
+                            new Date(newRow.Next_maintainance) <
+                              new Date(newRow.purchase_year)
+                          ) {
+                            console.error(
+                              "An error occurred while updating data:"
+                            );
+                            toast.warn(
+                              "Time in Service or Next Maintenance cannot be before purchase year"
+                            );
+                            return false; // Prevent the update
+                          }
                           const userId1 = localStorage.getItem("user_id");
                           const amxtoken1 = localStorage
                             .getItem("amxtoken")
@@ -786,20 +839,18 @@ function DroneList() {
                             purchase_year: newRow.purchase_year,
                             UIN: newRow.UIN,
                             time_in_service: newRow.time_in_service,
-                            Next_maintainance: newRow.Next_maintainance,
+                            Next_maintainance: newRow.time_in_service,
                             user_id: userId1,
                             drone_id: newRow.id,
 
                             // ip_address:newRow.ip_address,
-                            latitude:newRow.latitude,
-                            longitude:newRow.longitude,
+                            latitude: newRow.latitude,
+                            longitude: newRow.longitude,
                             // location:newRow.location,
-                            Status:newRow.Status,
-
-
-
+                            Status: newRow.Status,
                           };
-                            console.log(requestBody)
+
+                          console.log(requestBody);
                           const config1 = {
                             headers: {
                               Authorization: amxtoken1,
@@ -812,14 +863,14 @@ function DroneList() {
                             config1
                           );
 
+                          console.log(response);
+
                           setTableData(updatedData);
 
                           toast.success("Drone updated successfully");
-                          setTimeout(()=>{
-
+                          setTimeout(() => {
                             window.location.reload();
-                          },2000)
-                          
+                          }, 2000);
                         } catch (error) {
                           console.error(
                             "An error occurred while updating data:",
@@ -827,7 +878,7 @@ function DroneList() {
                           );
                           setUpdatingRow(false);
                           toast.error("An error occurred while updating data");
-                        } 
+                        }
                       },
 
                       // onRowUpdate: (newRow, oldRow) =>
@@ -917,14 +968,15 @@ function DroneList() {
                       pagination: tableData.length > 0, // Show pagination if there's data
 
                       // Dynamically generate pageSizeOptions based on available data
-                      pageSizeOptions: [5,10, 15, 20, 25,30, 50, 75, 100]
-                        .filter(option => option <= tableData.length), // Filter out options larger than data size
-                  
+                      pageSizeOptions: [
+                        5, 10, 15, 20, 25, 30, 50, 75, 100,
+                      ].filter((option) => option <= tableData.length), // Filter out options larger than data size
+
                       pageSize: 5,
                       paginationType: "stepped",
                       showFirstLastPageButtons: false,
                       paginationPosition: "bottom",
-                      exportButton: true,
+                      exportButton: false,
                       exportAllData: true,
                       exportFileName: "TableData",
                       addRowPosition: "first",

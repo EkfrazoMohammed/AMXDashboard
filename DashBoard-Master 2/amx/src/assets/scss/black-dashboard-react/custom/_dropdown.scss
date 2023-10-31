@@ -353,7 +353,13 @@
 
 
 @media screen and (min-width: 992px){
-  .dropdown-menu .dropdown-item{
-      color: $dark-gray;
-  }
+  // .dropdown-menu .dropdown-item{
+  //     color: $dark-gray;
+  // }
+
+  
+.dropdown-menu .dropdown-item {
+  
+  color: #5a5ae5;
+}
 }

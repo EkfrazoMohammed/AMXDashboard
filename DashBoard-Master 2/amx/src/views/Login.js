@@ -70,7 +70,7 @@ const Login = () => {
         .post("https://fibregrid.amxdrones.com/dronecount/login/", payload)
         .then((res) => {
           const data2 = res.data;
-          console.log(res.data);
+          console.log(res);
           localStorage.setItem(
             "user_id",
             JSON.stringify(res.data.result.user_info.user_id)
@@ -207,7 +207,8 @@ if (pathOfPhoto !== undefined && pathOfPhoto !== null) {
             className={`password-toggle ${showPassword ? 'show' : ''}`}
             onClick={togglePasswordVisibility}
           >
-            {showPassword ? <BsFillEyeFill /> : <BsFillEyeSlashFill />}
+              {/* {showPassword ?<BsFillEyeFill />  : <BsFillEyeSlashFill />} */}
+            {showPassword ?<BsFillEyeSlashFill />  : <BsFillEyeFill />}
           </div>
         </div>
         {errors.password && (
