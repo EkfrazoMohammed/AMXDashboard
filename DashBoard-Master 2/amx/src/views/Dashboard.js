@@ -444,7 +444,7 @@ function Dashboard(props) {
         "https://fibregrid.amxdrones.com/dronecount/v2/get-folders/",
         config
       );
-      console.log("first");
+      console.log("github");
       // console.log(response.data.map(item => item.folder_structure), "projectdata====>")
       // console.log(response.data[0].folder_structure, "All Projects Charts====>");
       const allProjectData = response.data[0].folder_structure;
