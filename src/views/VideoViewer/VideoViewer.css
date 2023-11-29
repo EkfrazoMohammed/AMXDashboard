@@ -1,0 +1,42 @@
+.videoviewer-page-container{
+width: 100%;
+height: auto;
+
+
+}
+
+.wrapper-container{
+    width: 100%;
+    height: auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap:1rem;
+    flex-direction: column;
+}
+
+.left,.right{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    align-content: center;
+    width: 100%;
+    height: auto;
+    font-size: 2rem;
+   
+
+}
+
+@media (max-width:767px){
+    .left,.right{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        align-content: center;
+        width: 100%;
+        height: auto;
+        font-size: 1rem;
+       
+    
+    }
+}

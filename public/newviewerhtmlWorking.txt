@@ -1,0 +1,1406 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+</head>
+<body>
+  <style>
+
+    
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700;800&display=swap');
+
+*{
+ padding: 0;
+ margin: 0;
+ box-sizing: border-box;
+}
+    .folder::after {
+     width: 92px;
+     height: 60px;
+     position: absolute;
+     content: '';
+     background: linear-gradient(90deg, #8aa2e8 0%, #8aa2e8 100%);
+     top: 21px;
+     /* box-shadow: 0 0 5px 2px rgba(0, 0, 0, 0.3); */
+     border-top-left-radius: 5px;
+     border-top-right-radius: 5px;
+     -webkit-transform: rotateX(-10deg);
+     transform: rotateX(-10deg);
+     transition: all 800ms ease;
+     /* background-color: #aed0c3; */
+     background: linear-gradient(90deg, #8aa2e8 0%, #8aa2e8 100%);
+ }
+ .folder::before {
+     width: 35px;
+     
+     height: 24px;
+     content: '';
+     background: linear-gradient(90deg, #8aa2e8 0%, #8aa2e8 100%);
+     position: absolute;
+     top: -11px;
+     border-top-left-radius: 5px;
+     border-top-right-radius: 5px;
+     background-color: #aed0c3;
+ }
+ .folder {
+  display: flex;
+     -webkit-perspective: 500px;
+     perspective: 500px;
+     width: 91px;
+     height: 60px;
+     background: linear-gradient(90deg, #8aa2e8 0%, #8aa2e8 100%);
+     /* position: absolute; */
+     /* top: 210px; */
+     /* left: 390px; */
+     border-top-right-radius: 5px;
+     cursor: pointer;
+     transition: all 300ms ease;
+     /* background-color: #aed0c3; */
+ }
+ 
+ .btn-primary:hover {
+    color: #fff;
+    background-color: #fff !important;
+    border-color: #fff !important;
+}
+ .folder-inside::before {
+     content: '';
+     background: repeating-linear-gradient(0deg, #ffffff, #ffffff 10px, #333333 10px, #333333 20px);
+     position: absolute;
+     top: -30px;
+     left: 25px;
+     width: 25px;
+     height: 85px;
+     color: #343434;
+     font-size: 40px;
+     line-height: 10px;
+     -webkit-transform: rotate(-90deg);
+     transform: rotate(-90deg);
+     opacity: 0.15;
+ }
+ .folder-inside {
+     width: 80px;
+     height: 51px;
+     position: absolute;
+     background: white;
+     top: 14px;
+     left: 7px;
+     /* box-shadow: 0 0 5px 5px rgba(0, 0, 0, 0.1); */
+     -webkit-transform: rotate(-1deg);
+     transform: rotate(-1deg);
+     border: 2px solid white;
+     transition: all 200ms ease;
+ }
+ /* finally let's get this folder to rotate when we hover on it */
+
+.folder:hover::after{
+-webkit-transform: rotateX(-15deg);
+transform: rotateX(-15deg);
+}
+.folder:hover .folder-inside{
+-webkit-transform: rotate(-7deg) translateY(-15%);
+transform: rotate(-7deg) translateY(-15%);
+}
+/* hover over the folder to see the effect in action */
+ 
+
+body th,tr,hr{
+ display: none !important;
+}
+body{
+ /* background-color: rgba(25,40,44,1); */
+
+ /* background-color:rgba(65, 195, 199, 0.03); */
+ padding: 1rem;
+ background-color: #f5f6fa;
+}
+.body-container{
+ display: flex;
+ flex-direction: column;
+ gap: 1rem;
+ justify-content: center;
+ align-items: center;
+ width: 100%;
+ height: calc(88vh);
+ font-family: 'Poppins', sans-serif;
+
+ background:url("https://aactxg.stripocdn.email/content/guids/CABINET_f37167ea2322984dfeb6a0a05e92d2480b49356b15fb055bb2ce2e84131a12e4/images/amxlogoremovebgpreview.png") no-repeat center center;
+ 
+
+}
+.wrapper{
+ width: 100%;
+ height: auto;
+ display: flex;
+ flex-direction: column;
+ gap:1rem;
+}
+.browse-btn{
+ border-radius: 5px;
+ padding: 1rem 3rem;
+ margin: 1rem;
+ border:none;
+ outline: none;
+ /* background-color: #FD6585; */
+ 
+ font-weight: 500;
+ cursor:pointer;
+ transition: all .2s ease-in-out;
+ 
+}
+
+.browse-btn:hover{
+background-color: rgba(25,40,44,1);
+}
+
+.subcontainer{
+   width: 100%;
+   height: auto;
+   display: flex;
+   flex-direction: column;
+   gap:1rem;
+}
+.div-containers{
+ display: flex;
+ flex-direction: column;
+ gap: 1rem;
+ justify-content: center;
+ align-items: center;
+
+}
+#launch-project{
+ /* color: #fff; */
+/* background-color: #3c5055 !important; */
+background-color: #FD6585 !important;
+ background-image: linear-gradient(to bottom left, #FD6585, #FA742B, #FD6585) !important;
+ background-image: -moz-linear-gradient(to bottom left, #FD6585, #FA742B, #FD6585) !important;
+ color: #ffffff;
+ box-shadow: none;
+ display: inline-block;
+ font-weight: 600;
+ text-align: center;
+ vertical-align: middle;
+ -webkit-user-select: none;
+ user-select: none;
+ border: 1px solid transparent;
+ 
+ padding: 11px 40px;
+ font-size: 14px;
+ line-height: 1.35em;
+ border-radius: 0.25rem;
+ transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+
+#launch-project:hover {
+ box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.4);
+ transform: translateY(-1px);
+ -webkit-transform: translateY(-1px);
+}
+.div-containers button .div-elements{
+
+padding: 1rem;
+font-size: 1rem;
+
+
+}
+/* #modalDiv{
+margin-top: 20px!important;
+height: 50%;
+} */
+.folderbutton{
+ color: #000;
+ background: none !important;
+
+ display: flex;
+ justify-content: center;
+ align-items: center;
+ flex-direction: column;
+margin: 1rem 0;
+/* gap: 1rem; */
+}
+.folderbutton:hover{
+
+color:#000 !important;
+
+}
+@media (max-width:767px){
+.folderbutton2{
+ width: 40% !important;
+
+}
+}
+.btn-container{
+ width: 100%;
+ height: auto;
+ display: flex;
+ justify-content: center;
+ align-items: center;
+ gap: 1rem;
+}
+.modal-open {
+ overflow:none !important;
+}
+#modalDiv{
+ width: 100% !important;
+ height: 100%;
+ position: relative;
+}
+@media (min-width: 576px){
+ .modal-dialog {
+ min-width: 100% !important;
+ margin:0 !important;
+
+}}
+.modal-body{
+ padding: 0 !important;
+ background-color: #fff !important;
+}
+
+.modal_dialog{
+min-width: 500px;
+ min-width: 100%;
+ position: absolute;
+ top: 50px;
+ left: 0;
+ width: 100%;
+ height: auto;
+ margin: 0 !important; 
+ /* overflow: scroll !important; */
+}
+.btn-primary {
+ border-color: none !important;
+}
+iframe body.modal-open th{
+ display: none !important;
+}
+
+.modal-dialog .btn-primary {
+ color: #000;
+ background-color: #fff !important;
+ border-color: none !important;
+ border-color: #fff !important;
+}
+.image-container{
+ width: 100%;
+ height: auto;
+ display: flex;
+ justify-content: center;
+ align-items: center;
+ margin: 0 auto;
+}
+
+img{
+
+min-width: 80px;
+/* height: 50px; */
+height: 66px;
+}
+#popup{
+ /* background-color: palegreen; */
+}
+
+.modalBodyContainer{
+ width: 100%;
+ height: auto;
+
+}
+.modal-content{
+height: 94vh;
+}
+ /* .modalWrapper{
+     width: 100%;
+     height: 94vh;
+     display: flex;
+     gap:1rem;
+     text-align: center;
+     padding: 1rem;
+ } */
+ .modalWrapper{
+     width: 100%;
+     min-height:94vh;
+     display: flex;
+     /* text-align: center; */
+     /* gap:1rem;
+     padding: 1rem; */
+ }
+ .modalWrapper .links{
+     display: flex;
+     flex-direction: column;
+     gap: 0.5rem;
+  }
+  .outputWrapper{
+   width: 100%;
+   height: auto;
+  }
+ .allprojects{
+   width: 100%;
+   height: auto;
+   display: flex;
+   gap:2rem;
+   flex-direction: column;
+ }
+ #htmlViewerModal {
+z-index: 1150; /* This value should be higher than the z-index of createModal1 */
+}
+
+.loader {
+ display: flex;
+ justify-content: center;
+ align-items: center;
+ height: 100px; /* Adjust the height as needed */
+}
+
+.loader::after {
+ content: "";
+ display: block;
+ width: 30px;
+ height: 30px;
+ border: 3px solid #ccc;
+ border-top: 3px solid #3498db;
+ border-radius: 50%;
+ animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+ 0% { transform: rotate(0deg); }
+ 100% { transform: rotate(360deg); }
+}
+
+ </style>
+    <!-- <style>
+  @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700;800&display=swap');
+
+*{
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+
+body th,tr,hr{
+    display: none !important;
+}
+body{
+    /* background-color: rgba(25,40,44,1); */
+
+    /* background-color:rgba(65, 195, 199, 0.03); */
+    padding: 1rem;
+    background-color: #f5f6fa;
+}
+.body-container{
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: calc(88vh);
+    font-family: 'Poppins', sans-serif;
+
+    background:url("https://aactxg.stripocdn.email/content/guids/CABINET_f37167ea2322984dfeb6a0a05e92d2480b49356b15fb055bb2ce2e84131a12e4/images/amxlogoremovebgpreview.png") no-repeat center center;
+    
+  
+}
+.wrapper{
+    width: 100%;
+    height: auto;
+    display: flex;
+    flex-direction: column;
+    gap:1rem;
+}
+.browse-btn{
+    border-radius: 5px;
+    padding: 1rem 3rem;
+    margin: 1rem;
+    border:none;
+    outline: none;
+    /* background-color: #FD6585; */
+    
+    font-weight: 500;
+    cursor:pointer;
+    transition: all .2s ease-in-out;
+    
+}
+
+.browse-btn:hover{
+background-color: rgba(25,40,44,1);
+}
+
+.subcontainer{
+      width: 100%;
+      height: auto;
+      display: flex;
+      flex-direction: column;
+      gap:1rem;
+}
+.div-containers{
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    justify-content: center;
+    align-items: center;
+
+}
+#launch-project{
+    /* color: #fff; */
+   /* background-color: #3c5055 !important; */
+   background-color: #FD6585 !important;
+    background-image: linear-gradient(to bottom left, #FD6585, #FA742B, #FD6585) !important;
+    background-image: -moz-linear-gradient(to bottom left, #FD6585, #FA742B, #FD6585) !important;
+    color: #ffffff;
+    box-shadow: none;
+    display: inline-block;
+    font-weight: 600;
+    text-align: center;
+    vertical-align: middle;
+    -webkit-user-select: none;
+    user-select: none;
+    border: 1px solid transparent;
+    
+    padding: 11px 40px;
+    font-size: 14px;
+    line-height: 1.35em;
+    border-radius: 0.25rem;
+    transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+
+#launch-project:hover {
+    box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.4);
+    transform: translateY(-1px);
+    -webkit-transform: translateY(-1px);
+}
+.div-containers button .div-elements{
+   
+   padding: 1rem;
+   font-size: 1rem;
+   
+  
+}
+/* #modalDiv{
+  margin-top: 20px!important;
+  height: 50%;
+} */
+.folderbutton{
+    color: #000;
+    background: none !important;
+
+}
+.folderbutton:hover{
+ 
+  color:#000 !important;
+
+}
+@media (max-width:767px){
+  .folderbutton2{
+    width: 40% !important;
+
+}
+}
+.btn-container{
+    width: 100%;
+    height: auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+}
+.modal-open {
+    overflow:none !important;
+}
+#modalDiv{
+    width: 100% !important;
+    height: 100%;
+    position: relative;
+}
+@media (min-width: 576px){
+    .modal-dialog {
+    min-width: 100% !important;
+    margin:0 !important;
+  
+}}
+.modal-body{
+    padding: 0 !important;
+    background-color: #fff !important;
+}
+
+.modal_dialog{
+  min-width: 500px;
+    min-width: 100%;
+    position: absolute;
+    top: 50px;
+    left: 0;
+    width: 100%;
+    height: auto;
+    margin: 0 !important; 
+    /* overflow: scroll !important; */
+}
+.btn-primary {
+    border-color: none !important;
+}
+iframe body.modal-open th{
+    display: none !important;
+}
+
+.modal-dialog .btn-primary {
+    color: #000;
+    background-color: #fff !important;
+    border-color: none !important;
+    border: #fff !important;
+}
+.image-container{
+    width: 100%;
+    height: auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0 auto;
+}
+img{
+
+    min-width: 80px;
+    height: 50px;
+}
+
+#popup{
+    /* background-color: palegreen; */
+}
+
+.modalBodyContainer{
+    width: 100%;
+    height: auto;
+
+}
+.modal-content{
+  height: 94vh;
+}
+    /* .modalWrapper{
+        width: 100%;
+        height: 94vh;
+        display: flex;
+        gap:1rem;
+        text-align: center;
+        padding: 1rem;
+    } */
+    .modalWrapper{
+        width: 100%;
+        min-height:94vh;
+        display: flex;
+        text-align: center;
+        /* gap:1rem;
+        padding: 1rem; */
+    }
+    .modalWrapper .links{
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+     }
+     .outputWrapper{
+      width: 100%;
+      height: auto;
+     }
+    .allprojects{
+      width: 100%;
+      height: auto;
+      display: flex;
+      gap:2rem;
+      flex-direction: column;
+    }
+    #htmlViewerModal {
+  z-index: 1150; /* This value should be higher than the z-index of createModal1 */
+}
+
+.loader {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100px; /* Adjust the height as needed */
+}
+
+.loader::after {
+    content: "";
+    display: block;
+    width: 30px;
+    height: 30px;
+    border: 3px solid #ccc;
+    border-top: 3px solid #3498db;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+    </style> -->
+    <div class="body-container">
+        <div class="wrapper">
+            <div class="subcontainer">
+                
+           
+        <div class="">
+        <button type="button" id="launch-project" class="btn" data-toggle="modal" data-target="#exampleModalLong">
+            Launch Projects
+          </button>
+          <!-- <div class="image-container">
+          <img  class="brandlogo" src="https://aactxg.stripocdn.email/content/guids/CABINET_f37167ea2322984dfeb6a0a05e92d2480b49356b15fb055bb2ce2e84131a12e4/images/amxlogoremovebgpreview.png" alt="logo">
+        </div> -->
+    </a>
+</div>
+
+<!-- <div class="div-containers">
+    <button class="div-elements">Appearances</button>
+    <button class="div-elements">Tools</button>
+    <button class="div-elements">Scene</button>
+    <button class="div-elements">filters</button>
+    <button class="div-elements">About</button>
+</div> -->
+
+</div>
+</div>
+
+
+<div id="modalDiv">
+    <div class="modal fade" id="exampleModalLong" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true" >
+      <div class="modal-dialog modal_dialog" role="document">
+        <div class="modal-content">
+         
+          <div class="modal-body">  
+           <!-- <iframe src="http://64.227.154.198/examples" id="popup" 
+           
+           frameborder="0" style="width:100%;height:92vh;"></iframe> -->
+            <div class="modalBodyContainer">
+                <div class="modalWrapper">
+                <div class="container-fluid all-projects">
+                  <div class="allprojects" id="output">
+                    
+                  </div>
+                  </div>
+                  <div id="modalBodies">
+
+
+                  </div>
+                 
+                 </div>
+
+
+
+                 
+              </div>
+    </div>
+      
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade" id="htmlViewerModal" tabindex="-1" role="dialog" aria-labelledby="htmlViewerModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal_dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="htmlViewerModalLabel">HTML Viewer</h5>
+
+          <span>
+            <button class="btn" aria-hidden="true" onclick="closeAll()"></button>
+            <span> &nbsp;&nbsp;</span>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <button class="btn" aria-hidden="true" onclick="closeAll()">&times;</button>
+            </button>
+          </span>
+        </div>
+        <div class="modal-body">
+          <iframe src="" frameborder="0" style="width: 100%; height: 80vh;"></iframe>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+   
+    </div>
+  </div>
+ 
+</div>
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script>
+  
+  function closeAll(){
+    setTimeout(()=>{
+      window.location.reload()
+    },500)
+  }
+
+  const userIdO = localStorage.getItem("user_id");
+	const amxtokenO = localStorage.getItem("amxtoken").replace(/"/g, "");
+  const projectIdo=localStorage.getItem("project_id");
+  const folderIdo=localStorage.getItem("folder_id");
+
+	const config = {
+  params: {
+    user_id: userIdO,
+    project_name: projectIdo,
+    folder_name: folderIdo,
+  },
+  headers: {
+    Authorization: amxtokenO,
+  },
+};
+function extractPathBeforeLastSegment(url) {
+  const urlParts = url.split("/");
+  let pathSegments = [];
+
+  for (let i = 0; i < urlParts.length; i++) {
+    const part = urlParts[i];
+    if (part.endsWith(".html") || part.endsWith(".jpg")|| part.endsWith(".kml")|| part.endsWith(".jpeg")) {
+      break;
+    }
+    pathSegments.push(part);
+  }
+
+  const path = pathSegments.join("/");
+  return path;
+}
+
+async function getProjects() {
+  try {
+    
+    const url = "https://fibregrid.amxdrones.com/dronecount/v2/get-folders/?user_id="+userIdO;
+    // const queryString = new URLSearchParams(config.params).toString();
+    // const queryString = new URLSearchParams(config.params).toString();
+    // const fullUrl = `${url}?${queryString}`;
+
+    const response = await fetch(url, {
+      headers: config.headers,
+    });
+
+    if (!response.ok) {
+      throw new Error("Network response was not ok");
+    }
+
+    const data = await response.json();
+    console.log(data[0].folder_structure);
+    console.log(data[0].folder_structure.length)
+
+    // displayProjects(data);
+   // Display loader/spinner while waiting for the data
+
+
+
+        displayProjects(data[0].folder_structure);
+
+   
+
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+  function displayProjects(data) {
+
+ 
+    const projectWrapper = document.createElement("div");
+
+   
+    const outputDiv = document.getElementById('output');
+    
+  const modalBodiesDiv = document.getElementById('modalBodies');
+    
+
+  // Create a header for selecting projects
+  const projectSelectHeader = document.createElement("div");
+  projectSelectHeader.classList.add("modal-header");
+
+  const projectSelectTitleH5 = document.createElement("h5");
+  projectSelectTitleH5.classList.add("modal-title");
+  projectSelectTitleH5.innerText = "Select a Project";
+  projectSelectHeader.appendChild(projectSelectTitleH5);
+
+  const closeButtons=document.createElement("div")
+  // Close button for the header
+  const closeButton = document.createElement("button");
+  closeButton.setAttribute("type", "button");
+  closeButton.classList.add("close");
+  closeButton.setAttribute("data-dismiss", "modal");
+
+  // const closeIconSpan = document.createElement("span");
+  const closeIconSpan = document.createElement("button");
+  
+  closeIconSpan.classList.add("btn");
+  closeIconSpan.innerHTML = "&times;";
+  closeButton.appendChild(closeIconSpan);
+
+  
+  // Create a "close all" button
+const closeAllButton = document.createElement("button");
+closeAllButton.setAttribute("type", "button");
+closeAllButton.classList.add("btn");
+closeAllButton.innerText = "X";
+closeAllButton.addEventListener("click", function() {
+    // Reload the page when "Close All" is clicked
+    setTimeout(()=>{
+
+      window.location.reload();
+    },500)
+});
+  
+  
+// closeButtons.appendChild(closeButton);
+closeButtons.appendChild(closeAllButton)
+
+  projectSelectHeader.appendChild(closeButtons);
+  
+  
+
+
+  // Create a div to wrap the header
+  const headerWrapper = document.createElement("div");
+  headerWrapper.classList.add("header-wrapper");
+  headerWrapper.appendChild(projectSelectHeader);
+
+  // Append the header wrapper to the output div
+  
+  projectWrapper.appendChild(headerWrapper);
+  const projectDiv = document.createElement("div");
+  projectDiv.classList.add("row");
+      projectDiv.style.display="flex"
+      projectDiv.style.gap="1rem"
+      projectDiv.style.margin="1rem"
+          
+    
+    data.forEach((project, index) => {
+     
+      // const entryDiv = document.createElement("span");
+
+      
+   
+      const button = document.createElement("button");
+      button.setAttribute("type", "button");
+      button.setAttribute("data-toggle", "modal");
+      button.setAttribute("data-target", `#exampleModalLong${index + 1}`);
+      button.classList.add("folderbutton","folderbutton2", "entry-button", "btn", "btn-primary");
+      button.classList.add("col-md-2");
+
+      const folderIconWrapper = document.createElement("div");
+        folderIconWrapper.classList.add("folder");
+
+        const folderIconInside = document.createElement("div");
+        folderIconInside.classList.add("folder-inside");
+
+        folderIconWrapper.appendChild(folderIconInside)
+      
+
+      const imageElement = document.createElement("img");
+imageElement.src="https://xtemko.stripocdn.email/content/guids/CABINET_011ac676721e1f583c3fb4b1d2cbfc3b0427b776fb72abc4cef912f54559fc93/images/folderpng3d.png"
+   
+   
+      // imageElement.src="https://xtemko.stripocdn.email/content/guids/CABINET_011ac676721e1f583c3fb4b1d2cbfc3b0427b776fb72abc4cef912f54559fc93/images/folderpng3d.png"
+      // imageElement.src="https://res.cloudinary.com/dxjrvvjp1/image/upload/v1693480473/icons8-folder-94_r3lnm7.png";
+      // imageElement.src = "https://aactxg.stripocdn.email/content/guids/CABINET_d2c61cd4fa579e3609ac1dce15feb3311d67f9975b3b433315a90ea0a424bac3/images/icons8symlinkdirectory48.png";
+      button.appendChild( imageElement);
+
+      const textElement = document.createElement("p");
+      textElement.innerText = project.name.split("(")[0].trim();
+      textElement.classList.add("mt-2");
+
+      button.appendChild(textElement);
+      
+      
+      projectDiv.appendChild(button);
+      projectWrapper.appendChild(projectDiv);
+      outputDiv.appendChild(projectWrapper)
+
+      // Create modal for each project
+      const modal = createModal(project, index + 1);
+
+      modalBodiesDiv.appendChild(modal);
+    });
+  }
+
+function createModal(project, index) {
+  const modalDiv = document.createElement("div");
+  modalDiv.setAttribute("id", `exampleModalLong${index}`);
+  modalDiv.classList.add("modal", "fade");
+
+
+  const modalDialogDiv = document.createElement("div");
+  
+  modalDialogDiv.classList.add("modal-dialog","m-0");
+  // modalDialogDiv.classList.add("modal-dialog", "modal-dialog-centered");
+
+  const modalContentDiv = document.createElement("div");
+  modalContentDiv.classList.add("modal-content");
+
+  const modalHeaderDiv = document.createElement("div");
+  modalHeaderDiv.classList.add("modal-header");
+
+  const modalTitleH5 = document.createElement("h5");
+  modalTitleH5.classList.add("modal-title");
+  modalTitleH5.innerText = `Project : ${project.name.split("(")[0].trim()}`;
+  
+
+  
+  // ==== old close button ====
+//    const closeButton = document.createElement("button");
+//  closeButton.setAttribute("type", "button");
+//  closeButton.classList.add("close");
+//   closeButton.addEventListener("click", () => {
+//     const modal = document.getElementById(`exampleModalLong${index}`);
+//     $(modal).modal("hide"); 
+//   });
+//   const closeIconSpan = document.createElement("span");
+//   closeIconSpan.innerHTML = "&times;";
+//   closeButton.appendChild(closeIconSpan);
+
+  const closeButtons=document.createElement("div")
+  // Close button for the header
+  const closeButton = document.createElement("button");
+  closeButton.setAttribute("type", "button");
+  closeButton.classList.add("close");
+  // closeButton.setAttribute("data-dismiss", "modal");
+  closeButton.addEventListener("click", () => {
+    const modal = document.getElementById(`exampleModalLong${index}`);
+    $(modal).modal("hide"); 
+  });
+  // const closeIconSpan = document.createElement("span");
+  const closeIconSpan = document.createElement("button");
+  
+  closeIconSpan.classList.add("btn");
+  closeIconSpan.innerHTML = "&times;";
+  closeButton.appendChild(closeIconSpan);
+
+  
+  // Create a "close all" button
+const closeAllButton = document.createElement("button");
+closeAllButton.setAttribute("type", "button");
+closeAllButton.classList.add("btn");
+closeAllButton.innerText = "X";
+closeAllButton.addEventListener("click", function() {
+    // Reload the page when "Close All" is clicked
+    setTimeout(()=>{
+
+      window.location.reload();
+    },500)
+});
+  
+  
+// closeButtons.appendChild(closeButton);
+closeButtons.appendChild(closeAllButton)
+
+
+
+  
+  
+  modalHeaderDiv.appendChild(modalTitleH5);
+
+  modalHeaderDiv.appendChild(closeButtons);
+
+  const modalBodyDiv = document.createElement("div");
+  modalBodyDiv.classList.add("modal-body", "modalBodyContainer");
+
+  const foldersListUl = document.createElement("div");
+  foldersListUl.id = `foldersList${index}`;
+  foldersListUl.classList.add("row");
+  foldersListUl.style.display="flex"
+  // foldersListUl.style.flexDirection="row"
+  foldersListUl.style.gap='1rem'
+  foldersListUl.style.margin="1rem"
+  
+
+  function displayFolders(data) {
+ console.table(data)
+}
+function createFolderItems(folders, parentList) {
+  folders.forEach(folder => {
+
+    const button = document.createElement("button");
+    button.classList.add("btn", "btn-primary","folderbutton2");
+    button.style.border = "none !important";
+    button.style.display = "flex";
+    button.style.flexDirection = "column-reverse";
+    button.style.justifyContent = "center";
+    // button.style.gap = "1rem";
+    button.style.alignItems = "center";
+    button.classList.add("col-sm-6", "col-md-2");
+
+    const folderIconWrapper = document.createElement("div");
+        folderIconWrapper.classList.add("folder");
+
+        const folderIconInside = document.createElement("div");
+        folderIconInside.classList.add("folder-inside");
+
+        folderIconWrapper.appendChild(folderIconInside)
+
+    const imageElement = document.createElement("img");
+   
+    imageElement.src="https://xtemko.stripocdn.email/content/guids/CABINET_011ac676721e1f583c3fb4b1d2cbfc3b0427b776fb72abc4cef912f54559fc93/images/folderpng3d.png"
+   
+    
+    // imageElement.src="https://xtemko.stripocdn.email/content/guids/CABINET_011ac676721e1f583c3fb4b1d2cbfc3b0427b776fb72abc4cef912f54559fc93/images/folderpng3d.png"
+    // imageElement.src = "https://aactxg.stripocdn.email/content/guids/CABINET_d2c61cd4fa579e3609ac1dce15feb3311d67f9975b3b433315a90ea0a424bac3/images/icons8symlinkdirectory48.png";
+    // imageElement.src = "https://aactxg.stripocdn.email/content/guids/CABINET_f37167ea2322984dfeb6a0a05e92d2480b49356b15fb055bb2ce2e84131a12e4/images/textlogo600ae37041cf252ad0d2.png";
+    
+    
+    const textElement = document.createElement("span");
+    textElement.innerText = folder.name.split("(")[0].trim();
+    button.appendChild(textElement);
+    button.appendChild(imageElement);
+
+    button.addEventListener("click", () => {
+      const modal = createModal1(folder);
+      document.body.appendChild(modal);
+      $(modal).modal("show"); // Using jQuery to show the modal
+    });
+
+    parentList.appendChild(button);
+
+    if (folder.subfolders && folder.subfolders.length > 0) {
+      const subfoldersListDiv = document.createElement("div");
+      subfoldersListDiv.classList.add("d-flex", "flex-wrap");
+      button.appendChild(subfoldersListDiv);
+      createFolderItems(folder.subfolders, subfoldersListDiv);
+    }
+  });
+}
+//   function createFolderItems(folders, parentList) {
+//   folders.forEach(folder => {
+//     const imageElement = document.createElement("img");
+//     imageElement.src = "https://aactxg.stripocdn.email/content/guids/CABINET_d2c61cd4fa579e3609ac1dce15feb3311d67f9975b3b433315a90ea0a424bac3/images/icons8symlinkdirectory48.png";
+//     const folderItemLi = document.createElement("span");
+//     folderItemLi.addEventListener("click", displayFolders);
+//     folderItemLi.style.border="1px solid blue"
+//     folderItemLi.style.display="flex"
+//     folderItemLi.style.flexDirection = "column-reverse";
+//     folderItemLi.innerText = folder.name;
+//     folderItemLi.appendChild(imageElement);
+//     folderItemLi.classList.add("list-group-item");
+//     parentList.appendChild(folderItemLi);
+
+//     if (folder.subfolders && folder.subfolders.length > 0) {
+//       const subfoldersListUl = document.createElement("ul");
+//       subfoldersListUl.classList.add("list-group");
+//       folderItemLi.appendChild(subfoldersListUl);
+//       createFolderItems(folder.subfolders, subfoldersListUl);
+//     }
+
+//     folderItemLi.addEventListener("click", () => {
+//       const modal = createModal1(folder);
+//       document.body.appendChild(modal);
+//       $(modal).modal("show"); // Using jQuery to show the modal
+//     });
+//   });
+// }
+
+// Function to extract the last segment containing .html or .jpg
+// function extractLastSegment(url) {
+//   const urlParts = url.split("/");
+//   let lastSegment = null;
+
+//   for (let i = urlParts.length - 1; i >= 0; i--) {
+//     const part = urlParts[i];
+//     if (part.endsWith(".html") || part.endsWith(".jpg")) {
+//       lastSegment = part;
+//       break;
+//     }
+//   }
+// console.log(lastSegment);
+// }
+
+
+const url = "https://storage.googleapis.com/amxstorage.appspot.com/68/project2/PROCESSED%20DATA%20%289a73f6c6-c9b6-414c-8e70-258ba408f245%29/3D%20%2819419eb3-511a-4256-a35e-9b8389fe0dd2%29/lion_laz.html";
+
+
+
+function createModal1(folder) {
+      console.log(folder);
+      const modalDiv = document.createElement("div");
+      modalDiv.classList.add("modal", "fade");
+
+      const modalDialogDiv = document.createElement("div");
+      modalDialogDiv.classList.add("modal-dialog", "modal_dialog");
+
+      const modalContentDiv = document.createElement("div");
+      modalContentDiv.classList.add("modal-content");
+
+      const modalHeaderDiv = document.createElement("div");
+      modalHeaderDiv.classList.add("modal-header");
+
+      const modalTitleH5 = document.createElement("h5");
+      modalTitleH5.classList.add("modal-title");
+      modalTitleH5.innerText = `Folder: ${folder.name.split("(")[0].trim()}`;
+    //   modalTitleH5.innerText = `Folder: ${folder.name} - Folder_ID: ${folder.id}`;
+    const foldersListUl1 = document.createElement("div");
+  foldersListUl1.id = `foldersList${index}`;
+  foldersListUl1.classList.add("row");
+  foldersListUl1.style.display="flex"
+  // foldersListUl1.style.flexDirection="row"
+  foldersListUl1.style.gap='1rem'
+  foldersListUl1.style.margin="1rem"
+
+      // const closeButton = document.createElement("button");
+      // closeButton.setAttribute("type", "button");
+      // closeButton.setAttribute("data-dismiss", "modal");
+      // closeButton.classList.add("close");
+      // const closeIconSpan = document.createElement("span");
+      // closeIconSpan.innerHTML = "&times;";
+      // closeButton.appendChild(closeIconSpan);
+
+      const closeButtons=document.createElement("div")
+  // Close button for the header
+  const closeButton = document.createElement("button");
+  closeButton.setAttribute("type", "button");
+  closeButton.classList.add("close");
+  closeButton.setAttribute("data-dismiss", "modal");
+
+  // const closeIconSpan = document.createElement("span");
+  const closeIconSpan = document.createElement("button");
+  
+  closeIconSpan.classList.add("btn");
+  closeIconSpan.innerHTML = "&times;";
+  closeButton.appendChild(closeIconSpan);
+
+  
+  // Create a "close all" button
+const closeAllButton = document.createElement("button");
+closeAllButton.setAttribute("type", "button");
+closeAllButton.classList.add("btn");
+closeAllButton.innerText = "X";
+closeAllButton.addEventListener("click", function() {
+    // Reload the page when "Close All" is clicked
+    setTimeout(()=>{
+
+      window.location.reload();
+    },500)
+});
+  
+  
+// closeButtons.appendChild(closeButton);
+closeButtons.appendChild(closeAllButton)
+
+
+      modalHeaderDiv.appendChild(modalTitleH5);
+      modalHeaderDiv.appendChild(closeButtons);
+
+      const modalBodyDiv = document.createElement("div");
+      modalBodyDiv.classList.add("modal-body");
+
+      function openModal(childFolder) {
+        const modal = createModal1(childFolder);
+        document.body.appendChild(modal);
+        $(modal).modal("show"); // Using jQuery to show the modal
+      }
+
+      if (folder.children && folder.children.length > 0) {
+        folder.children.forEach((childFolder, index) => {
+        const allowedExtensions = ["html","css",'csv', 'pdf', 'jpg', 'png', 'jpeg', 'mp3', 'mp4', 'zip', 'laz', 'js', 'md', 'kml', 'svg', 'json', 'xml'];
+
+            function hasAllowedExtension(folderName) {
+  console.log("foldername", folderName);
+  const parts = folderName.split('.');
+  const lastPart = parts.pop();
+  const folderExtension = lastPart.replace(/\([^)]+\)/, '').toLowerCase().trim();
+  console.log("folderExtension", folderExtension);
+  
+  const final = allowedExtensions.includes(folderExtension);
+  console.log(final);
+  
+  return final;
+}
+
+// function hasAllowedExtension(folderName) {
+
+//   console.log("foldername", folderName);
+
+//   // Check if folderName is empty or contains only whitespace
+//   if (!folderName || !folderName.trim()) {
+//     console.log("folderName is empty or contains only whitespace");
+//     return false;
+//   }
+
+//   // Extract the extension from the folder name (last part after dot)
+//   const lastDotIndex = folderName.lastIndexOf('.');
+//   if (lastDotIndex === -1 || folderName===".") {
+//     console.log("folderName has no extension");
+//     return false;
+//   }
+
+//   const folderExtension = folderName.substring(lastDotIndex + 1).toLowerCase();
+//   console.log("folderExtension", folderExtension);
+
+//   const final = allowedExtensions.includes(folderExtension);
+
+//   // Invert the result
+//   const invertedResult = !final;
+//   console.log(invertedResult);
+
+//   if (invertedResult) {
+//     return true;
+//   } else {
+//     return false;
+//   }
+// }
+
+
+if (hasAllowedExtension(childFolder.name)) {
+  const button = document.createElement("button");
+  button.classList.add("btn", "btn-primary","folderbutton2");
+  button.style.border = "1px solid #fff";
+  button.style.display = "flex";
+  button.style.flexDirection = "column";
+  // button.style.gap = "1rem";
+  button.style.alignItems="center";
+  button.classList.add("col-sm-6", "col-md-2");
+
+
+  const folderIconWrapper = document.createElement("div");
+        folderIconWrapper.classList.add("folder");
+
+        const folderIconInside = document.createElement("div");
+        folderIconInside.classList.add("folder-inside");
+
+        folderIconWrapper.appendChild(folderIconInside)
+  const imageElement = document.createElement("img");
+  // imageElement.src = "https://aactxg.stripocdn.email/content/guids/CABINET_d2c61cd4fa579e3609ac1dce15feb3311d67f9975b3b433315a90ea0a424bac3/images/icons8codefile48.png";
+  // imageElement.src = "https://aactxg.stripocdn.email/content/guids/CABINET_f37167ea2322984dfeb6a0a05e92d2480b49356b15fb055bb2ce2e84131a12e4/images/textlogo600ae37041cf252ad0d2.png";
+  imageElement.src="https://xtemko.stripocdn.email/content/guids/CABINET_011ac676721e1f583c3fb4b1d2cbfc3b0427b776fb72abc4cef912f54559fc93/images/icons8file128removebgpreview.png"
+  button.appendChild(imageElement);
+  // button.appendChild(folderIconWrapper);
+  const textElement = document.createElement("span");
+
+  textElement.style.margin = "0";
+
+  textElement.innerText = childFolder.name.split("(")[0].trim();
+  button.appendChild(textElement);
+
+ 
+    button.addEventListener("click", () => {
+    openHtmlViewer(childFolder);
+  });
+ 
+  foldersListUl1.append(button);
+}
+
+else{
+    const button = document.createElement("button");
+  button.classList.add("btn", "btn-primary","folderbutton2");
+//   button.style.border = "1px solid blue";
+  button.style.display = "flex";
+  button.style.flexDirection = "column";
+  // button.style.gap = "5px";
+  // button.style.gap = "1rem";
+  button.style.alignItems="center";
+  
+  button.classList.add("col-sm-6", "col-md-2");
+
+  const folderIconWrapper = document.createElement("div");
+        folderIconWrapper.classList.add("folder");
+
+        const folderIconInside = document.createElement("div");
+        folderIconInside.classList.add("folder-inside");
+
+        folderIconWrapper.appendChild(folderIconInside)
+  const imageElement = document.createElement("img");
+
+  imageElement.src="https://xtemko.stripocdn.email/content/guids/CABINET_011ac676721e1f583c3fb4b1d2cbfc3b0427b776fb72abc4cef912f54559fc93/images/folderpng3d.png"
+  // imageElement.src = "https://aactxg.stripocdn.email/content/guids/CABINET_d2c61cd4fa579e3609ac1dce15feb3311d67f9975b3b433315a90ea0a424bac3/images/icons8symlinkdirectory48.png";
+  // button.appendChild(imageElement);
+  button.appendChild(imageElement);
+  const textElement = document.createElement("span");
+  // button.classList.add("m-1");
+  textElement.style.margin = "0 auto !important";
+
+  textElement.innerText = childFolder.name.split("(")[0].trim();
+  button.appendChild(textElement);
+
+  button.addEventListener("click", () => {
+    openModal(childFolder);
+  });
+
+  foldersListUl1.append(button);
+}
+          modalBodyDiv.appendChild(foldersListUl1);
+        });
+      }
+
+      
+      if (folder.files && folder.files.length > 0) {
+    const filesList = document.createElement("ul");
+    filesList.classList.add("list-group");
+    folder.files.forEach((file) => {
+      const fileItem = document.createElement("li");
+      fileItem.classList.add("list-group-item");
+      fileItem.innerText = file.name;
+      filesList.appendChild(fileItem);
+    });
+    modalBodyDiv.appendChild(filesList);
+  }
+      modalContentDiv.appendChild(modalHeaderDiv);
+      modalContentDiv.appendChild(modalBodyDiv);
+      modalDialogDiv.appendChild(modalContentDiv);
+      modalDiv.appendChild(modalDialogDiv);
+
+      return modalDiv;
+    }
+    
+    function openHtmlViewer(HtmlFile) {
+  const modal = document.getElementById("htmlViewerModal");
+  const modalContent = modal.querySelector(".modal-content");
+  const iframe = modal.querySelector("iframe");
+
+  // const url = "https://storage.googleapis.com/amxstorage.appspot.com/68/project2/PROCESSED%20DATA%20%289a73f6c6-c9b6-414c-8e70-258ba408f245%29/3D%20%2819419eb3-511a-4256-a35e-9b8389fe0dd2%29/" + HtmlFile.name;
+
+  // Set the iframe source to the HTML file
+  const pathBeforeLastSegment = extractPathBeforeLastSegment(HtmlFile.url);
+  console.log(pathBeforeLastSegment)
+  console.log("file url==>",pathBeforeLastSegment+"/"+HtmlFile.name+"?alt=media")
+  // iframe.src = pathBeforeLastSegment+"/"+HtmlFile.name+"?alt=media"
+  
+  iframe.src = pathBeforeLastSegment;
+  // lksdsk
+
+  // Add a load event listener to the iframe
+  iframe.addEventListener("load", () => {
+    // Show the modal once the iframe has loaded
+    $(modal).modal("show");
+
+    // Re-highlight code blocks using Prism.js
+    Prism.highlightAll();
+
+    // Remove the load event listener to avoid multiple bindings
+    iframe.removeEventListener("load", loadEventListener);
+  });
+
+  // A function to remove the load event listener
+  const loadEventListener = () => {
+    iframe.removeEventListener("load", loadEventListener);
+  };
+
+  // Bind the load event listener
+  iframe.addEventListener("load", loadEventListener);
+}
+
+createFolderItems(project.children, foldersListUl);
+
+  modalBodyDiv.appendChild(foldersListUl);
+  modalContentDiv.appendChild(modalHeaderDiv);
+  modalContentDiv.appendChild(modalBodyDiv);
+  modalDialogDiv.appendChild(modalContentDiv);
+  modalDiv.appendChild(modalDialogDiv);
+
+  return modalDiv;
+}
+
+  getProjects();
+</script>
+
+
+
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.28.0/themes/prism.css" />
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.28.0/prism.js"></script>
+
+</body>
+</html>
