@@ -25,6 +25,7 @@ import NewViewer from "views/NewViewer";
 import DemoVideoViewer from "views/VideoViewer/DemoVideoViewer";
 import VideoParentProject from "views/VideoViewer/VideoParentProject";
 import RoboFlow from "views/RoboFlow";
+import Yulu from "./views/Yulu"
 
 var routes = [
   {
@@ -138,7 +139,7 @@ var routes = [
     name: "Analytics",
     // rtlName: "إخطارات",
     icon: "tim-icons icon-support-17",
-    component: RoboFlow,
+    component: Yulu,
     layout: "/amx",
   },
   // {
