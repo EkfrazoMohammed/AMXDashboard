@@ -156,6 +156,8 @@ function DroneMap(props) {
       "https://aactxg.stripocdn.email/content/guids/CABINET_f37167ea2322984dfeb6a0a05e92d2480b49356b15fb055bb2ce2e84131a12e4/images/icons8drone50.png",
     inactive:
       "https://aactxg.stripocdn.email/content/guids/CABINET_f37167ea2322984dfeb6a0a05e92d2480b49356b15fb055bb2ce2e84131a12e4/images/icons8drone50_1.png",
+      green:"https://aactxg.stripocdn.email/content/guids/CABINET_f37167ea2322984dfeb6a0a05e92d2480b49356b15fb055bb2ce2e84131a12e4/images/dronelocationgreen_sGx.png",
+      red:"https://aactxg.stripocdn.email/content/guids/CABINET_f37167ea2322984dfeb6a0a05e92d2480b49356b15fb055bb2ce2e84131a12e4/images/dronelocationred.png",
   };
 
   useEffect(() => {
@@ -221,7 +223,7 @@ function DroneMap(props) {
               lng: parseFloat(drone.longitude),
             }}
             onClick={() => handleMarkerClick(drone)}
-            icon={drone.Status ? dron_state_icon.one : dron_state_icon.two}
+            icon={drone.Status ? dron_state_icon.green : dron_state_icon.red}
           >
             {clickedMarkerInfo === drone ? (
               <>

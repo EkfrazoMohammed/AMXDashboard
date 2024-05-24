@@ -10,6 +10,9 @@ import { faClapperboard, faClose } from "@fortawesome/free-solid-svg-icons";
 
 import { Tooltip,Spinner } from 'reactstrap';
 import { Button,Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
+
+import folderimage from "../../../src/views/assets/images/folder-png-3d.png";
+
 import {
   Dropdown,
   DropdownToggle,
@@ -681,31 +684,42 @@ setData(folders11)
             >
              
 
-              <div style={{}} className="row mt-4">
+              <div  style={{gap:"2rem"}} className="row mt-4">
                     {data.map((item) => (
                       //  <div  className="row">
                       <>
                         {/* <Link to={item.link}> */}
 
-                        <div onClick={reloadAndGetData.bind(null, item)}>
-                          <div className="file-cards" onClick={() => handleSomeAction(item.name)}>
+                        <div 
+                        
+                         
+                        onClick={reloadAndGetData.bind(null, item)}
+                        >
+                          {/* <div className="file-cards" onClick={() => handleSomeAction(item.name)}>
                             <div
                               style={{}}
                               className="col-lg-2 col-sm-2 col-md-2 mb-5 mt-5"
                             >
-                              {/* <div style={{justifyContent:"center"}} className="col-lg-2 col-sm-12 col-md-3"> */}
+                              {/* <div style={{justifyContent:"center"}} className="col-lg-2 col-sm-12 col-md-3"> 
                               <div
                                 data={color}
                                 style={{ alignContent: "center" }}
                                 class="folder"
                               >
-                                {/* <div class="folder-inside" style={{ backgroundColor: item.folder_color }}> */}
+                                {/* <div class="folder-inside" style={{ backgroundColor: item.folder_color }}>
                                 <div class="folder-inside" style={{}}></div>
                               </div>
 
-                              {/* </div> */}
                             </div>
-                          </div>
+                          </div> */}
+                          <div
+                          onClick={() => handleSomeAction(item.name)}
+                            style={{display:"flex",justifyContent:"center",alignItems:"center",alignContent: "center",flexDirection:"column" ,textAlign: "center",}}
+                         
+                          >
+
+                      
+                          <img src={folderimage} style={{height:'100px',width:'100px'}}    alt=""  />
                           <h4
                             style={{
                               fontSize: 12,
@@ -716,6 +730,7 @@ setData(folders11)
                            {/* {item.id}- */}
                            {item.name.split("(")[0].trim()}
                           </h4>
+                        </div>
                         </div>
                       </>
                     ))}
@@ -829,7 +844,7 @@ setData(folders11)
                           download={item.name}
                         > */}
                         <div>
-                          <div className="file-cards">
+                          {/* <div className="file-cards">
                             <div
                               style={{}}
                               className="col-lg-1 col-sm-2 col-md-2 mb-5 mt-5 w-100"
@@ -841,7 +856,7 @@ setData(folders11)
                                 {renderFileElement(item.name,item.path_of_file)}
                               </div>
                             </div>
-                          </div>
+                          </div> */}
                           <h4
                             style={{
                               fontSize: 12,

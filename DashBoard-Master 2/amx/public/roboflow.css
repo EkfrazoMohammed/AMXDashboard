@@ -5,11 +5,17 @@
  margin: 0;
  box-sizing: border-box;
 }
-canvas,
+/* canvas,
 video,
 #picture {
   height: 480px;
   width: 640px;
+} */
+canvas,
+video,
+#picture {
+  height: auto;
+  width: 100%;
 }
 h1 {
   font-family: "Poppins", sans-serif;

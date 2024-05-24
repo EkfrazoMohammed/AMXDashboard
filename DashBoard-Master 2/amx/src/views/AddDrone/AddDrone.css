@@ -324,11 +324,18 @@ a {
   cursor: pointer;
   transition: all 0.3s ease;
 }
-.button button.cancel {
+/* .button button.cancel {
   background: #f082ac;
 }
 .button button.cancel:hover {
   background: #ec5f95;
+} */
+
+.button button.cancel {
+  background: #e74545;
+}
+.button button.cancel:hover {
+  background: #e90707;
 }
 .button button.send:hover {
   background: #275df1;
@@ -447,11 +454,18 @@ a {
   cursor: pointer;
   transition: all 0.3s ease;
 }
-.button button.cancel {
+/* .button button.cancel {
   background: #f082ac;
 }
 .button button.cancel:hover {
   background: #ec5f95;
+} */
+
+.button button.cancel {
+  background: #e74545;
+}
+.button button.cancel:hover {
+  background: #e90707;
 }
 .button button.send:hover {
   background: #275df1;

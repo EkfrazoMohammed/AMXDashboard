@@ -881,8 +881,8 @@ section.active .profile{
   min-height: 100%;
   /* min-width: 50vh; */
    max-height: 70vh !important;
-  /*overflow-y: scroll !important;
-  overflow-x: hidden !important; */
+  overflow-y: scroll !important;
+  overflow-x: hidden !important;
 }
 /* .wraper-dashboard {
   display: flex;

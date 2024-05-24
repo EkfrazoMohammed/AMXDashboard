@@ -13,7 +13,7 @@ import {
   DropdownMenu,
   DropdownItem,
 } from "reactstrap";
-
+import folderimage from "../../../src/views/assets/images/folder-png-3d.png";
 import { CircularProgressbar } from "react-circular-progressbar";
 import { Progress } from "reactstrap";
 import { Tooltip, Spinner } from "reactstrap";
@@ -24,39 +24,14 @@ import imageLogo from "../../../src/views/assets/images/fileimagesLogo/imgeLogo.
 import backImage from "../../../src/views/assets/images/fileimagesLogo/backImage.png";
 import DropFileInput from "views/DropFileInput/DropFileInput";
 
+
 import axios from "axios";
 // import { toast } from "react-toastify";
 import { ToastContainer, toast } from "react-toastify";
 
 import drone from "../../assets/drone.png";
 
-const folder_list = [
-  {
-    project_name: "Ekfrazo",
-    folder_color: "#D65A47",
-    link: "/amx/createproject",
-  },
-  {
-    project_name: "Aivlove",
-    folder_color: "rgb(64,153,173)",
-    link: "/amx/createproject",
-  },
-  {
-    project_name: "Microsoft",
-    folder_color: "rgb(239,185,93)",
-    link: "/amx/createproject",
-  },
-  {
-    project_name: "TCS",
-    folder_color: "rgb(55,109,236)",
-    link: "/amx/processdata",
-  },
-  {
-    project_name: "ADDITIONAL",
-    folder_color: "#D65A47",
-    link: "/amx/processdata",
-  },
-];
+
 const Parent = () => {
   const [disableButton, setDisableButton] = useState(false);
   const [downloadProgress, setDownloadProgress] = useState(0);
@@ -122,20 +97,7 @@ const Parent = () => {
       
       setfolder_list(data.data[0].folder_structure);
       setLoading(false);
-      // toast.success("Your project folder updated !", {
-      //   position: "top-right",
-      //   autoClose: 5000,
-      //   hideProgressBar: false,
-      //   closeOnClick: true,
-      //   pauseOnHover: true,
-      //   draggable: true,
-      //   progress: undefined,
-      //   theme: "light",
-      //   icon: <img src={drone} />,
-      // });
-      // toast(`Successfully ${project_name}  project data was created`);
-      // navigate("/");
-      // CloseProject()
+   
     } catch (error) {
       console.log(error);
       setLoading(true);
@@ -197,6 +159,9 @@ const Parent = () => {
   };
   const CloseProject = (name) => {
     setaddprojectopen(false);
+    setTimeout(()=>{
+      window.location.reload()
+    },1000)
   };
   let { name } = state;
 
@@ -408,38 +373,30 @@ const Parent = () => {
           >
             <h2 style={{ fontSize: "25px" }}>Projects</h2>
             {loading ? (
-              <>
-                <Spinner
-                  size="md"
-                  color="primary"
-                  style={{
-                    height: "2rem",
-                    width: "2rem",
-                  }}
-                ></Spinner>
+              <div style={{display:'flex',flexDirection:'column',alignItems:'center',height:'100%',width:'100%',justifyContent:'center'}}>
+                                 <img src="https://cdnl.iconscout.com/lottie/premium/thumb/loading-5966360-4958661.gif" width='60px' alt="" />
+
                 <span style={{ fontSize: "20px" }}> Fetching Projects</span>
                
-              </>
+              </div>
             ) : (
               <>
                 <div className="row">
                   <div
                     id="TooltipExample"
-                    onClick={goBack}
+               
                     style={{ cursor: "pointer", margin: "0 1rem" }}
                   >
-                    <img src={backImage} alt="" height={25} />
-                  </div>
-                  <Tooltip
-                    autohide={true}
-                    flip={true}
-                    isOpen={tooltipOpen}
-                    target="TooltipExample"
-                    toggle={toggle}
-                    placement="top"
+ <button
+                    type="button"
+                    onClick={goBack}
+                    className="btn btn-primary"
                   >
-                    <div>Go Back</div>
-                  </Tooltip>
+                 Back
+                  </button>                 
+                  
+                   </div>
+          
                   <button
                     type="button"
                     onClick={AddProject}
@@ -458,30 +415,16 @@ const Parent = () => {
                             {/* <Link to={item.link}> */}
                             {/* <div onClick={() => PushToCreateProject(item)}> */}
                             <div
+                            style={{width:'130px',display:'flex',flexDirection:'column',alignItems:'center',justifyContent:'center',cursor:'pointer'}}
                               onClick={() =>
                                 history.push(
                                   "/amx/folders?project_id=" + item.name
                                 )
                               }
                             >
-                              <div className="file-cards">
-                                <div
-                                  style={{}}
-                                  className="col-lg-2 col-sm-2 col-md-2 mb-5 mt-5"
-                                >
-                                  {/* <div style={{justifyContent:"center"}} className="col-lg-2 col-sm-12 col-md-3"> */}
-                                  <div
-                                    data={color}
-                                    style={{ alignContent: "center" }}
-                                    class="folder"
-                                  >
-                                    {/* <div class="folder-inside" style={{ backgroundColor: item.folder_color }}> */}
-                                    <div class="folder-inside" style={{}}></div>
-                                  </div>
+                                                      <img src={folderimage} style={{height:'100px',width:'100px'}}    alt="" />
 
-                                  {/* </div> */}
-                                </div>
-                              </div>
+                         
                               <h4
                                 style={{
                                   fontSize: 12,
@@ -498,7 +441,15 @@ const Parent = () => {
 
                         // </div>
                       )
-                    : null}
+                    : 
+                    
+                    <span style={{ fontSize: "20px", margin:"1rem" }}>
+                      {" "}
+                      No Projects Added
+                    </span>
+                 
+                   
+                    }
                 </div>
 
                 <div
@@ -575,34 +526,12 @@ const Parent = () => {
                             </div>
                           </div>
                         </div>
-                        {/* <textarea spellcheck="false" placeholder="Enter your message"></textarea> */}
                         <div className="button">
-                          {/* <button
-                        id="close"
-                        onClick={handleSubmit}
-                        className="cancel"
-                        class="btn btn-primary"
-                      >
-                        ADD
-                      </button> */}
+                     
                           {disableButton ? (
                             <>
                               <div style={{display:"flex",justifyContent:"center",alignItems:"center",flexDirection:"column",gap:"5px"}}>
-                                {/* <Button
-                                  color="primary"
-                                  type="submit"
-                                  onClick={handleSubmit}
-                                  disabled
-                                >
-                                  Adding project ....
-                                </Button> */}
-                                
-                                  {/* <div style={{width:"100%"}}> */}
-                                  {/* <CircularProgressbar
-                                  width="20%"
-                                value={downloadProgress}
-                                text={`${downloadProgress}%`}
-                              /> */}
+                            
                                <Spinner
                   size="md"
                   color="primary"
@@ -641,95 +570,9 @@ const Parent = () => {
                   data={color}
                   className="row gx-0 row-datas-cards col-lg-12 col-md-12 col-sm-6"
                 >
-                  {/* <button
-                    data={color}
-                    type="file"
-                    className="header-content-btn1"
-                    onClick={AddProject}
-                  >
-                    +
-                  </button> */}
-
-                  {/* <div>
-            {popup ? (
-              <div className="main-pop-up">
-                <div className="pop-up-employee-file">
-                  <div className="header-employee-pop">
-                    <h3 className="project-name-1">PROJECTS</h3>
-                    <button
-                      className="pop-up-closer-button"
-                      onClick={ClosePopup}
-                    >
-                      X
-                    </button>
-                  </div>
-                  <div className="input-file-type">
-                    <form onSubmit={handleSubmit}>
-                      <div class="form-group row">
-                        <label
-                          for="staticEmail"
-                          class="col-sm-3 col-form-label"
-                          
-                        >
-                          Project
-                        </label>{' '}
-                        <div class="col-sm-9">
-                          <input 
-                            type="text"
-                            class="form-control"
-                            id="name"
-                            name="project_name"
-                            placeholder="Name"
-                            value={project_name}
-                            onChange={handleChange}
-                          />
-                        </div>
-                      </div>
-                      <div class="form-group row">
-                        <div class="col-sm-12"></div>
-                      </div>
-                      <div className="text-center1">
-                        <button className="handleSubmit">SUBMIT</button>
-                      </div>
-                    </form>
-                  </div>
-                  <br />
-                  <br />
+                 
                 </div>
-              </div>
-            ) : (
-              ""
-            )}
-          </div> */}
-                </div>
-                {/* <ButtonGroup>
             
-        <Dropdown isOpen={dropdownOpen} toggle={toggleDropdown}>
-          <DropdownToggle outline color="primary">
-            Options
-          </DropdownToggle>
-          <DropdownMenu>
-            <DropdownItem>View</DropdownItem>
-            <DropdownItem divider />
-            <DropdownItem>
-                 Download
-            
-            </DropdownItem>
-          </DropdownMenu>
-        </Dropdown>
-      
-    </ButtonGroup> */}
-                {/* <div style={{  height: '30px',marginTop:'20px'  }} className="row">
-        <div className="col-lg-2 col-sm-2 col-md-2" style={{ alignItems: "center" , marginLeft:"18px"}}>
-          RAW DATA
-         </div>
-        <Link to="/amx/processdata" style={{ alignItems: "center",marginLeft:"20px" }} className="col-lg-2 col-sm-2 col-md-2">
-          PROCESSED DATA
-        </Link>
-        <div style={{ alignItems: "center" ,marginLeft:"20px"}} className="col-lg-2 col-sm-2 col-md-2">DGPS DATA</div>
-        <div style={{ alignItems: "center",marginLeft:"20px"}} className="col-lg-2 col-sm-2 col-md-2">VIDEO</div>
-        <div style={{ alignItems: "center",marginLeft:"20px" }} className="col-lg-2 col-sm-2 col-md-2">ADDITIONAL DATA</div> 
-      </div> */}
               </>
             )}
           </div>

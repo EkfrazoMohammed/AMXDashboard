@@ -559,7 +559,7 @@ function UserProfile() {
       <div className="content">
         <br />
         <div className="row">
-          <div
+          {/* <div
             id="TooltipExample"
             onClick={goBack}
             style={{ cursor: "pointer", margin: "0 1rem" }}
@@ -575,7 +575,22 @@ function UserProfile() {
             placement="top"
           >
             <div>Go Back</div>
-          </Tooltip>
+          </Tooltip> */}
+
+<div
+                    id="TooltipExample"
+                 
+                    style={{ cursor: "pointer", margin: "0 1rem" }}
+                  >
+ <button
+                    type="button"
+                    onClick={goBack}
+                    className="btn btn-primary"
+                  >
+                 Back
+                  </button>                 
+                  
+                   </div>
         </div>
         <br />
         <Row>
@@ -881,6 +896,7 @@ function UserProfile() {
                   <h5 className="title">User ID : {userIdO}</h5>
                   <h5 className="title">User Name : {userNameO}</h5>
                   <h5 className="title">Company Name : {companyNameO}</h5>
+                  <h5 className="title">Email: {}</h5>
                   {/* </a> */}
                 </div>
                 {/* <div className="card-description">

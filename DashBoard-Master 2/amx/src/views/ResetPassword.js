@@ -33,8 +33,37 @@ const ResetPassword = () => {
   const [showPassword2, setShowPassword2] = useState(false);
 
   const changeHandler = (e) => {
-    setData({ ...data, [e.target.name]: e.target.value });
-    setErrors({ ...errors, [e.target.name]: false });
+    const { name, value } = e.target;
+    setData({ ...data, [name]: value });
+    setErrors({ ...errors, [name]: false });
+
+    if (name === "password" || name === "cpassword") {
+      const alphaNumericWithSpecialPattern = /^[^\s]+$/;
+      const startsWithWhiteSpace = /^\s/;
+      const hasConsecutiveSpecialChars = /(\W)\1/;
+      const hasConsecutiveDifferentSpecialChars = /(\W)\1|(\W)(?=\W)/;
+      const containsOnlyNumbers = /^\d+$/;
+      setErrors({
+        ...errors,
+
+        // [name]: value.trim() === '', // Check if the value is empty or contains non-alphanumeric characters
+
+        [name]:
+          value.trim() === "" ||
+          startsWithWhiteSpace.test(value) ||
+          hasConsecutiveSpecialChars.test(value) ||
+          hasConsecutiveDifferentSpecialChars.test(value) ||
+          containsOnlyNumbers.test(value), // Check if the value is empty or contains non-alphanumeric characters
+      });
+    } else if (name === "mail") {
+      const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      setErrors({
+        ...errors,
+        [name]: !emailPattern.test(value) || e.target.value.trim() === "",
+      });
+    } else {
+      setErrors({ ...errors, [name]: false });
+    }
   };
 
   const history = useHistory();
@@ -73,7 +102,6 @@ const ResetPassword = () => {
           const data2 = res.data;
           console.log(res.data);
 
-     
           toast.success("Password reset Successfully !", {
             position: "top-right",
             autoClose: 3000,
@@ -85,10 +113,9 @@ const ResetPassword = () => {
             theme: "light",
             icon: <img src={drone} alt="" />,
           });
-          setTimeout(()=>{
-
+          setTimeout(() => {
             history.push("/login");
-          },2000)
+          }, 2000);
         })
         .catch((err) => {
           if (err.response) {
@@ -154,8 +181,15 @@ const ResetPassword = () => {
                   className="form-control"
                   placeholder="Enter Email"
                 />{" "}
-                {errors.mail && (
+                {/* {errors.mail && (
                   <span className="error-message">Email is required</span>
+                )} */}
+                {errors.mail && (
+                  <span className="error-message">
+                    {data.mail.trim() === ""
+                      ? "Email is required"
+                      : "Please enter valid email"}
+                  </span>
                 )}
               </div>
 
@@ -168,7 +202,7 @@ const ResetPassword = () => {
                   onChange={changeHandler}
                   name="otp"
                   value={data.otp}
-                  type="text"
+                  type="number"
                   className="form-control"
                   placeholder="Enter OTP"
                 />
@@ -208,8 +242,19 @@ const ResetPassword = () => {
                   className="form-control"
                   placeholder="Enter Password"
                 /> */}
-                {errors.password && (
+                {/* {errors.password && (
                   <span className="error-message">Password is required</span>
+                )} */}
+
+                {errors.password && (
+                  // <span className="error-message">Password is required</span>
+                  <span className="error-message">
+                    {/* User Name is required */}
+
+                    {data.password.trim() === ""
+                      ? "Password is required"
+                      : "Password should not start with space,only special character and number"}
+                  </span>
                 )}
               </div>
 
@@ -245,11 +290,23 @@ const ResetPassword = () => {
                     {showPassword2 ? <BsFillEyeSlashFill /> : <BsFillEyeFill />}
                   </div>
                 </div>
-                {errors.cpassword && (
+                {/* {errors.cpassword && (
                   <span className="error-message">
                     Confirm Password is required
                   </span>
-                )}
+                )} */}
+
+                
+        {errors.cpassword && (
+          // <span className="error-message">Password is required</span>
+          <span className="error-message">
+          {/* User Name is required */}
+
+          {data.cpassword.trim() === ""
+            ? "Password is required"
+            : "Password should not start with space,only special character and number"}
+        </span>
+        )}
               </div>
               {/* <div className="checkbox checkbox-fill d-inline d-flex align-item-center">
                   <input

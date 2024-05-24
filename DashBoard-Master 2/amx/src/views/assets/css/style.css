@@ -7,6 +7,9 @@
 /**  =====================
       Custom css start
 ==========================  **/
+
+
+
 body {
   font-family: "Open Sans", sans-serif;
   font-size: 14px;
@@ -97,6 +100,7 @@ strong {
   -webkit-animation: anim-rotate 1s linear infinite;
           animation: anim-rotate 1s linear infinite;
 }
+
 
 @-webkit-keyframes anim-rotate {
   100% {
@@ -325,6 +329,51 @@ p.text-muted {
 .dropdown-menu > li.active > a, .dropdown-menu > li:active > a, .dropdown-menu > li:focus > a, .dropdown-menu > li:hover > a {
   background: transparent;
 }
+
+
+
+/* Graph Container */
+ .graph-container{
+  display: flex;
+  justify-content: center;
+  align-items: start;
+  width: 24%;
+  height: 200px;
+ }
+ .Round-container{
+  display: flex;
+  justify-content: center;
+  align-items: start;
+  width: 15%;
+  height: 200px;
+ }
+
+ @media (max-width: 1400px) {
+  .graph-container{
+    width: 43% !important;
+    align-items: center;
+
+  }
+  .Round-container{
+    width: 43% !important;
+    align-items: center;
+
+  }
+ }
+ @media (max-width:767px) {
+  .graph-container{
+    width: 80% !important;
+    align-items: center;
+
+  }
+  .Round-container{
+    width: 80% !important;
+    align-items: center;
+
+  }
+ }
+
+
 
 /* ================================    Dropdown End  ===================== */
 @media (min-width: 1600px) {
@@ -7358,7 +7407,9 @@ background: url("https://firebasestorage.googleapis.com/v0/b/amxdrones-70b8a.app
 } */
 
 .auth-wrapper {
-  background: url("https://firebasestorage.googleapis.com/v0/b/amxdrones-70b8a.appspot.com/o/99%2F1%20(e97bfa9e-189c-41e4-a13b-0bb58e0512af)%2FVIDEO%20(0f7b2705-3cc7-4700-a765-ba9ba1519826)%2Fnew%2Floginbg.jpg?alt=media");
+  background: url("https://aactxg.stripocdn.email/content/guids/CABINET_d2c61cd4fa579e3609ac1dce15feb3311d67f9975b3b433315a90ea0a424bac3/images/amxbglogo_sZz.jpg");
+  /* background: url("https://aactxg.stripocdn.email/content/guids/CABINET_d2c61cd4fa579e3609ac1dce15feb3311d67f9975b3b433315a90ea0a424bac3/images/amxbglogo.jpg"); */
+  /* background: url("https://firebasestorage.googleapis.com/v0/b/amxdrones-70b8a.appspot.com/o/99%2F1%20(e97bfa9e-189c-41e4-a13b-0bb58e0512af)%2FVIDEO%20(0f7b2705-3cc7-4700-a765-ba9ba1519826)%2Fnew%2Floginbg.jpg?alt=media"); */
   position: relative;
   display: flex;
   align-items: center;
@@ -10920,4 +10971,24 @@ font-size: 10px;
 .barChartStyles{
   width: 500px;
   height: 300px;
+}
+/* dashboard chart css */
+.card-category{
+  color: black !important;
+  font-weight: 600 !important;
+}
+.cartd_item{
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  margin-top: 0.5rem !important;
+  font-weight: 500 !important;
+}
+
+.MTableHeader-header-13 {
+  top: 0;
+  z-index: 10;
+  position: -webkit-sticky;
+  position: sticky;
+  background: linear-gradient(0deg, #5cdbdf 0%, #5a5ae5 100%) !important;
 }

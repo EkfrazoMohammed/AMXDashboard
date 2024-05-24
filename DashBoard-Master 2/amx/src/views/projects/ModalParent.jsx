@@ -6,7 +6,7 @@ import { BackgroundColorContext } from "contexts/BackgroundColorContext";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faClapperboard, faClose } from "@fortawesome/free-solid-svg-icons";
 import { Button, ButtonGroup, Dropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
-
+import folderimage from "../../../src/views/assets/images/folder-png-3d.png";
 import { Tooltip,Spinner } from 'reactstrap';
 import pdfImage from "../../../src/views/assets/images/fileimagesLogo/pdf.png";
 import mp4Logo from "../../../src/views/assets/images/fileimagesLogo/mp4logo.png";
@@ -278,6 +278,7 @@ const ModalParent = ({ nestedToggle }) => {
   const handleCloseModal = () => {
     setShowModal(false);
     setSelectedFolder(null);
+
   };
   // const handleSomeAction = (id) => {
   //   // Perform the navigation using history.push
@@ -333,14 +334,18 @@ const ModalParent = ({ nestedToggle }) => {
                     (item) => (
                       <>
                
-                        <div
+                        <div  
                           // onClick={() =>
                           //   history.push("/amx/savefolders?project_id=" + item.id)
                           // }
                         onClick={() => handleSomeAction(item.name)}
+                        
+                        className="col-lg-2 col-sm-2 col-md-2 mb-5"
+                        style={{display:"flex",justifyContent:"center",alignItems:"center",alignContent: "center",flexDirection:"column" }}
+                        
                           // onClick={handleSomeAction(item.id)}
                         >
-                          <div className="file-cards">
+                          {/* <div className="file-cards">
                             <div
                               style={{}}
                               className="col-lg-2 col-sm-2 col-md-2 mb-5 mt-5"
@@ -354,7 +359,9 @@ const ModalParent = ({ nestedToggle }) => {
                               </div>
 
                             </div>
-                          </div>
+                          </div> */}
+
+<img src={folderimage} style={{height:'100px',width:'100px'}}    alt="" />
                           <h4
                             style={{
                               fontSize: 12,

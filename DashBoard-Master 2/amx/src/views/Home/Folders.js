@@ -22,7 +22,7 @@ import fileImageLogo from "../../../src/views/assets/images/fileimagesLogo/textl
 import imageLogo from "../../../src/views/assets/images/fileimagesLogo/imgeLogo.png";
 import backImage from "../../../src/views/assets/images/fileimagesLogo/backImage.png";
 import DropFileInput from "views/DropFileInput/DropFileInput";
-
+import folderimage from "../../../src/views/assets/images/folder-png-3d.png"
 import axios from "axios";
 
 import { ToastContainer, toast } from "react-toastify";
@@ -37,7 +37,7 @@ import { saveAs } from "file-saver";
 import { CircularProgressbar } from "react-circular-progressbar";
 
 function Folders() {
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   const [uploading, setUploading] = useState(false);
 
@@ -68,6 +68,9 @@ function Folders() {
   };
   const CloseFolder = (name) => {
     setaddfolderopen(false);
+    setTimeout(()=>{
+      window.location.reload()
+    },1000)
   };
   const handleChange2 = (e) => {
     setFolderData((prevState) => ({
@@ -526,7 +529,8 @@ function Folders() {
       } catch (error) {
         console.error("Error fetching data:", error);
       } finally {
-        setLoading(false); // Finish loading, whether successful or not
+        setLoading(false
+          ); // Finish loading, whether successful or not
       }
     }
 
@@ -667,22 +671,41 @@ function Folders() {
   };
 
   const renderFileElement = (name, item) => {
+
+  
     const url = item.url;
+    console.log(item.name)
 
-    // console.log(item.url)
-    const extension = getFileExtension(name.replace(/\s\([^)]*\)/, ""));
 
+    // const filename = "(a79c0cbf)mysore.kml";
+
+    // Extract text between parentheses
+    const extractedName = item.name.match(/\((.*?)\)/)[1]; // Extracts the text inside parentheses
+    
+    // Remove text within parentheses and the extension
+    const nameWithoutExtension = item.name.replace(/\([^)]*\)|\.[^.]+$/, '');
+    
+    console.log(nameWithoutExtension); // Output: mysore
+    
+
+    const extension = getFileExtension(item.name.replace(/\s\([^)]*\)/, ""));
+console.log("extension",extension)
     const downloadFile = (name, url) => {
       axios({
         url: url,
         method: "GET",
         responseType: "blob",
       }) .then(response => {
-        const blob = new Blob([response.data]);
+        // const blob = new Blob([response.data]);
+         // Get the content type from the response headers
+         const contentType = response.headers['content-type'];
+    
+         // Create a Blob with the correct content type
+         const blob = new Blob([response.data], { type: contentType });
         const objectURL = URL.createObjectURL(blob);
         const a = document.createElement('a');
         a.href = objectURL;
-        a.download = name;
+        a.download = nameWithoutExtension;
         a.style.display = 'none';
         document.body.appendChild(a);
         a.click();
@@ -704,28 +727,6 @@ function Folders() {
         //   console.error("Error downloading file:", error);
         // });
     };
-
-    // const downloadFile = (name, url) => {
-    //   console.log(name);
-    //   console.log(url);
-    //   axios({
-    //     url: url,
-    //     method: "GET",
-    //     responseType: "blob",
-    //   })
-    //     .then((response) => {
-    //       const url = window.URL.createObjectURL(new Blob([response.data]));
-    //       const link = document.createElement("a");
-    //       link.href = url;
-    //       link.setAttribute("download", name);
-    //       document.body.appendChild(link);
-    //       link.click();
-    //       document.body.removeChild(link);
-    //     })
-    //     .catch((error) => {
-    //       console.error("Error downloading file:", error);
-    //     });
-    // };
 
     const handleView = () => {
       window.open(url, "_blank");
@@ -997,21 +998,21 @@ function Folders() {
                   <div className="row">
                     <div
                       id="TooltipExample"
-                      onClick={goBack}
+                   
                       style={{ cursor: "pointer", margin: "0 1rem" }}
                     >
-                      <img src={backImage} alt="" height={25} />
+                        <button
+                          type="button"
+                          className="btn btn-primary"
+                          onClick={goBack}
+                        >
+                          Back
+                        </button>
+                      {/* <img src={backImage} alt="" height={25} /> */}
                     </div>
-                    <Tooltip
-                      autohide={true}
-                      flip={true}
-                      isOpen={tooltipOpen}
-                      target="TooltipExample"
-                      toggle={toggleBack}
-                      placement="top"
-                    >
-                      <div>Go Back</div>
-                    </Tooltip>
+             
+                     
+                   
                     {showfolderButton ? (
                       <div>
                         <button
@@ -1027,36 +1028,31 @@ function Folders() {
                     )}
                   </div>
                   {loading ? (
-                    <>
-                      <Spinner
-                        size="md"
-                        color="primary"
-                        style={{
-                          height: "2rem",
-                          width: "2rem",
-                        }}
-                      ></Spinner>
+                     <div style={{display:'flex',flexDirection:'column',alignItems:'center',height:'75vh',width:'100%',justifyContent:'center',overflow:'hidden'}}>
+
+                     <img src="https://cdnl.iconscout.com/lottie/premium/thumb/loading-5966360-4958661.gif" width='60px' alt="" />
                       <span style={{ fontSize: "20px" }}>
                         {" "}
-                        Fetching Folders
+                        Fetching Data
                       </span>
-                    </>
+                    </div>
                   ) : data.length === 0 && fileList.length === 0 ? (
                     <>
-                      <div style={{}} className="row mt-4">
-                        <span style={{ fontSize: "20px" }}>
+                      <div style={{}} className="row mt-4 flex-column ml-2">
+                        <div style={{ fontSize: "20px" }}>
                           {" "}
                           No Folders / Files
-                        </span>
-                        <div>
+                        </div>
+                        <div className="row">
                           {showfileButton ? (
-                            <div className="p-4">
+                            <div style={{padding:"1rem 1rem 1rem 0"}}>
                               <button
                                 data={color}
                                 type="file"
                                 id="TooltipExampleFile2"
                                 className="header-content-btn1"
                                 onClick={openFIlePopUp}
+                                style={{margin:"1rem .5rem"}}
                               >
                                 +
                               </button>
@@ -1089,28 +1085,29 @@ function Folders() {
                             <>
                               {/* <Link to={item.link}> */}
 
-                              <div onClick={reloadAndGetData.bind(null, item)}>
-                                <div className="file-cards">
+                                {/* <div className="file-cards">
                                   <div
                                     style={{}}
                                     className="col-lg-2 col-sm-2 col-md-2 mb-5 mt-5"
                                   >
-                                    {/* <div style={{justifyContent:"center"}} className="col-lg-2 col-sm-12 col-md-3"> */}
                                     <div
                                       data={color}
                                       style={{ alignContent: "center" }}
                                       class="folder"
                                     >
-                                      {/* <div class="folder-inside" style={{ backgroundColor: item.folder_color }}> */}
                                       <div
                                         class="folder-inside"
                                         style={{}}
-                                      ></div>
+                                      >
+
+                                      </div>
                                     </div>
 
-                                    {/* </div> */}
+                                
                                   </div>
-                                </div>
+                                </div> */}
+                              <div  style={{width:'130px',display:'flex',flexDirection:'column',alignItems:'center',justifyContent:'center',cursor:'pointer'}} onClick={reloadAndGetData.bind(null, item)}>
+                                 <img src={folderimage} style={{height:'100px',width:'100px'}}    alt="" />
                                 <h4
                                   style={{
                                     fontSize: 12,
@@ -1150,11 +1147,15 @@ function Folders() {
                               {/* {item.name.replace(/\s\([^)]*\)/, '') && item.name.replace(/\s\([^)]*\)/, '').length > 15
                                   ? `${item.name.replace(/\s\([^)]*\)/, '').slice(0, 15)}...`
                                   : item.name.replace(/\s\([^)]*\)/, '')} */}
-                              {item.name.replace(/\s\([^)]*\)/g, "").length > 15
+                              {/* {item.name.replace(/\s\([^)]*\)/g, "").length > 15
                                 ? `${item.name
                                     .replace(/\s\([^)]*\)/g, "")
                                     .slice(0, 15)}...`
-                                : item.name.replace(/\s\([^)]*\)/g, "")}
+                                : item.name.replace(/\s\([^)]*\)/g, "")} */}
+
+{item.name.replace(/\s*\([^)]*\)/g, '').length > 15
+    ? `${item.name.replace(/\s*\([^)]*\)/g, '').slice(0, 15)}...`
+    : item.name.replace(/\s*\([^)]*\)/g, '')}
                             </h4>
                           </div>
                         ))}
@@ -1206,14 +1207,14 @@ function Folders() {
                         <div className="profile-text">
                           {/* <img src="profile.jpg" alt="" />  */}
                           <div className="text">
-                            <span className="name">Upload files</span>
+                            <span className="name">Upload Files </span>
 
                             {/* <span className="profession">Web & Web Designer</span> */}
                           </div>
                         </div>
 
                         <div className="wraper-dashboard">
-                          <div className="wraper-card-content-dashboard text-center">
+                        <div className="wraper-card-content-dashboard text-center">
                             {/* <input type="file" onChange={handleChange} /> */}
                             <DropFileInput
                               onFileChange={(files) => onFileChange(files)}
@@ -1230,15 +1231,12 @@ function Folders() {
                               ""
                             )}
                             {/* <DropFileInput
-                            //  onFileChange={(files) => onFileChange(files)}
+                             onFileChange={(files) => onFileChange(files)}
                             /> */}
                           </div>
                         </div>
                         <div className="button">
-                          {/* <button className="send" onClick={handleUpload}>
-                            Upload Files
-                          </button> */}
-
+                         
                           {selectedFile != null && selectedFile.length > 0 ? (
                             <>
                               {uploading ? (
@@ -1266,12 +1264,16 @@ function Folders() {
                                 </>
                               ) : (
                                 <>
-                                  <button
+                                 <button className="send" onClick={handleUpload}>
+                            Upload Files
+                          </button>
+
+                                  {/* <button
                                     className="send"
                                     onClick={handleUpload}
                                   >
                                     Upload Files
-                                  </button>
+                                  </button> */}
                                 </>
                               )}
                             </>

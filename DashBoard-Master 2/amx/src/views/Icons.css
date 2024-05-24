@@ -155,3 +155,10 @@ input[type="range"].range::-webkit-slider-thumb:first-child:hover {
 input[type="range"].range::-webkit-slider-thumb:nth-child(2):hover {
   background-color: #0056b3;
 }
+
+.MTableHeader-header-13 {
+  top: 0;
+  z-index: 10;
+  position: sticky;
+  background: linear-gradient(0deg, #5cdbdf 0%, #5a5ae5 100%) !important; 
+}

@@ -36,22 +36,61 @@ const DropFileInput = ({ onFileChange ,onFolderChange}) => {
     console.log(files)
   };
 
-
+  const handleFiles = async (files) => {
+    const maxFileSize = 5 * 1024 * 1024; // 5 MB in bytes
+    const updatedFileList = [];
+  
+    for (let i = 0; i < files.length; i++) {
+      const file = files[i];
+      console.log(file)
+      if (file.size > maxFileSize) {
+        // Split the file into smaller chunks
+        const chunkSize = maxFileSize;
+        const chunks = Math.ceil(file.size / chunkSize);
+  
+        for (let j = 0; j < chunks; j++) {
+          const start = j * chunkSize;
+          const end = Math.min(start + chunkSize, file.size);
+  
+          // Create a new Blob containing the chunk
+          const chunk = file.slice(start, end);
+  
+          // Compress the chunk using JSZip or any other compression library
+          const zip = new JSZip();
+          zip.file(file.name, chunk);
+  
+          // Generate the zip data
+          const zipData = await zip.generateAsync({ type: 'blob' });
+          console.log(zipData)
+  
+          // Add the compressed chunk to the updated list
+          updatedFileList.push(zipData);
+        }
+      } else {
+        // For files smaller than 100 MB, add them directly
+        updatedFileList.push(file);
+      }
+    }
+  
+    setFileList(updatedFileList);
+    onFileChange(updatedFileList);
+  };
+  
  
   // Handles the file drop event
-  const handleFiles = (files) => {
-    console.log(files)
-    const updatedList = [...fileList];
-    for (let i = 0; i < files.length; i++) {
-      updatedList.push(files[i]);
-    }
-    for (let i = 0; i < files.length; i++) {
-      console.log(files[i].webkitRelativePath); // Access the relative path for folders
-      console.log(files[i].name); // Access the name of each file/folder
-    }
-    setFileList(updatedList);
-    onFileChange(updatedList);
-  };
+  // const handleFiles = (files) => {
+  //   console.log(files)
+  //   const updatedList = [...fileList];
+  //   for (let i = 0; i < files.length; i++) {
+  //     updatedList.push(files[i]);
+  //   }
+  //   for (let i = 0; i < files.length; i++) {
+  //     console.log(files[i].webkitRelativePath); // Access the relative path for folders
+  //     console.log(files[i].name); // Access the name of each file/folder
+  //   }
+  //   setFileList(updatedList);
+  //   onFileChange(updatedList);
+  // };
 
   const [folderPreview, setFolderPreview] = useState([]);
 
@@ -368,7 +407,7 @@ const DropFileInput = ({ onFileChange ,onFolderChange}) => {
      
         <input type="file" name="file" multiple onChange={(e) => handleFiles(e.target.files)} />
       </div>
-      {/* <div
+  <div
         ref={wrapperRef}
         className="drop-file-input"
         onDragEnter={onDragEnter}
@@ -392,7 +431,7 @@ const DropFileInput = ({ onFileChange ,onFolderChange}) => {
         multiple
          onChange={(e) => handleFolders(e.target.files)} />
      
-       </div> */}
+       </div> 
       </div>
       {fileList.length > 0 && (
         <div className="drop-file-preview">

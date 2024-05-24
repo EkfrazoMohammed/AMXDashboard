@@ -78,7 +78,7 @@ const ForgotPassword = () => {
         .catch((err) => {
           if (err.response) {
             setSendLoading(false)
-            toast.error("Please check your credentials!", {
+            toast.error("Email does not exist!", {
               position: "top-right",
               autoClose: 5000,
               hideProgressBar: false,

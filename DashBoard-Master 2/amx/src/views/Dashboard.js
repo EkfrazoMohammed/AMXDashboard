@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Line, Bar, Pie, Doughnut } from "react-chartjs-2"; // Import Line component
+import { Line, Pie, Doughnut, Bar,PolarArea, Bubble } from "react-chartjs-2"; // Import Line component
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -12,25 +12,15 @@ import {
   Filler,
   BarElement,
   ArcElement,
+  
 } from "chart.js";
-
+import Droneimage from '../../src/views/assets/images/drone-dashboardICON.png'
+import MissioIcon from '../../src/views/assets/images/png/missonLogo_dashboard.png'
+import '../../src/views/assets/css/style.css'
 import { faker } from "@faker-js/faker"; // Updated import
 
 import NotificationAlert from "react-notification-alert";
-// import {
-//   BarChart,
-//   Bar,
-//   XAxis,
-//   YAxis,
-//   CartesianGrid,
-//   Tooltip,
-//   Legend,
-//   ResponsiveContainer,
-// } from "recharts";
-
-// nodejs library that concatenates classes
 import classNames from "classnames";
-// react plugin used to create charts
 import "./styles/dashboard.css";
 import { ToastContainer, toast } from "react-toastify";
 import {
@@ -42,7 +32,7 @@ import axios from "axios";
 import { useHistory } from "react-router-dom";
 
 import { Link } from "react-router-dom/cjs/react-router-dom.min";
-// reactstrap components
+
 import {
   Button,
   ButtonGroup,
@@ -67,8 +57,6 @@ import {
   Dropdown,
 } from "reactstrap";
 
-// import { faCheckSquare, faCoffee } from '@fortawesome/fontawesome-free-solid'
-
 import {
   faBoxArchive,
   faBriefcase,
@@ -89,6 +77,7 @@ import {
   faFolder,
   faDroneAlt,
   faDatabase,
+  faDrone
 } from "@fortawesome/free-solid-svg-icons";
 
 // import dronelogo from "/Users/apple/Documents/DashBoard-Master/black-dashboard-react-master/src/views/assets/images/drone-icon.png"
@@ -108,6 +97,7 @@ import {
   chartExample3,
   chartExample4,
 } from "variables/charts.js";
+
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   BackgroundColorContext,
@@ -115,87 +105,10 @@ import {
 } from "contexts/BackgroundColorContext";
 import ProgressBar from "components/ProgressBar/progress_bar";
 import DropFileInput from "./DropFileInput/DropFileInput";
+import { PieChart } from "recharts";
 // import {icon1} from "../../src/assets/img/anime3.png"
 
-function RoundProgressBar(props) {
-  const size = props.size;
-  const radius = (props.size - props.strokeWidth) / 2;
-  const viewBox = `0 0 ${size} ${size}`;
-  const dashArray = radius * Math.PI * 2;
-  const dashOffset = dashArray - (dashArray * props.value) / props.max;
-  const percentage = ((props.value / props.max) * 100).toFixed();
-  return (
-    <svg width={props.size} height={props.size} viewBox={viewBox}>
-      <circle
-        fill={"none"}
-        stroke={"#ddd"}
-        cx={props.size / 2}
-        cy={props.size / 2}
-        r={radius}
-        strokeWidth={`${props.strokeWidth}px`}
-      />
-      <circle
-        fill={"none"}
-        stroke={props.stroke}
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        strokeDasharray={dashArray}
-        strokeDashoffset={dashOffset}
-        cx={props.size / 2}
-        cy={props.size / 2}
-        r={radius}
-        strokeWidth={`${props.strokeWidth}px`}
-        transform={`rotate(-90 ${props.size / 2} ${props.size / 2})`}
-      />
-      <text
-        x="75%"
-        y="48%"
-        dy="0.4rem"
-        textAnchor="end"
-        fill={props.stroke}
-        style={{
-          fontSize: "2rem",
-        }}
-      >
-        {`${props.value.toFixed(2)}GB`}
-      </text>
 
-      <text
-        x="50%"
-        y="50%"
-        dy="1.5rem"
-        textAnchor="middle"
-        fill={props.stroke}
-        style={{
-          fontSize: "1rem",
-          fontWeight: "bold",
-        }}
-      >
-        {props.text}
-      </text>
-      {/* <text
-        x="50%"
-        y="50%"
-        dy="2.7rem"
-        textAnchor="middle"
-        fill={props.stroke}
-        style={{
-          fontSize: '1rem',
-        }}
-      >
-        {`${percentage}%`}
-      </text> */}
-    </svg>
-  );
-}
-RoundProgressBar.defaultProps = {
-  size: 210,
-  value: 25,
-  max: 100,
-  strokeWidth: 20,
-  stroke: "#3e98c7",
-  text: "",
-};
 function Dashboard(props) {
   ChartJS.register(
     CategoryScale,
@@ -208,7 +121,10 @@ function Dashboard(props) {
     BarElement,
     ArcElement
   );
-
+  const [bigChartData, setbigChartData] = React.useState("data1");
+  const setBgChartData = (name) => {
+    setbigChartData(name);
+  };
   const [hovered, setHovered] = useState(false);
   const percentage = hovered ? 75 : 0; // Change the percentage as needed
 
@@ -242,45 +158,6 @@ function Dashboard(props) {
     },
   };
 
-  // const [barChartData, setBarChartData] = useState([
-  //   {
-  //     name: "August",
-  //     Drones_Added: 0,
-  //     Projects_Added: 0,
-  //     amt: 2400,
-  //   },
-  //   {
-  //     name: "September",
-  //     Drones_Added: 0,
-  //     Projects_Added: 0,
-  //     amt: 2400,
-  //   },
-  //   {
-  //     name: "October",
-  //     Drones_Added: 0,
-  //     Projects_Added: 0,
-  //     amt: 2400,
-  //   },
-  //   {
-  //     name: "November",
-  //     Drones_Added: 0,
-  //     Projects_Added: 0,
-  //     amt: 2400,
-  //   },
-  //   {
-  //     name: "December",
-  //     Drones_Added: 0,
-  //     Projects_Added: 0,
-  //     amt: 2400,
-  //   },
-  //   {
-  //     name: "January",
-  //     Drones_Added: 0,
-  //     Projects_Added: 0,
-  //     amt: 2400,
-  //   },
-  // ]);
-
   const [barChartData, setBarChartData] = useState([
     { name: "Apr 2023", year: 2023, Projects_Added: 0, Drones_Added: 0 },
     { name: "May 2023", year: 2023, Projects_Added: 0, Drones_Added: 0 },
@@ -298,50 +175,7 @@ function Dashboard(props) {
   const notificationAlertRef = React.useRef(null);
   const [project_list, setProject_list] = React.useState([]);
   const [recent_project_list, recent_setProject_list] = React.useState([]);
-
-  const notify = (place) => {
-    var color = Math.floor(Math.random() * 5 + 1);
-    var type;
-    switch (color) {
-      case 1:
-        type = "primary";
-        break;
-      case 2:
-        type = "success";
-        break;
-      case 3:
-        type = "danger";
-        break;
-      case 4:
-        type = "warning";
-        break;
-      case 5:
-        type = "info";
-        break;
-      default:
-        break;
-    }
-    var options = {};
-    options = {
-      place: place,
-      message: (
-        <div>
-          <div>
-            Welcome to <b>Black Dashboard React</b> - a beautiful freebie for
-            every web developer.
-          </div>
-        </div>
-      ),
-      type: type,
-      icon: "tim-icons icon-bell-55",
-      autoDismiss: 7,
-    };
-    notificationAlertRef.current.notificationAlert(options);
-  };
-
-  // notifications ends
-
-  const [imageData, setImageData] = useState(null);
+ const [imageData, setImageData] = useState(null);
 
   function handleFileUpload(event) {
     const file = event.target.files[0];
@@ -354,7 +188,6 @@ function Dashboard(props) {
   }
 
   const onFileChange = (files) => {
-    console.log(files);
   };
 
   const [addprojectopen, setaddprojectopen] = React.useState(false);
@@ -365,21 +198,6 @@ function Dashboard(props) {
   };
   const CloseProject = (name) => {
     setaddprojectopen(false);
-  };
-
-  const SendProject = () => {
-    setaddprojectopen(false);
-    toast.info("This feature in dashboad is under development !", {
-      position: "top-right",
-      autoClose: 5000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-      theme: "light",
-      icon: <img src={drone} />,
-    });
   };
 
   const BuyNow = () => {
@@ -415,7 +233,7 @@ function Dashboard(props) {
     "#e75b8fbf",
     "#ffeeff",
   ]; // Add more colors as needed
-  const [selectedTimeRange, setSelectedTimeRange] = useState("last6months");
+  const [selectedTimeRange, setSelectedTimeRange] = useState("last3months");
 
   const GetAllProjects = async () => {
     try {
@@ -425,11 +243,9 @@ function Dashboard(props) {
         config
       );
       // console.log(response.data.map(item => item.folder_structure), "projectdata====>")
-      console.log(response.data[0].folder_structure, "All Projects====>");
       const allProjectData = response.data[0].folder_structure;
       setProject_list(allProjectData);
 
-      console.log(response.data[1].total_size.toFixed(2), "storage remaining");
       setRemainingStorage(response.data[1].total_size.toFixed(2));
       // const consumed_data = localStorage.setItem("consumed_data");
     } catch (error) {
@@ -444,21 +260,15 @@ function Dashboard(props) {
         "https://fibregrid.amxdrones.com/dronecount/v2/get-folders/",
         config
       );
-      console.log("github");
-      // console.log(response.data.map(item => item.folder_structure), "projectdata====>")
-      // console.log(response.data[0].folder_structure, "All Projects Charts====>");
-      const allProjectData = response.data[0].folder_structure;
-
-      console.log(allProjectData);
+   console.log("github");
+     const allProjectData = response.data[0].folder_structure;
 
       let response2 = await axios.get(
         "https://fibregrid.amxdrones.com/dronecount/addDrone/",
         config
       );
-      console.log(response2.data, "dronedata charts====>");
       const droneChartData = response2.data;
 
-      console.log(droneChartData);
 
       // Calculate the number of active drones
       const numberOfActiveDrones = response2.data.reduce((count, drone) => {
@@ -476,46 +286,113 @@ function Dashboard(props) {
         droneChartData || 0,
         selectedTimeRange
       );
-
-      console.log("processedChartData=>", processedChartData);
+      console.log(processedChartData,'<====before')
       setBarChartData(processedChartData);
+
+      let chart1_2_options = {
+        maintainAspectRatio: false,
+        legend: {
+          display: false,
+
+        },
+        tooltips: {
+          backgroundColor: "#f5f5f5",
+          titleFontColor: "#333",
+          bodyFontColor: "#666",
+          bodySpacing: 4,
+          xPadding: 12,
+          mode: "nearest",
+          intersect: 0,
+          position: "nearest",
+        },
+        responsive: true,
+        maintainAspectRatio: false, 
+        scales: {
+          yAxes: {
+            barPercentage: 1.6,
+            gridLines: {
+              drawBorder: false,
+              color: "rgba(29,140,248,0.0)",
+              zeroLineColor: "transparent",
+            },
+            ticks: {
+              suggestedMin: 60,
+              suggestedMax: 125,
+              padding: 20,
+              fontColor: "#9a9a9a",
+            },
+          },
+          xAxes: {
+            barPercentage: 1.6,
+            gridLines: {
+              drawBorder: false,
+              color: "rgba(29,140,248,0.1)",
+              zeroLineColor: "transparent",
+            },
+            ticks: {
+              padding: 20,
+              fontColor: "#9a9a9a",
+            },
+          },
+        },
+      };
 
       function convertData(dynamicData, datasetType) {
         const labels = dynamicData.map((item) => `${item.name}`);
         const data = dynamicData.map((item) => item[datasetType]);
-
-        const dataset = {
-          fill: true,
-          label: datasetType,
-          data: data,
-          height: 50, // Increase the height (adjust the value as needed)
-          borderColor:
-            datasetType === "Projects_Added"
-              ? "rgb(255, 99, 132)"
-              : "rgb(75, 192, 192)",
-          backgroundColor:
-            datasetType === "Projects_Added"
-              ? "rgba(255, 99, 132, 0.5)"
-              : "rgba(75, 192, 192, 0.5)",
+      
+        // Create a linear gradient for the background color
+        const gradientStroke = {
+          canvas: null,
+          context: null,
+          gradient: null,
         };
-
+      
+        gradientStroke.canvas = document.createElement("canvas");
+        gradientStroke.context = gradientStroke.canvas.getContext("2d");
+        gradientStroke.gradient = gradientStroke.context.createLinearGradient(
+          0,
+          230,
+          0,
+          50
+        );
+      
+        gradientStroke.gradient.addColorStop(1, "rgba(29,140,248,0.2)");
+        gradientStroke.gradient.addColorStop(0.4, "rgba(29,140,248,0.0)");
+        gradientStroke.gradient.addColorStop(0, "rgba(29,140,248,0)"); // blue colors
+      
+        const dataset = {
+          label:datasetType,
+          fill: true,
+          height: 200,
+          backgroundColor: gradientStroke.gradient,
+          borderColor: "#1f8ef1",
+          borderWidth: 2,
+          borderDash: [],
+          borderDashOffset: 0.0,
+          pointBackgroundColor: "#1f8ef1",
+          pointBorderColor: "rgba(255,255,255,0)",
+          pointHoverBackgroundColor: "#1f8ef1",
+          pointBorderWidth: 20,
+          pointHoverRadius: 4,
+          pointHoverBorderWidth: 15,
+          pointRadius: 4,
+          data: data,
+        };
+      
         return {
           labels: labels,
           datasets: [dataset],
+          options: chart1_2_options, // Add the options object here
         };
       }
 
       const projectsData = convertData(processedChartData, "Projects_Added");
       const dronesData = convertData(processedChartData, "Drones_Added");
-
-      console.log("Projects Data:");
-      console.log(projectsData);
       setProjectdataChart(projectsData);
+console.log(dronesData,'<=====dronesData')
 
-      console.log("Drones Data:");
-      console.log(dronesData);
       setDronedataChart(dronesData);
-
       const options123 = {
         responsive: true,
         plugins: {
@@ -546,7 +423,6 @@ function Dashboard(props) {
         };
       };
       let pf1 = f1("Project Added");
-      console.log(pf1);
       setOptionChart(pf1);
     } catch (error) {
       console.log(error);
@@ -555,61 +431,92 @@ function Dashboard(props) {
   const [optionChart, setOptionChart] = useState([]);
   const [optiondataChart, setdataOptionChart] = useState([]);
 
-  const [projectdataChart, setProjectdataChart] = useState([]);
-  const [dronedataChart, setDronedataChart] = useState([]);
-
-  useEffect(() => {
-    const labels = [
-      "January",
-      "February",
-      "March",
-      "April",
-      "May",
-      "June",
-      "July",
-    ];
-    const data123 = {
-      labels: ["Aug 2023", "Sep 2023", "Oct 2023"],
+  const [projectdataChart, setProjectdataChart] = useState({
+    labels: [],
+    datasets: [
+      {
+        labels: [
+          'Red',
+          'Yellow',
+          'Blue'
+      ],
+              data: [],
+        fill: false,
+        borderColor: 'rgba(75,192,192,1)',
+        borderWidth: 2,
+      },
+    ],
+    options: {
+      scales: {
+          x: {
+              grid: {
+                  display: false // This removes the x-axis grid lines
+              }
+          },
+          y: {
+              grid: {
+                  display: false // This removes the y-axis grid lines
+              }
+          }
+      }
+  }
+});
+  const [dronedataChart, setDronedataChart] = useState(
+    {
+      labels: [],
       datasets: [
         {
-          fill: true,
-          label: "Projects Added",
-          data: [1, 4, 5],
-          borderColor: "rgb(255, 99, 132)",
-          backgroundColor: "rgba(255, 99, 132, 0.5)",
-          height: 50, // Increase the height (adjust the value as needed)
+          labels: [
+            'Red',
+            'Yellow',
+            'Blue'
+        ],
+                data: [],
+          fill: false,
+          borderColor: 'rgba(75,192,192,1)',
+          borderWidth: 2,
         },
       ],
-    };
-    // setdataOptionChart(data123);
+      options: {
+        scales: {
+            x: {
+                grid: {
+                    display: false // This removes the x-axis grid lines
+                }
+            },
+            y: {
+                grid: {
+                    display: false // This removes the y-axis grid lines
+                }
+            }
+        }
+    }
+    }
+  );
 
-    const dynamicData = [
-      { name: "Apr 2023", year: 2023, Projects_Added: 1, Drones_Added: 0 },
-      { name: "May 2023", year: 2023, Projects_Added: 3, Drones_Added: 0 },
-      { name: "Jun 2023", year: 2023, Projects_Added: 0, Drones_Added: 0 },
-      { name: "Jul 2023", year: 2023, Projects_Added: 0, Drones_Added: 0 },
-      { name: "Aug 2023", year: 2023, Projects_Added: 0, Drones_Added: 0 },
-      { name: "Sep 2023", year: 2023, Projects_Added: 0, Drones_Added: 3 },
-      { name: "Oct 2023", year: 2023, Projects_Added: 5, Drones_Added: 2 },
-    ];
-  }, []);
   const processDataForTimeRange = (data, data2, timeRange) => {
-    // Check if data is provided; if not, use an empty array
+
 
     const today = new Date();
     const sixMonthsAgo = new Date(today);
     sixMonthsAgo.setMonth(today.getMonth() - 6);
 
+    const threeMonthsAgo = new Date(today);
+    threeMonthsAgo.setMonth(today.getMonth() - 2);
+
     const monthsInTimeRange = [];
 
     let startDate, endDate;
 
-    if (timeRange === "last6months") {
+    if (timeRange === "last3months") {
+      startDate = threeMonthsAgo;
+      endDate = new Date(today);
+    } else if (timeRange === "last6months") {
       startDate = sixMonthsAgo;
       endDate = new Date(today);
     } else if (timeRange === "present6months") {
       startDate = new Date(today);
-      startDate.setDate(1);
+      startDate.setMonth(today.getMonth());
       endDate = new Date(today);
       endDate.setMonth(today.getMonth() + 6);
     } else if (timeRange === "future6months") {
@@ -623,9 +530,6 @@ function Dashboard(props) {
     } else if (timeRange === "previousYear") {
       startDate = new Date(today.getFullYear() - 1, 0, 1);
       endDate = new Date(today.getFullYear(), 0, 1);
-    } else if (timeRange === "upcomingYear") {
-      startDate = new Date(today.getFullYear() + 1, 0, 1);
-      endDate = new Date(today.getFullYear() + 2, 0, 1);
     }
 
     // Special handling for current year to ensure month names are visible
@@ -665,7 +569,6 @@ function Dashboard(props) {
     }
     // Check if data is provided; if not, use data2
     const projectsData = data || data2;
-    console.log(projectsData);
 
     const chartData = monthsInTimeRange.map((monthData) => {
       const projectsForMonth = projectsData
@@ -688,12 +591,8 @@ function Dashboard(props) {
                 new Date(entry.purchase_year).getFullYear() === monthData.year
             )
           : [];
-      // console.log(dronesForMonth);
       const monthYear = `${monthData.name.slice(0, 3)} ${monthData.year}`;
-
-      // console.log(monthYear);
-
-      return {
+return {
         ...monthData,
         name: monthYear,
         Projects_Added: projectsForMonth.length,
@@ -701,44 +600,11 @@ function Dashboard(props) {
       };
     });
 
-    // const chartData = monthsInTimeRange.map(monthData => {
-    //   // console.log(data)
-    //   const projectsForMonth = data.filter(
-    //     entry =>
-    //       new Date(entry.datetime).toLocaleString('default', { month: 'long' }) === monthData.name &&
-    //       new Date(entry.datetime).getFullYear() === monthData.year
-    //   );
-    //   // console.log(data2)
-    //   // const dronesForMonth = data2.filter(
-    //   //   entry =>
-    //   //   new Date(entry.purchase_year).toLocaleString('default', { month: 'long' }) === monthData.name &&
-    //   //   new Date(entry.purchase_year).getFullYear() === monthData.year
-    //   //     // new Date(entry.created_timestamp).toLocaleString('default', { month: 'long' }) === monthData.name &&
-    //   //     // new Date(entry.created_timestamp).getFullYear() === monthData.year
-    //   // );
-
-    //   // Only filter drones if data2 is provided
-    // const dronesForMonth = data2.length > 0
-    // ? data2.filter(
-    //     (entry) =>
-    //       new Date(entry.purchase_year).toLocaleString('default', { month: 'long' }) === monthData.name &&
-    //       new Date(entry.purchase_year).getFullYear() === monthData.year
-    //   )
-    // : [];
-
-    //   const monthYear = `${monthData.name.slice(0, 3)} ${monthData.year}`; // Combine month and year
-
-    //   return {
-    //     ...monthData,
-    //     name:monthYear,
-    //     Projects_Added: projectsForMonth.length, // Number of projects added for that month
-    //     Drones_Added: dronesForMonth.length,// Number of drones added for that month
-    //   };
-    // });
     return chartData;
   };
 
   const timeRangeOptions = [
+    { value: "last3months", label: "Last 3 Months" },
     { value: "last6months", label: "Last 6 Months" },
     { value: "present6months", label: "Present 6 Months" },
     { value: "currentYear", label: "Current Year" },
@@ -753,16 +619,12 @@ function Dashboard(props) {
       );
 
       const sortedData = response.data[0].folder_structure.sort((a, b) => {
-        // Sort in descending order (latest datetime first)
+  
         return new Date(b.datetime) - new Date(a.datetime);
       });
 
-      // Get the top 5 latest records
       const top5Latest = sortedData.slice(0, 5);
 
-      // console.log(top5Latest, "Top 5 latest projects");
-
-      // recent_setProject_list(response.data);
       recent_setProject_list(top5Latest);
     } catch (error) {
       console.log(error);
@@ -779,7 +641,6 @@ function Dashboard(props) {
       );
       console.log(data.data, "dronedata====>");
       setDroneData(data.data);
-      // Calculate the number of active drones
       const numberOfActiveDrones = data.data.reduce((count, drone) => {
         if (drone.Status === true) {
           return count + 1;
@@ -787,29 +648,39 @@ function Dashboard(props) {
         return count;
       }, 0);
 
-      console.log("Number of active drones:", numberOfActiveDrones);
       setActiveDrones(numberOfActiveDrones);
-      // toast(`Successfully ${project_name}  project data was created`);
-      // navigate("/");
-      // CloseProject()
+
     } catch (error) {
       console.log(error);
     }
   };
-  // // console.log(activeDrones)
-
+ 
   useEffect(() => {
     GetAllChartData();
   }, [selectedTimeRange]);
+  const [isLoading, setIsLoading] = useState(true);
 
+  // useEffect(() => {
+  //   getDetails();
+  //   GetAllProjects();
+  //   GetRecentProjects();
+  //   GetAllDrone();
+  // }, []);
   useEffect(() => {
-    getDetails();
-    GetAllProjects();
-    GetRecentProjects();
-    GetAllDrone();
-    GetAllChartData();
-  }, []);
+    const fetchData = async () => {
+      try {
+        setIsLoading(true);
+        await Promise.all([GetAllChartData(), getDetails(), GetAllProjects(), GetRecentProjects(), GetAllDrone()]);
+        setIsLoading(false);
+      } catch (error) {
+        console.error(error);
+        setIsLoading(false);
+      }
+    };
 
+    fetchData();
+  }, []);
+ 
   const monthNames = [
     "January",
     "February",
@@ -825,101 +696,51 @@ function Dashboard(props) {
     "December",
   ];
 
-  const chartData = [
-    {
-      name: "August",
-      Drones_Added: 0,
-      Projects_Added: 0,
-      amt: 2400,
-    },
-    {
-      name: "August",
-      Drones_Added: 0,
-      Projects_Added: 0,
-      amt: 2400,
-    },
-    {
-      name: "August",
-      Drones_Added: 0,
-      Projects_Added: 0,
-      amt: 2400,
-    },
-    {
-      name: "August",
-      Drones_Added: 0,
-      Projects_Added: 0,
-      amt: 2400,
-    },
-    {
-      name: "August",
-      Drones_Added: 0,
-      Projects_Added: 0,
-      amt: 2400,
-    },
-    {
-      name: "August",
-      Drones_Added: 5,
-      Projects_Added: 2,
-      amt: 2400,
-    },
-  ];
+let totalMissions = droneData.length
+let activeMissions = droneData.filter((drone) => drone.Status === true).length
+let inactiveMissions = droneData.filter((drone) => drone.Status === false).length
+let remainSTorage = (remainingStorage - 10).toFixed(2)
+  const datas = {
+    labels: ['Active Missions ' ,'Inactive Missions'],
+    datasets: [
+      {
+        data: [activeMissions,inactiveMissions], // values for each section
+        backgroundColor: [ '#208ef1','#5cd1df', '#FFCE56'], // colors for each section
+        // hoverBackgroundColor: ['#FF6384', '#36A2EB', '#FFCE56'], // hover colors
+      },
+    ],
+  };
 
-  const demoData = [
-    {
-      name: "amx1 (9f806eb7-e583-4912-b091-9efecbbc74d9)",
-      datetime: "2023-08-25T10:45:45.190000Z",
-    },
-    {
-      name: "amx2 (9f806eb7-e583-4912-b091-9efecbbc74d9)",
-      datetime: "2023-10-25T10:45:45.190000Z",
-    },
-    {
-      name: "amx3 (9f806eb7-e583-4912-b091-9efecbbc74d9)",
-      datetime: "2023-07-25T10:45:45.190000Z",
-    },
-    {
-      name: "amx4 (9f806eb7-e583-4912-b091-9efecbbc74d9)",
-      datetime: "2023-08-24T10:45:45.190000Z",
-    },
-    {
-      name: "amx5 (9f806eb7-e583-4912-b091-9efecbbc74d9)",
-      datetime: "2023-07-25T10:45:45.190000Z",
-    },
-  ];
+  // Options for the pie chart
+  const options = {
+    responsive: true,
+    maintainAspectRatio: false,
+    
+  };
 
-  useEffect(() => {
-    // Separate active and inactive drones
-    const active = droneData.filter((drone) => drone.Status === true);
-    const inactive = droneData.filter((drone) => drone.Status === false);
 
-    console.log(active);
-  }, [droneData]);
-  const overviewdata = [
-    {
-      icon: faUser,
-      title: "total projects",
-      count: project_list.length,
-      item: "projects",
-    },
-    {
-      icon: faFileInvoice,
-      title: "total Drones",
-      count: droneData.length,
-      item: "drones",
-    },
-    {
-      icon: faDatabase,
-      title: "Max Storage",
-      count: "5",
-      item: "GB",
-    },
-    {
-      icon: faFolder,
-      title: "Total Missions",
-      count: droneData.filter((drone) => drone.Status === true).length,
-      item: "missions",
-    },
-  ];
+  let usedStorage=Maxstorage-(remainingStorage - 10);
+  const storagedata = {
+    labels: ["Used Storage","Remaining Storage"],
+    datasets: [
+      {
+        data: [usedStorage, remainingStorage - 10, ], // values for each section
+        backgroundColor: [ '#208ef1','#5cd1df', '#FFCE56'], // colors for each section
+        // hoverBackgroundColor: ['#FF6384', '#36A2EB', '#FFCE56'], // hover colors
+      },
+    ],
+  };
+  const dougnutoptions = {
+    responsive: true,
+    maintainAspectRatio: false, 
+  };
+//  useEffect(() => {
+//     // Separate active and inactive drones
+//     const active = droneData.filter((drone) => drone.Status === true);
+//     const inactive = droneData.filter((drone) => drone.Status === false);
+
+//   }, [droneData]);
+
   const [data, setData] = useState({
     name: "",
     user_id: userIdO,
@@ -937,7 +758,6 @@ function Dashboard(props) {
 
     try {
       let payload = data;
-      console.log(payload, "payload=====>");
       let data1 = await axios
         .post(
           "https://fibregrid.amxdrones.com/dronecount/projects/",
@@ -978,11 +798,6 @@ function Dashboard(props) {
             GetAllProjects();
             GetRecentProjects();
             CloseProject();
-            console.log(err.response.status);
-            console.log(err.response.statusText);
-            console.log(err.message);
-            console.log(err.response.headers); // 👉️ {... response headers here}
-            console.log(err.response.data); // 👉️ {... response data here}
           }
         });
     } catch (error) {
@@ -994,6 +809,51 @@ function Dashboard(props) {
   const toggle = () => setDropdownOpen((prevState) => !prevState);
   const history = useHistory();
 
+
+  const overviewdata = [
+    {
+      icon:      <FontAwesomeIcon icon={faFolder} style={{ color: "#1f8ef1", width: "20px", height: "20px" }} />      ,
+
+      title: "total projects",
+      count: project_list.length,
+      item: "projects",
+      chart:  <Line
+      data={projectdataChart}
+      style={{minHeight:"150px",maxHeight:"220px"}}
+    />
+    },
+    {
+      icon: <img src={Droneimage} alt="" srcset="" width='30px' height='30px' />
+      ,
+      title: "total Drones",
+      count: droneData.length,
+      item: "drones",
+      chart:<Bar        style={{minHeight:"150px",maxHeight:"220px"}}  data={dronedataChart} />  
+    },
+  
+    {
+      icon:<img src={MissioIcon} alt="" srcset="" width='30px' height='30px' />
+      ,
+      title: "Active Missions",
+      // count: droneData.filter((drone) => drone.Status === true).length,
+      count: totalMissions,
+      item: "missions",
+      chart:  
+      <Pie data={datas} options={options}       style={{minHeight:"150px",maxHeight:"220px"}} />
+     
+    },
+    {
+      icon:<FontAwesomeIcon icon={faDatabase} style={{ color: "#1f8ef1", width: "20px", height: "20px" }} />
+      ,
+      title: `Max Storage: ${Maxstorage} GB `,
+      item: `Available:${remainSTorage} GB`,
+      chart:<Doughnut data={storagedata} options={dougnutoptions}       style={{minHeight:"150px",maxHeight:"220px"}}/>
+    }
+  ];
+
+  // chart:<Doughnut data={storagedata} options={dougnutoptions}       style={{minHeight:"150px",maxHeight:"220px"}}/>
+ 
+  console.log("Added Changes")
   return (
     <BackgroundColorContext.Consumer>
       {({ color }) => (
@@ -1003,6 +863,8 @@ function Dashboard(props) {
           <div className="react-notification-alert-container">
             <NotificationAlert ref={notificationAlertRef} />
           </div>
+    
+  
 
           <div className={addprojectopen == true ? "overlay show" : "overlay"}>
             {/* <!-- popup box start --> */}
@@ -1066,295 +928,86 @@ function Dashboard(props) {
                   : "rgba(65, 195, 199,.03)",
             }}
           >
+            {isLoading? <>
+              <div style={{display:'flex',flexDirection:'column',alignItems:'center',height:'75vh',width:'100%',justifyContent:'center',overflow:'hidden'}}>
+
+<img src="https://cdnl.iconscout.com/lottie/premium/thumb/loading-5966360-4958661.gif" width='60px' alt="" />
+ <span style={{ fontSize: "20px" }}>
+   {" "}
+   Fetching Data please wait...
+ </span>
+</div>
+            </>:<>
             <div className="container-fluid">
               <div className="row">
                 {/* Left section */}
 
-                <div className="col-md-8 col-sm-8 left-section">
+                <div className="col-md-12 col-sm-12 left-section">
                   {/* <h2>Left Section</h2> */}
                   <>
+               
+
                     <Row>
+
                       <Col className="text-left" md="6">
-                        <CardTitle tag="h4" style={{}}>
-                          Dashboard Overview
-                        </CardTitle>
-                      </Col>
-                    </Row>
-                    <Row>
-                      {/* {overviewdata.map((v,index)=>{
-    return(
-      <>
-      <Col md="3" sm="6">
-      <div className="card2" key={index}>
-          <div
-            className="content"
-            style={{ backgroundColor: cardBackgroundColors[index % cardBackgroundColors.length] }}
-          >
-            <FontAwesomeIcon icon={v.icon} style={{ color: "#ffffff", width: "20px", height: "20px" }} />
-            <h4 style={{ marginBottom: "5px", fontSize: "12px", fontWeight: "bold" }}>{v.title}</h4>
-            <h5 style={{ marginBottom: "5px", fontSize: "12px" }}>{v.count} {v.item}</h5>
-          </div>
-        </div>
-    </Col> 
-      </>
-    ) })} */}
-                      <Col md="3" sm="6">
-                        <div className="card2">
-                          <div
-                            className="content"
-                            style={{ backgroundColor: "#55d392" }}
-                          >
-                            <FontAwesomeIcon
-                              icon={faUser}
-                              style={{
-                                color: "#ffffff",
-                                width: "20px",
-                                height: "20px",
-                              }}
-                            />
-                            <h4
-                              style={{
-                                marginBottom: "5px",
-                                fontSize: "12px",
-                                fontWeight: "bold",
-                              }}
-                            >
-                              total projects
-                            </h4>
-                            <h5
-                              style={{ marginBottom: "5px", fontSize: "12px" }}
-                            >
-                              {project_list.length} projects
-                            </h5>
-                          </div>
-                        </div>
-                      </Col>
-
-                      <Col md="3" sm="6">
-                        <div className="card2">
-                          <div
-                            className="content"
-                            style={{ backgroundColor: "#05daff" }}
-                          >
-                            <FontAwesomeIcon
-                              icon={faFileInvoice}
-                              style={{
-                                color: "#ffffff",
-                                width: "20px",
-                                height: "20px",
-                              }}
-                            />
-                            <h4
-                              style={{
-                                marginBottom: "5px",
-                                fontSize: "12px",
-                                fontWeight: "bold",
-                              }}
-                            >
-                              total Drones
-                            </h4>
-                            <h5
-                              style={{ marginBottom: "5px", fontSize: "12px" }}
-                            >
-                              {droneData.length} drones
-                            </h5>
-                          </div>
-                        </div>
-                      </Col>
-                      <Col md="3" sm="6">
-                        <div
-                          style={{
-                            overflow: "visible",
-                          }}
-                        >
-                          <Dropdown
-                            isOpen={dropdownOpen}
-                            toggle={() => {
-                              toggle(); // Call the 'toggle' function
-                            }}
-                          >
-                            <DropdownToggle tag="span">
-                              <div className="card2">
-                                <div
-                                  className="content"
-                                  style={{
-                                    backgroundColor: "#23efe2",
-                                    overflow: "visible",
-                                  }}
-                                >
-                                  <FontAwesomeIcon
-                                    icon={faDatabase}
-                                    style={{
-                                      color: "#ffffff",
-                                      width: "20px",
-                                      height: "20px",
-                                    }}
-                                  />
-                                  <h4
-                                    style={{
-                                      marginBottom: "5px",
-                                      fontSize: "12px",
-                                      fontWeight: "bold",
-                                    }}
-                                  >
-                                    max storage
-                                  </h4>
-                                  <h5
-                                    style={{
-                                      marginBottom: "5px",
-                                      fontSize: "12px",
-                                    }}
-                                  >
-                                    5 GB
-                                  </h5>
-                                  {/* <Dropdown isOpen={dropdownOpen} toggle={toggle} >
-        <DropdownToggle caret tag="span">Dropdown</DropdownToggle>
-        <DropdownMenu>
-      
-          
-          <DropdownItem>Buy Now</DropdownItem>
-        </DropdownMenu>
-      </Dropdown> */}
-                                </div>{" "}
-                              </div>
-                            </DropdownToggle>
-                            <DropdownMenu container="body">
-                              <DropdownItem
-                                onClick={BuyNow}
-                                className="container-storage"
-                              >
-                                <div>
-                                  <a
-                                    data={color}
-                                    className="buynow"
-                                    title="Buy storage"
-                                  >
-                                    <i
-                                      style={{ color: "white" }}
-                                      className="tim-icons icon-key-25"
-                                    ></i>
-                                    <span
-                                      style={{
-                                        marginLeft: "10px",
-                                        color: "white",
-                                      }}
-                                    >
-                                      Buy now
-                                    </span>
-                                  </a>
-                                </div>
-                              </DropdownItem>
-                            </DropdownMenu>
-                          </Dropdown>
-                        </div>
-                      </Col>
-
-                      <Col md="3" sm="6">
-                        <div className="card2">
-                          <div
-                            className="content"
-                            style={{ backgroundColor: "#e75b8fbf" }}
-                          >
-                            <FontAwesomeIcon
-                              icon={faFolder}
-                              style={{
-                                color: "#ffffff",
-                                width: "20px",
-                                height: "20px",
-                              }}
-                            />
-                            <h4
-                              style={{
-                                marginBottom: "5px",
-                                fontSize: "12px",
-                                fontWeight: "bold",
-                              }}
-                            >
-                              Total Missions
-                            </h4>
-                            <h5
-                              style={{ marginBottom: "5px", fontSize: "12px" }}
-                            >
-                              {
-                                droneData.filter(
-                                  (drone) => drone.Status === true
-                                ).length
-                              }{" "}
-                              missions
-                            </h5>
-                          </div>
-                        </div>
-                      </Col>
-                    </Row>
-
-                    <Row>
-                      <Col className="text-left" md="6">
-                        <CardTitle tag="h4" style={{ marginTop: "20px" }}>
+                        <CardTitle tag="h4" >
                           Overview
                         </CardTitle>
                       </Col>
                     </Row>
+                 
+                  <Row>
+   
+                  </Row>
+                  <Row>
+     
+{
+  overviewdata.map((v,index)=>{
+    return(
+          <Col lg="3" md='6' sm='12'>
+            <Card className="card-chart">
+              <CardHeader>
+                <h5 className="card-category">{v.title}</h5>
 
+      <CardTitle className="cartd_item" tag="h4">
+                  {v.icon}
+                 {v.count} {v.item}
+                </CardTitle>
+  
+
+              </CardHeader>
+              <CardBody>
+                <div className="chart-area" style={{display:'flex',justifyContent:'center',minHeight:"220px"}}>
+              
+                               {v.chart}
+
+          
+                </div>
+              </CardBody>
+            </Card>
+          </Col>
+    )
+  })
+}
+  
+        </Row>
+                   
                     <Row>
-                      {/* <Col md="12" style={{ marginTop: "20px" }}> */}
-                      <div style={{ width: "50%", height: "100%" }}>
-                        {barChartData.some(
-                          (item) => item.Projects_Added > 0
-                        ) && (
-                          <Line options={optionChart} data={projectdataChart} />
-                        )}
-                      </div>
-                      <div style={{ width: "50%", height: "100%" }}>
-                        {barChartData.some(
-                          (item) => item.Projects_Added > 0
-                        ) && (
-                          <Bar options={optionChart} data={dronedataChart} />
-                        )}
-                      </div>
-
-                      {/* <ResponsiveContainer
-                          width="100%"
-                          height={400}
-                          cursor="pointer"
-                        >
-                          <BarChart
-                            className="barChartStyles"
-                            data={barChartData}
-                          >
-                            <CartesianGrid strokeDasharray="2 2" />
-                            <XAxis dataKey="name" />
-                            <YAxis />
-                            <Tooltip />
-                            <Legend />
-                            {/* {barChartData.some(item => item.Projects_Added > 0) && ( 
-                            <Bar
-                              dataKey="Projects_Added"
-                              fill="#3e98c7"
-                              minPointSize={1}
-                            />
-                            {/* )} */}
-                      {/* {barChartData.some(item => item.Drones_Added > 0) && ( 
-                            <Bar
-                              dataKey="Drones_Added"
-                              fill="#55d392"
-                              minPointSize={1}
-                            />
-                            {/* )} 
-                          </BarChart>
-                        </ResponsiveContainer> */}
+                      <Col md="3">
                       <div>
                         <FormGroup
                           style={{
                             display: "flex",
                             justifyContent: "center",
                             alignItems: "center",
-                            gap: "2rem",
+                            gap: ".5rem",
                           }}
                         >
                           <Label htmlFor="timeRange" style={{ margin: 0 }}>
                             Select Duration
                           </Label>
                           <Input
+                          style={{backgroundColor:'#ffff',padding:"4px"}}
                             name="select"
                             type="select"
                             id="timeRange"
@@ -1371,20 +1024,21 @@ function Dashboard(props) {
                           </Input>
                         </FormGroup>
                       </div>
-                      {/* </Col> */}
-                      {/* <p>{JSON.stringify(barChartData)}</p> */}
+                      </Col>
+                   
                     </Row>
 
+                    
                     <Row>
                       <Col className="text-left" md="6">
-                        <CardTitle tag="h4" style={{ marginTop: "20px" }}>
+                        <CardTitle tag="h4" style={{ marginTop: "10px" }}>
                           Recent Projects
                         </CardTitle>
                       </Col>
                     </Row>
 
                     <Row>
-                      <Col md="12" style={{ marginTop: "20px" }}>
+                      <Col md="6" style={{ marginTop: "20px" }}>
                         {/* <Card>
               <CardHeader>
                 <CardTitle tag="h4">Recent Projects</CardTitle>
@@ -1422,107 +1076,11 @@ function Dashboard(props) {
                   </>
                 </div>
 
-                {/* Right Section */}
-                <div className=" col-md-4 ">
-                  {/* <h2>Right Section</h2> */}
-                  <>
-                    <div
-                      style={{
-                        // background: "red",
-                        // borderRadius: "1rem",
-                        justifyContent: "center",
-                        alignItems: "center",
-                        paddingLeft: "25px",
-                        paddingRight: "25px",
-                      }}
-                    >
-                      <div
-                        className="container"
-                        style={{
-                          background: "white",
-                          borderRadius: "1rem",
-                          justifyContent: "center",
-                          alignItems: "center",
-                          padding: "10px",
-                          // width: "300px",
-                        }}
-                      >
-                        <h3
-                          style={{ textAlign: "center" }}
-                          className="Storage-chart"
-                        >
-                          Storage
-                        </h3>
-                        <div
-                          style={{ textAlign: "center", marginBottom: "auto" }}
-                        >
-                          <div
-                            className="row"
-                            // style={{ height: "500px", width: "500px" }}
-                          >
-                            <div className="col-12">
-                              <RoundProgressBar
-                                value={remainingStorage - 10}
-                                max={Maxstorage}
-                                text="AVAILABLE"
-                                className="w-75"
-                              />
-                              {/* <CircularProgressbar
-  className="w-75"
-  value={remainingStorage - 10}
-  maxValue={Maxstorage}
-  text={`${remainingStorage - 10} GB`}
-  
- >
-  </CircularProgressbar> */}
-
-                              {/* <div
-      onMouseEnter={() => setHovered(true)}
-      onMouseLeave={() => setHovered(false)}
-      style={{ textAlign: 'center' }}
-    >
-      <CircularProgressbar
-        value={percentage}
-        text={`${hovered ? 0 : percentage}%`}
-        styles={buildStyles({
-          textSize: '16px',
-          pathTransitionDuration: 0.5,
-          pathColor: `#3498db`,
-          textColor: '#3498db',
-        })}
-      />
-    </div> */}
-                            </div>
-                          </div>
-                        </div>
-
-                        {/* <div style={{ textAlign: "center" }} className="center">
-                    
-                                <div onClick={BuyNow} className="container-storage">
-                            <a
-                              data={color}
-                              className="buynow"
-                              title="Buy storage"
-                            >
-                              <i
-                                style={{ color: "white" }}
-                                className="tim-icons icon-key-25"
-                              ></i>
-                              <span
-                                style={{ marginLeft: "10px", color: "white" }}
-                              >
-                                Buy now
-                              </span>
-                            </a>
-                          </div>
-                     
-                        </div> */}
-                      </div>
-                    </div>
-                  </>
-                </div>
+             
+             
               </div>
             </div>
+            </> }
           </div>
         </>
       )}
@@ -1532,64 +1090,120 @@ function Dashboard(props) {
 
 export default Dashboard;
 
-{
-  /* </Col> */
-}
+ // useEffect(() => {
+  //   const labels = [
+  //     "January",
+  //     "February",
+  //     "March",
+  //     "April",
+  //     "May",
+  //     "June",
+  //     "July",
+  //   ];
+  //   const data123 = {
+  //     labels: ["Aug 2023", "Sep 2023", "Oct 2023"],
+  //     datasets: [
+  //       {
+  //         fill: true,
+  //         label: "Projects Added",
+  //         data: [1, 4, 5],
+  //         borderColor: "rgb(255, 99, 132)",
+  //         backgroundColor: "rgba(255, 99, 132, 0.5)",
+  //         height: 50,
+  //       },
+  //     ],
+  //   };
 
-{
-  /* <Col  lg="2">
-            <Card className="card-chart">
-              <CardHeader>
-                <h5 className="card-category">Daily Sales</h5>
-                <CardTitle tag="h3">
-                  <i className="tim-icons icon-delivery-fast text-primary" />{" "}
-                  3,500€
-                </CardTitle>
-              </CardHeader>
-              <CardBody>
-                <div className="chart-area">
-                  <Bar
-                    data={chartExample3.data}
-                    options={chartExample3.options}
-                  />
-                </div>
-              </CardBody>
-            </Card>
-          </Col>
-          <Col  lg="2">
-            <Card className="card-chart">
-              <CardHeader>
-                <h5 className="card-category">Completed Tasks</h5>
-                <CardTitle tag="h3">
-                  <i className="tim-icons icon-send text-success" /> 12,100K
-                </CardTitle>
-              </CardHeader>
-              <CardBody>
-                <div className="chart-area">
-                  <Line
-                    data={chartExample4.data}
-                    options={chartExample4.options}
-                  />
-                </div>
-              </CardBody>
-            </Card>
-          </Col>
-          <Col  lg="2">
-            <Card className="card-chart">
-              <CardHeader>
-                <h5 className="card-category">Completed Tasks</h5>
-                <CardTitle tag="h3">
-                  <i className="tim-icons icon-send text-success" /> 12,100K
-                </CardTitle>
-              </CardHeader>
-              <CardBody>
-                <div className="chart-area">
-                  <Line
-                    data={chartExample4.data}
-                    options={chartExample4.options}
-                  />
-                </div>
-              </CardBody>
-            </Card>
-          </Col> */
-}
+
+  //   const dynamicData = [
+  //     { name: "Apr 2023", year: 2023, Projects_Added: 1, Drones_Added: 0 },
+  //     { name: "May 2023", year: 2023, Projects_Added: 3, Drones_Added: 0 },
+  //     { name: "Jun 2023", year: 2023, Projects_Added: 0, Drones_Added: 0 },
+  //     { name: "Jul 2023", year: 2023, Projects_Added: 0, Drones_Added: 0 },
+  //     { name: "Aug 2023", year: 2023, Projects_Added: 0, Drones_Added: 0 },
+  //     { name: "Sep 2023", year: 2023, Projects_Added: 0, Drones_Added: 3 },
+  //     { name: "Oct 2023", year: 2023, Projects_Added: 5, Drones_Added: 2 },
+  //   ];
+  // }, []);
+ {/* function RoundProgressBar(props) {
+    const size = props.size;
+    const radius = (props.size - props.strokeWidth) / 2;
+    const viewBox = `0 0 ${size} ${size}`;
+    const dashArray = radius * Math.PI * 2;
+    const dashOffset = dashArray - (dashArray * props.value) / props.max;
+    const percentage = ((props.value / props.max) * 100).toFixed();
+    return (
+      <svg width={props.size} height={props.size} viewBox={viewBox}>
+        <circle
+          fill={"none"}
+          stroke={"#ddd"}
+          cx={props.size / 2}
+          cy={props.size / 2}
+          r={radius}
+          strokeWidth={`${props.strokeWidth}px`}
+        />
+        <circle
+          fill={"none"}
+          stroke={props.stroke}
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          strokeDasharray={dashArray}
+          strokeDashoffset={dashOffset}
+          cx={props.size / 2}
+          cy={props.size / 2}
+          r={radius}
+          strokeWidth={`${props.strokeWidth}px`}
+          transform={`rotate(-90 ${props.size / 2} ${props.size / 2})`}
+        />
+        <text
+          x="65%"
+          y="45%"
+          dy="0.4rem"
+          textAnchor="end"
+          fill={props.stroke}
+          style={{
+            fontSize: "1rem",
+          }}
+        >
+          {`${props.value.toFixed(2)}GB`}
+        </text>
+  
+        <text
+          x="50%"
+          y="45%"
+          dy="1.5rem"
+          textAnchor="middle"
+          fill={props.stroke}
+          style={{
+            fontSize: "0.55rem",
+            fontWeight: "bold",
+            color:'RGB(74 101 255)'
+          }}
+        >
+          {props.text}
+        </text>
+   <text
+          x="50%"
+          y="50%"
+          dy="2.7rem"
+          textAnchor="middle"
+          fill={props.stroke}
+          style={{
+            fontSize: '1rem',
+          }}
+        >
+          {`${percentage}%`}
+        </text> */}
+      {/* </svg>
+    );
+  }
+  RoundProgressBar.defaultProps = {
+    size: 160,
+    value: 25,
+    max: 100,
+    strokeWidth: 20,
+    stroke: "#3e98c7",
+    text: "",
+    fontSize:'10px',
+    color:'RGB(74 101 255)'
+  }; */}

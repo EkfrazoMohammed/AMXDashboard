@@ -32,7 +32,6 @@ const Register = () => {
     mail: "",
     password: "",
     amtoken: "",
-
     first_name:"",
     last_name:"",
     company_name:"",
@@ -94,16 +93,20 @@ const Register = () => {
     const { name, value } = e.target;
     setData({ ...data, [name]: value });
     setErrors({ ...errors, [name]: false });
-    if (name === "user_name" || name === "password" || name==="first_name") {
+    if (name === "user_name" || name === "password"  || name==="first_name") {
       const alphaNumericWithSpecialPattern = /^[^\s]+$/;
-
+      const startsWithWhiteSpace = /^\s/;
+      const hasConsecutiveSpecialChars = /(\W)\1/
+      const hasConsecutiveDifferentSpecialChars = /(\W)\1|(\W)(?=\W)/
+      const containsOnlyNumbers = /^\d+$/
+      const startsWithNumber = /^\d/;
       setErrors({
         ...errors,
 
         // [name]: value.trim() === '', // Check if the value is empty or contains non-alphanumeric characters
 
         [name]:
-          !alphaNumericWithSpecialPattern.test(value) || value.trim() === "", // Check if the value is empty or contains non-alphanumeric characters
+        value.trim() === ""||startsWithWhiteSpace.test(value)||hasConsecutiveSpecialChars.test(value) || hasConsecutiveDifferentSpecialChars.test(value)|| startsWithNumber.test(value),// Check if the value is empty or contains non-alphanumeric characters
       });
     } else if (name === 'mail') {
       const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -111,7 +114,35 @@ const Register = () => {
         ...errors,
         [name]: !emailPattern.test(value) || value.trim() === '',
       });
-    } else {
+    }else  if (name === "password") {
+      const alphaNumericWithSpecialPattern = /^[^\s]+$/;
+      const startsWithWhiteSpace = /^\s/;
+      const hasConsecutiveSpecialChars = /(\W)\1/
+      const hasConsecutiveDifferentSpecialChars = /(\W)\1|(\W)(?=\W)/
+      const containsOnlyNumbers = /^\d+$/
+      setErrors({
+        ...errors,
+
+        // [name]: value.trim() === '', // Check if the value is empty or contains non-alphanumeric characters
+
+        [name]:
+        value.trim() === ""||startsWithWhiteSpace.test(value)||hasConsecutiveSpecialChars.test(value) ||hasConsecutiveDifferentSpecialChars.test(value) || containsOnlyNumbers.test(value) , // Check if the value is empty or contains non-alphanumeric characters
+      });
+    }else  if (name === "last_name") {
+      const alphaNumericWithSpecialPattern = /^[^\s]+$/;
+      const startsWithWhiteSpace = /^\s/;
+      const hasConsecutiveSpecialChars = /(\W)\1/
+      const hasConsecutiveDifferentSpecialChars = /(\W)\1|(\W)(?=\W)/
+      const containsOnlyNumbers = /^\d+$/
+      setErrors({
+        ...errors,
+
+        // [name]: value.trim() === '', // Check if the value is empty or contains non-alphanumeric characters
+
+        [name]:
+        value.trim() === ""||startsWithWhiteSpace.test(value)||hasConsecutiveSpecialChars.test(value) ||hasConsecutiveDifferentSpecialChars.test(value) || containsOnlyNumbers.test(value) , // Check if the value is empty or contains non-alphanumeric characters
+      });
+    }else {
       setErrors({ ...errors, [name]: false });
     }
   };
@@ -162,27 +193,7 @@ const Register = () => {
        });
        return;
      }
-     // Check if user_name contains non-alphanumeric characters (including spaces)
-     // Check if user_name starts with a white space or special character
-     if (/^\s/.test(data.user_name)) {
-       // Check if user_name starts with white space
-       setErrors({
-         user_name: !data.user_name,
-       });
-       toast.error("User Name cannot start with a white space", {
-         position: "top-right",
-         autoClose: 5000,
-         hideProgressBar: false,
-         closeOnClick: true,
-         pauseOnHover: true,
-         draggable: true,
-         progress: undefined,
-         theme: "light",
-       });
- 
-       return;
-     }
- 
+   
      // Check if user_name starts with a white space or special character
      if (/^\s/.test(data.mail)) {
        // Check if user_name starts with white space
@@ -338,7 +349,7 @@ const Register = () => {
               <div className="col-md-6"  >
               <div className="mb-3">
             
-            <span className="form-labels"><span className="asterisk-symbol">*</span>Username </span>
+            <span className="form-labels"><span className="asterisk-symbol">*</span>User Name </span>
          
 
               <input
@@ -346,9 +357,8 @@ const Register = () => {
                 onChange={changeHandler}
                 name="user_name"
                 value={data.user_name}
-                type="text"
                 className="form-control"
-                placeholder="Enter Username"
+                placeholder="Enter User Name"
                 required
               />
                {errors.user_name && (
@@ -358,7 +368,7 @@ const Register = () => {
 
       {data.user_name.trim() === ""
         ? "User Name is required"
-        : "User Name should not start with space"}
+        : "User Name should not start with space,special characters and numbers"}
     </span>
     )}
           </div>
@@ -441,7 +451,7 @@ const Register = () => {
 
           {data.password.trim() === ""
             ? "Password is required"
-            : "Password should not start with space"}
+            : "Password should not start with space or only special character"}
         </span>
         )}
       </div>
@@ -485,7 +495,7 @@ const Register = () => {
                <div className="mb-3">
             
             <span className="form-labels">
-              Last Name </span>
+             &nbsp; Last Name </span>
          
 
               <input
@@ -498,14 +508,21 @@ const Register = () => {
                 placeholder="Enter Last Name"
                 required
               />
-             
+                  {errors.last_name && (
+          // <span className="error-message">First Name is required</span>
+          <span className="error-message">
+          {/* User Name is required */}
+
+          {data.last_name?"Last Name should not start with space and Special characters or only numbers":""}
+        </span>
+        )}
           </div>
 
               <div className="mb-3">
             
             <span className="form-labels">
               {/* <span className="asterisk-symbol">*</span> */}
-              Company Name </span>
+              &nbsp; Company Name </span>
          
 
               <input
@@ -518,6 +535,7 @@ const Register = () => {
                 placeholder="Enter Company Name"
                 required
               />
+
               
           </div>
               </div> 

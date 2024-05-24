@@ -23,7 +23,7 @@ import 'react-toastify/dist/ReactToastify.css';
 // toast.configure()
 
 ReactDOM.render(
-  <React.StrictMode>
+  // <React.StrictMode>
      <ThemeContextWrapper>
     <BackgroundColorWrapper>
       <BrowserRouter>
@@ -48,7 +48,8 @@ ReactDOM.render(
       </BrowserRouter>
     </BackgroundColorWrapper>
   </ThemeContextWrapper>
-  </React.StrictMode>,
+  // </React.StrictMode>
+  ,
   document.getElementById('root')
 );
 

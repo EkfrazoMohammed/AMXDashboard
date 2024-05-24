@@ -385,6 +385,16 @@ function AddDrone() {
                       </label>
                       <div class="col-sm-3">
                         <input
+                          // type="text"
+                          type="date"
+                          class="form-control addDrone-input"
+                          id="text"
+                          placeholder="Time in Service"
+                          name="time_in_service"
+                          onChange={handleChange}
+                        />
+
+                        {/* <input
                           type="date"
                           class="form-control addDrone-input"
                           id="text"
@@ -393,7 +403,7 @@ function AddDrone() {
                           value={time_in_service}
                           min={purchase_year}
                           onChange={handleChange}
-                        />
+                        /> */}
                         {/* {errors.time_in_service && (
                           <span className="error-message">
                             Time in service date is required
@@ -758,7 +768,11 @@ function DroneList() {
     window.location.assign("/dronelist");
     // const handleEdit = e => {};
   };
-
+  const tableHeaderStyle = {
+    background: "linear-gradient(0deg, #5cdbdf 0%, #5a5ae5 100%)", // Gradient frm orange to pink
+    color: "#fff", // Text color
+    // Other styles as needed
+  };
   // console.log(columns, "columns===>");
   return (
     <BackgroundColorContext.Consumer>
@@ -881,14 +895,6 @@ function DroneList() {
                         }
                       },
 
-                      // onRowUpdate: (newRow, oldRow) =>
-                      //   new Promise((resolve, reject) => {
-                      //     const updatedData = [...tableData];
-                      //     updatedData[oldRow.tableData.id] = newRow;
-                      //     setTableData(updatedData);
-                      //     setTimeout(() => resolve(), 500);
-                      //   }),
-
                       onRowDelete: async (selectedRow) => {
                         try {
                           const { id } = selectedRow; // Assuming the selected row has a 'drone_id' property
@@ -934,28 +940,7 @@ function DroneList() {
                           toast.error("An error occurred while deleting data");
                         }
                       },
-
-                      // onRowDelete: (selectedRow) =>
-                      // new Promise((resolve, reject) => {
-                      //   console.log(selectedRow.id); // Print the selectedRow object
-
-                      //   const updatedData = [...tableData];
-                      //   updatedData.splice(selectedRow.tableData.id, 1);
-                      //   setTableData(updatedData);
-                      //   setTimeout(() => resolve(), 1000);
-                      // })
                     }}
-                    // actions={[
-                    //   {
-                    //     icon: () => <GetApp />,
-                    //     tooltip: "Click me",
-                    //     onClick: (e, data) => console.log(data),
-                    //     // isFreeAction:true
-                    //   },
-                    // ]}
-                    // onSelectionChange={(selectedRows) =>
-                    //   console.log(selectedRows)
-                    // }
                     options={{
                       // sorting: true,
                       search: true,
@@ -992,7 +977,7 @@ function DroneList() {
                       columnsButton: true,
                       rowStyle: (data, index) =>
                         index % 2 === 0 ? { background: "#f5f5f5" } : null,
-                      headerStyle: { background: "#f44336", color: "#fff" },
+                      headerStyle: tableHeaderStyle,
                     }}
                     title="Drone Information"
                     icons={{ Add: () => null }}

@@ -12,7 +12,7 @@ import fileImageLogo from "../../../src/views/assets/images/fileimagesLogo/textl
 import imageLogo from "../../../src/views/assets/images/fileimagesLogo/imgeLogo.png";
 import backImage from "../../../src/views/assets/images/fileimagesLogo/backImage.png";
 import DropFileInput from "views/DropFileInput/DropFileInput";
-
+import folderimage from "../../../src/views/assets/images/folder-blue-color.png"
 import axios from "axios";
 // import { toast } from "react-toastify";
 import { ToastContainer, toast } from "react-toastify";
@@ -224,25 +224,27 @@ const ParentProject = () => {
                       //  <div  className="row">
                       <>
                         {/* <Link to={item.link}> */}
-                        <div onClick={() => PushToCreateProject(item)}>
-                          <div className="file-cards">
+                        <div style={{width:'130px',display:'flex',flexDirection:'column',alignItems:'center',justifyContent:'center',cursor:'pointer'}} onClick={() => PushToCreateProject(item)}>
+                          {/* <div className="file-cards">
                             <div
                               style={{}}
                               className="col-lg-2 col-sm-2 col-md-2 mb-5 mt-5"
                             >
-                              {/* <div style={{justifyContent:"center"}} className="col-lg-2 col-sm-12 col-md-3"> */}
                               <div
                                 data={color}
                                 style={{ alignContent: "center" }}
                                 class="folder"
                               >
-                                {/* <div class="folder-inside" style={{ backgroundColor: item.folder_color }}> */}
-                                <div class="folder-inside" style={{}}></div>
+                                sdsdsdsds
+                                <div class="folder-inside" style={{}}>
+                                 
+                                </div>
                               </div>
 
-                              {/* </div> */}
+                           
                             </div>
-                          </div>
+                          </div> */}
+
                           <h4
                             style={{
                               fontSize: 12,
