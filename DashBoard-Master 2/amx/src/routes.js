@@ -139,7 +139,7 @@ var routes = [
     name: "Analytics",
     // rtlName: "إخطارات",
     icon: "tim-icons icon-support-17",
-    component: Yulu,
+    component: RoboFlow,
     layout: "/amx",
   },
   // {

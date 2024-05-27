@@ -57,33 +57,32 @@ const Home = () => {
         className=""
         style={{
           width: '100%',
-          height: '100%',
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          justifyContent: "center",
-          gap: "1rem",
+          display:'flex',
+          justifyContent:'center'
         }}
       >
-        <h1>File Upload</h1>
-        <p>{video?.filename}</p>
+        {/* <p>{video?.filename}</p> */}
 
         <div
           {...getRootProps()}
           className={`dropzone ${isDragActive ? 'active' : ''}`}
           style={{
-            border: "2px dashed #007bff",
-            borderRadius: "20px",
+            // border: "2px dashed #007bff",
+            borderRadius: "10px",
             padding: "20px",
             textAlign: "center",
             cursor: "pointer",
             transition: "background-color 0.3s",
-            width: "300px",
-            height: "200px",
+            width: "200px",
+            height: "65px",
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
             // borderRadius:'10px'
+            minHeight:'60px',
+            background:'#FA742B',
+            color:'#fff',
+            fontWeight:'600'
           }}
         >
           <input {...getInputProps()} />
@@ -91,7 +90,11 @@ const Home = () => {
           {isDragActive ? (
             <p>Drop the video files here...</p>
           ) : (
-            <img src="https://cdn.pixabay.com/photo/2016/01/03/00/43/upload-1118929_1280.png" style={{width:'100px'}} alt="" />
+            <div className="" style={{display:'flex',flexDirection:'column',alignItems:'center',padding:'1rem'}} >
+              <img src="https://cdn.pixabay.com/photo/2016/01/03/00/43/upload-1118929_1280.png" style={{width:'30px'}} alt="" />
+              Upload Video
+            </div>
+            
           )}
         </div>
         {/* <button onClick={handlePost}>POST DATA</button> */}

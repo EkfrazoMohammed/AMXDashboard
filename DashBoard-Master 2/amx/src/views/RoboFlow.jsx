@@ -117,6 +117,7 @@ import ProgressBar from "components/ProgressBar/progress_bar";
 import DropFileInput from "./DropFileInput/DropFileInput";
 import { PieChart } from "recharts";
 // import {icon1} from "../../src/assets/img/anime3.png"
+import Yulu from "./Yulu"
 
 import Frame from "react-frame-component";
 function RoboFlow() {
@@ -125,7 +126,7 @@ function RoboFlow() {
   return (
     <>
       <div className="content">
-        <Row>
+        <Row style={{justifyContent:'center'}}>
           <Col lg="6" md="12">
             <div
               id="map"
@@ -134,7 +135,7 @@ function RoboFlow() {
                 position: "relative",
                 overflow: "hidden",
                 width: "100%",
-                height: "calc(88vh)",
+                height: "calc(78vh)",
               }}
             >
               <iframe
@@ -146,10 +147,13 @@ function RoboFlow() {
                 }}
                 src={myurl}
                 id="iframeId"
-              ></iframe>
+                ></iframe>
             </div>
+                <Yulu/>
+        
           </Col>
-          <Col lg="6" md="12">
+
+      {/*}    <Col lg="6" md="12">
             <Card className="card-tasks" style={{height:"auto"}}>
               <CardHeader>
                 <h6 className="title d-inline">Plugins (4)</h6>
@@ -371,7 +375,7 @@ function RoboFlow() {
                 </Table>
               </CardBody>
             </Card>
-          </Col>
+              </Col>*/ }
         </Row>
       </div>
     </>
