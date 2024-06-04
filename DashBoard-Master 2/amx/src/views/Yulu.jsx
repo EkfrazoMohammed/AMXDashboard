@@ -1,105 +1,93 @@
-import React, { useCallback, useState, useEffect } from "react";
-import axios from "axios";
-import { useDropzone } from "react-dropzone";
+import React, { useRef, useEffect, useState } from "react";
+import axios from 'axios';
+import { TailSpin } from 'react-loader-spinner'
+import RoboFlow from "./RoboFlow";
 
-const Home = () => {
-  const [video, setVideo] = useState();
-  const [dataUrl, setDataUrl] = useState([]);
+const Loader = ()=>{
+  return(
+    <div className="" style={{height:'90vh',display:'flex',alignItems:'center',justifyContent:'center'}}>
+      <TailSpin
+      visible={true}
+      height="80"
+      width="80"
+      color="#4fa94d"
+      ariaLabel="tail-spin-loading"
+      radius="1"
+      wrapperStyle={{}}
+      wrapperClass=""
+      />
+    </div>
+  )
+}
 
-  const onDrop = useCallback((acceptedFiles) => {
-    const file = acceptedFiles[0];
-    const videoURL = URL.createObjectURL(file);
-    const fileName = file.name;
+const Home = ({setTogglesection}) => {
+  const videoRef = useRef(null);
+  const [video,setVideo]=useState(null)
+  const [socket, setSocket] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
+  console.log("object")
 
-    setVideo({ filename: fileName, blob: videoURL });
-  }, []);
-
-  const { getRootProps, getInputProps, isDragActive } = useDropzone({
-    onDrop,
-    accept: 'video/*'
-  });
-
-  const handleChange = (e) => {
-    const file = e.target.files[0];
-    const videoURL = URL.createObjectURL(file);
-    const fileName = file.name;
-
-    setVideo({ filename: fileName, blob: videoURL });
-  };
-
-  const url = "http://localhost:8000/url";
+  useEffect(() => {
+    return () => {
+      if (socket) {
+        socket.close();
+      }
+    };
+  }, [socket]);
 
   const handlePost = async () => {
     try {
-      await axios.post(url, video);
-      alert("Video uploaded successfully!");
+      const url = "https://your-api-url";
+      const post = await axios.post(url,{video});
+      console.log(post);
     } catch (error) {
-      console.error("Error uploading video:", error);
+      alert(error);
     }
-
-    getData();
   };
 
-  const getData = async () => {
+  const initializeWebSocket = () => {
+    const newSocket = new WebSocket('ws://your-websocket-url');
+    newSocket.onmessage = (event) => {
+      const frameData = event.data;
+      const imageUrl = 'data:image/jpeg;base64,' + frameData;
+      if (videoRef.current) {
+        videoRef.current.src = imageUrl;
+      }
+    };
+    setSocket(newSocket);
+  };
+
+  const handleFileChange = async (e) => {
+    setIsLoading(true);
+    setTogglesection(false)
     try {
-      const res = await axios.get(url);
-      setDataUrl(res.data);
-    } catch (err) {
-      console.log(err);
+      const file = e.target.files[0];
+      const videoURL = URL.createObjectURL(file);
+      if (videoRef.current) {
+        videoRef.current.src = videoURL;
+        setVideo(videoURL)
+        await handlePost();
+        await initializeWebSocket();
+      }
+    } catch (error) {
+      alert(error);
+    } finally {
+      setIsLoading(false);
     }
   };
-
-  console.log(dataUrl);
 
   return (
     <>
-      <div
-        className=""
-        style={{
-          width: '100%',
-          display:'flex',
-          justifyContent:'center'
-        }}
-      >
-        {/* <p>{video?.filename}</p> */}
+    
+    
 
-        <div
-          {...getRootProps()}
-          className={`dropzone ${isDragActive ? 'active' : ''}`}
-          style={{
-            // border: "2px dashed #007bff",
-            borderRadius: "10px",
-            padding: "20px",
-            textAlign: "center",
-            cursor: "pointer",
-            transition: "background-color 0.3s",
-            width: "200px",
-            height: "65px",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            // borderRadius:'10px'
-            minHeight:'60px',
-            background:'#FA742B',
-            color:'#fff',
-            fontWeight:'600'
-          }}
-        >
-          <input {...getInputProps()} />
-          <input type="file" onChange={handleChange} accept="video/*" style={{ display: 'none' }} />
-          {isDragActive ? (
-            <p>Drop the video files here...</p>
-          ) : (
-            <div className="" style={{display:'flex',flexDirection:'column',alignItems:'center',padding:'1rem'}} >
-              <img src="https://cdn.pixabay.com/photo/2016/01/03/00/43/upload-1118929_1280.png" style={{width:'30px'}} alt="" />
-              Upload Video
-            </div>
-            
-          )}
-        </div>
-        {/* <button onClick={handlePost}>POST DATA</button> */}
-      </div>
+    <div style={{ display: 'flex', justifyContent: 'center', flexDirection: 'column-reverse', gap: '1rem' }}>
+  
+      <video ref={videoRef} controls autoPlay />
+    </div>
+    
     </>
+    
   );
 };
 
