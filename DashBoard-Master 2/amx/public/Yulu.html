@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>File Upload</title>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const fileInput = document.getElementById('fileInput');
+            const uploadButton = document.getElementById('uploadButton');
+            const annotatedImage = document.getElementById('annotatedImage');
+
+            uploadButton.addEventListener('click', () => {
+                const file = fileInput.files[0];
+                if (!file) return;
+
+                const reader = new FileReader();
+                reader.onload = () => {
+                    const base64File = reader.result.split(',')[1];
+
+                    const socket = new WebSocket('ws://localhost:8000/ws/video/');
+
+                    socket.addEventListener('open', () => {
+                        console.log("websocket connected");
+                        socket.send(JSON.stringify({ file: base64File }));
+                    });
+
+                    socket.addEventListener('message', (event) => {
+                        const data = JSON.parse(event.data);
+                        console.log(data)
+                        if (data.annotated_frame) {
+                            // Update the image source with the received annotated frame
+                            annotatedImage.src = data:image/jpeg;base64,${data.annotated_frame};
+                        } else if (data.message === 'Video processing completed') {
+                            // Close the socket connection when processing is complete
+                            console.log('Video processing completed');
+                            socket.close();
+                        }
+                    });
+                };
+                reader.readAsDataURL(file);
+            });
+        });
+    </script>
+</head>
+<body>
+    <div>
+        <input type="file" id="fileInput">
+        <button id="uploadButton">Upload</button>
+    </div>
+    <div>
+        <img id="annotatedImage" alt="Annotated Frame" width=100% height="400vh" >
+    </div>
+</body>
+</html>

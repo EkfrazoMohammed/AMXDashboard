@@ -299,7 +299,9 @@ import { Card, CardHeader, CardBody, Row, Col } from "reactstrap";
 // };
 import Frame from 'react-frame-component';
 function ViewerWrapper() {
+
    const myurl=process.env.PUBLIC_URL + '/NewViewer.html';
+   
   const [localStorageValue, setLocalStorageValue] = useState(null);
   // const jstree = localStorage.getItem("jstree");
   // console.log("jstree==>", jstree);

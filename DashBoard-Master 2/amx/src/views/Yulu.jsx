@@ -46,7 +46,7 @@ const Home = ({setTogglesection}) => {
   };
 
   const initializeWebSocket = () => {
-    const newSocket = new WebSocket('ws://your-websocket-url');
+    const newSocket = new WebSocket('wss://fibregrid.amxdrones.com/ws/videos/');
     newSocket.onmessage = (event) => {
       const frameData = event.data;
       const imageUrl = 'data:image/jpeg;base64,' + frameData;

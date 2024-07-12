@@ -55,7 +55,8 @@
     "recharts": "^2.6.2",
     "sass": "1.53.0",
     "three": "^0.152.2",
-    "use-supercluster": "^0.4.0"
+    "use-supercluster": "^0.4.0",
+    "websocket": "^1.0.35"
   },
   "browser": {
     "fs": false,
