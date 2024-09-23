@@ -459,11 +459,11 @@ const handleMapClick = (event) => {
             </Button>
           </div>
         </div>
-        {area && (
+        {/* {area && (
         <div>
           <p>Area: {JSON.stringify(area)}</p>
         </div>
-      )}
+      )} */}
         <GoogleMap
           // center={mapCenter}
           center={userCenter}
