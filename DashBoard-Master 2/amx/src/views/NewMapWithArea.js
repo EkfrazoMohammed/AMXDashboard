@@ -308,25 +308,47 @@ const handleMapClick = (event) => {
   };
   const [latitude, setLatitude] = useState("");
   const [longitude, setLongitude] = useState("");
-
   const handleSearch = () => {
     if (!latitude || !longitude) {
       toast.info("Enter Latitude & Longitude");
+      return;
     }
-    if (latitude && longitude) {
-      const selectedLocation = {
-        lat: parseFloat(latitude),
-        lng: parseFloat(longitude),
-      };
-
-      // Update the map's center and set the zoom level
-      mapRef.current.panTo(selectedLocation);
-      mapRef.current.setZoom(16);
-    } else {
-      // Handle empty input error
-      console.log("Please enter both latitude and longitude.");
-    }
+  
+    const selectedLocation = {
+      lat: parseFloat(latitude),
+      lng: parseFloat(longitude),
+    };
+  
+    // Add the new coordinates to the polygonCoordinates array
+    setPolygonCoordinates((prevCoordinates) => {
+      const updatedCoordinates = [...prevCoordinates, selectedLocation];
+      calculateArea(updatedCoordinates); // Recalculate area with the new coordinates
+      return updatedCoordinates;
+    });
+  
+    // Update the map's center and set the zoom level
+    mapRef.current.panTo(selectedLocation);
+    mapRef.current.setZoom(16);
   };
+  
+//   const handleSearch = () => {
+//     if (!latitude || !longitude) {
+//       toast.info("Enter Latitude & Longitude");
+//     }
+//     if (latitude && longitude) {
+//       const selectedLocation = {
+//         lat: parseFloat(latitude),
+//         lng: parseFloat(longitude),
+//       };
+
+//       // Update the map's center and set the zoom level
+//       mapRef.current.panTo(selectedLocation);
+//       mapRef.current.setZoom(16);
+//     } else {
+//       // Handle empty input error
+//       console.log("Please enter both latitude and longitude.");
+//     }
+//   };
   const [nestedModal, setNestedModal] = useState(false);
   const [closeAll, setCloseAll] = useState(false);
 
