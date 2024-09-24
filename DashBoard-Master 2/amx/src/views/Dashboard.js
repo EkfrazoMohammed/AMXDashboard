@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Line, Pie, Doughnut, Bar,PolarArea, Bubble } from "react-chartjs-2"; // Import Line component
+import { Line, Pie, Doughnut, Bar } from "react-chartjs-2"; // Import Line component
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -9,105 +9,44 @@ import {
   Title,
   Tooltip,
   Legend,
-  Filler,
   BarElement,
   ArcElement,
-  
 } from "chart.js";
 import Droneimage from '../../src/views/assets/images/drone-dashboardICON.png'
 import MissioIcon from '../../src/views/assets/images/png/missonLogo_dashboard.png'
 import '../../src/views/assets/css/style.css'
-import { faker } from "@faker-js/faker"; // Updated import
-
 import NotificationAlert from "react-notification-alert";
-import classNames from "classnames";
 import "./styles/dashboard.css";
-import { ToastContainer, toast } from "react-toastify";
-import {
-  CircularProgressbar,
-  buildStyles,
-  CircularProgressbarWithChildren,
-} from "react-circular-progressbar";
+import { toast } from "react-toastify";
 import axios from "axios";
 import { useHistory } from "react-router-dom";
 
-import { Link } from "react-router-dom/cjs/react-router-dom.min";
-
 import {
-  Button,
-  ButtonGroup,
   Card,
   CardHeader,
   CardBody,
   CardTitle,
-  DropdownToggle,
-  DropdownMenu,
-  DropdownItem,
-  UncontrolledDropdown,
   Label,
   FormGroup,
   Input,
-  Table,
   Row,
   Col,
-  UncontrolledTooltip,
-  Alert,
-  UncontrolledAlert,
-  UncontrolledPopover,
-  Dropdown,
 } from "reactstrap";
 
 import {
-  faBoxArchive,
-  faBriefcase,
-  faCamera,
   faClose,
-  faDrum,
-  faDrumstickBite,
-  faEllipsis,
-  faFileAudio,
-  faFileInvoice,
-  faGraduationCap,
-  faMicrophone,
-  faPlug,
-  faPlus,
-  faShareNodes,
-  faUser,
-  faVideo,
   faFolder,
-  faDroneAlt,
   faDatabase,
-  faDrone
 } from "@fortawesome/free-solid-svg-icons";
 
-// import dronelogo from "/Users/apple/Documents/DashBoard-Master/black-dashboard-react-master/src/views/assets/images/drone-icon.png"
 import "./assets/images/drone-icon.png";
-// import projectfolder from "/Users/apple/Documents/DashBoard-Master/black-dashboard-react-master/src/views/assets/images/project-folder-black.png"
 import "./assets/images/project-folder-black.png";
-// import projectblue from "/Users/apple/Documents/DashBoard-Master/black-dashboard-react-master/src/views/assets/images/project-folder-blue.png"
-import projectblue from "./assets/images/project-folder-blue.png";
-
 import drone from "../assets/drone.png";
-import dronecamera from "../assets/camera-drone.png";
-
-// core components
-import {
-  chartExample1,
-  chartExample2,
-  chartExample3,
-  chartExample4,
-} from "variables/charts.js";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   BackgroundColorContext,
-  backgroundColors,
 } from "contexts/BackgroundColorContext";
-import ProgressBar from "components/ProgressBar/progress_bar";
-import DropFileInput from "./DropFileInput/DropFileInput";
-import { PieChart } from "recharts";
-// import {icon1} from "../../src/assets/img/anime3.png"
-
 
 function Dashboard(props) {
   ChartJS.register(
@@ -121,23 +60,9 @@ function Dashboard(props) {
     BarElement,
     ArcElement
   );
-  const [bigChartData, setbigChartData] = React.useState("data1");
-  const setBgChartData = (name) => {
-    setbigChartData(name);
-  };
-  const [hovered, setHovered] = useState(false);
-  const percentage = hovered ? 75 : 0; // Change the percentage as needed
-
   const userIdO = localStorage.getItem("user_id");
-
   const amxtokenO = localStorage.getItem("amxtoken").replace(/"/g, "");
-
-  const consumed_data = localStorage.getItem("consumed_data").replace(/"/g, "");
-
   const Maxstorage = 5; //15 GB
-
-  const totalGBused = (consumed_data / (1024 * 1024 * 1024)).toFixed(2);
-  // console.log('Total Gigabytes Used:', totalGBused);
 
   const config = {
     params: {
@@ -158,96 +83,27 @@ function Dashboard(props) {
     },
   };
 
-  const [barChartData, setBarChartData] = useState([
-    { name: "Apr 2023", year: 2023, Projects_Added: 0, Drones_Added: 0 },
-    { name: "May 2023", year: 2023, Projects_Added: 0, Drones_Added: 0 },
-    { name: "Jun 2023", year: 2023, Projects_Added: 0, Drones_Added: 0 },
-    { name: "Jul 2023", year: 2023, Projects_Added: 0, Drones_Added: 0 },
-    { name: "Aug 2023", year: 2023, Projects_Added: 0, Drones_Added: 0 },
-    { name: "Sep 2023", year: 2023, Projects_Added: 0, Drones_Added: 0 },
-    { name: "Oct 2023", year: 2023, Projects_Added: 0, Drones_Added: 0 },
-  ]);
   const [remainingStorage, setRemainingStorage] = useState(15.0);
-  const [userid, setUserid] = useState("");
-  const [usertoken, setUsertoken] = useState("");
-  const [gbData, setGbData] = useState("");
-  // Notification starts
   const notificationAlertRef = React.useRef(null);
   const [project_list, setProject_list] = React.useState([]);
   const [recent_project_list, recent_setProject_list] = React.useState([]);
- const [imageData, setImageData] = useState(null);
-
-  function handleFileUpload(event) {
-    const file = event.target.files[0];
-    const reader = new FileReader();
-    reader.readAsDataURL(file);
-    reader.onload = () => {
-      const fileData = reader.result;
-      setImageData(fileData);
-    };
-  }
-
-  const onFileChange = (files) => {
-  };
 
   const [addprojectopen, setaddprojectopen] = React.useState(false);
-
-  const AddProject = (name) => {
-    // console.log("AddProject======");
-    setaddprojectopen(true);
-  };
   const CloseProject = (name) => {
     setaddprojectopen(false);
   };
 
-  const BuyNow = () => {
-    setaddprojectopen(false);
-    toast.info("Contact Admin to Buy more Storage!", {
-      position: "top-right",
-      autoClose: 5000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-      theme: "light",
-      icon: <img src={drone} />,
-    });
-  };
-
-  const OKProject = (name) => {
-    setaddprojectopen(false);
-  };
-  // const Maxstorage = 16106127360;
-  const [user, setUser] = useState(null);
-
-  const getDetails = () => {
-    setUserid(localStorage.getItem("user_id"));
-    setUsertoken(localStorage.getItem("amxtoken"));
-  };
-
-  const cardBackgroundColors = [
-    "#55d392",
-    "#05daff",
-    "#23efe2",
-    "#e75b8fbf",
-    "#ffeeff",
-  ]; // Add more colors as needed
   const [selectedTimeRange, setSelectedTimeRange] = useState("last3months");
 
   const GetAllProjects = async () => {
     try {
-      // https://fibregrid.amxdrones.com/dronecount/projects/
       const response = await axios.get(
         "https://fibregrid.amxdrones.com/dronecount/v2/get-folders/",
         config
       );
-      // console.log(response.data.map(item => item.folder_structure), "projectdata====>")
       const allProjectData = response.data[0].folder_structure;
       setProject_list(allProjectData);
-
       setRemainingStorage(response.data[1].total_size.toFixed(2));
-      // const consumed_data = localStorage.setItem("consumed_data");
     } catch (error) {
       console.log(error);
     }
@@ -255,45 +111,25 @@ function Dashboard(props) {
 
   const GetAllChartData = async () => {
     try {
-      // https://fibregrid.amxdrones.com/dronecount/projects/
       const response = await axios.get(
         "https://fibregrid.amxdrones.com/dronecount/v2/get-folders/",
         config
       );
-   console.log("github");
-     const allProjectData = response.data[0].folder_structure;
-
+      const allProjectData = response.data[0].folder_structure;
       let response2 = await axios.get(
         "https://fibregrid.amxdrones.com/dronecount/addDrone/",
         config
       );
       const droneChartData = response2.data;
-
-
-      // Calculate the number of active drones
-      const numberOfActiveDrones = response2.data.reduce((count, drone) => {
-        if (drone.Status === true) {
-          return count + 1;
-        }
-        return count;
-      }, 0);
-
-      console.log("Number of active drones:", numberOfActiveDrones);
-
-      // Process data for the selected time range
       const processedChartData = processDataForTimeRange(
         allProjectData,
         droneChartData || 0,
         selectedTimeRange
       );
-      console.log(processedChartData,'<====before')
-      setBarChartData(processedChartData);
-
       let chart1_2_options = {
         maintainAspectRatio: false,
         legend: {
           display: false,
-
         },
         tooltips: {
           backgroundColor: "#f5f5f5",
@@ -306,7 +142,6 @@ function Dashboard(props) {
           position: "nearest",
         },
         responsive: true,
-        maintainAspectRatio: false, 
         scales: {
           yAxes: {
             barPercentage: 1.6,
@@ -340,29 +175,20 @@ function Dashboard(props) {
       function convertData(dynamicData, datasetType) {
         const labels = dynamicData.map((item) => `${item.name}`);
         const data = dynamicData.map((item) => item[datasetType]);
-      
-        // Create a linear gradient for the background color
         const gradientStroke = {
           canvas: null,
           context: null,
           gradient: null,
         };
-      
+
         gradientStroke.canvas = document.createElement("canvas");
         gradientStroke.context = gradientStroke.canvas.getContext("2d");
-        gradientStroke.gradient = gradientStroke.context.createLinearGradient(
-          0,
-          230,
-          0,
-          50
-        );
-      
+        gradientStroke.gradient = gradientStroke.context.createLinearGradient(0, 230, 0, 50);
         gradientStroke.gradient.addColorStop(1, "rgba(29,140,248,0.2)");
         gradientStroke.gradient.addColorStop(0.4, "rgba(29,140,248,0.0)");
         gradientStroke.gradient.addColorStop(0, "rgba(29,140,248,0)"); // blue colors
-      
         const dataset = {
-          label:datasetType,
+          label: datasetType,
           fill: true,
           height: 200,
           backgroundColor: gradientStroke.gradient,
@@ -379,57 +205,21 @@ function Dashboard(props) {
           pointRadius: 4,
           data: data,
         };
-      
+
         return {
           labels: labels,
           datasets: [dataset],
           options: chart1_2_options, // Add the options object here
         };
       }
-
       const projectsData = convertData(processedChartData, "Projects_Added");
       const dronesData = convertData(processedChartData, "Drones_Added");
       setProjectdataChart(projectsData);
-console.log(dronesData,'<=====dronesData')
-
       setDronedataChart(dronesData);
-      const options123 = {
-        responsive: true,
-        plugins: {
-          legend: {
-            fill: true,
-            position: "bottom",
-          },
-          title: {
-            display: true,
-            text: "Projects Added",
-          },
-        },
-      };
-
-      const f1 = (str) => {
-        let s1 = {
-          responsive: true,
-          plugins: {
-            legend: {
-              fill: true,
-              position: "bottom",
-            },
-            title: {
-              display: true,
-              text: str,
-            },
-          },
-        };
-      };
-      let pf1 = f1("Project Added");
-      setOptionChart(pf1);
     } catch (error) {
       console.log(error);
     }
   };
-  const [optionChart, setOptionChart] = useState([]);
-  const [optiondataChart, setdataOptionChart] = useState([]);
 
   const [projectdataChart, setProjectdataChart] = useState({
     labels: [],
@@ -439,8 +229,8 @@ console.log(dronesData,'<=====dronesData')
           'Red',
           'Yellow',
           'Blue'
-      ],
-              data: [],
+        ],
+        data: [],
         fill: false,
         borderColor: 'rgba(75,192,192,1)',
         borderWidth: 2,
@@ -448,19 +238,19 @@ console.log(dronesData,'<=====dronesData')
     ],
     options: {
       scales: {
-          x: {
-              grid: {
-                  display: false // This removes the x-axis grid lines
-              }
-          },
-          y: {
-              grid: {
-                  display: false // This removes the y-axis grid lines
-              }
+        x: {
+          grid: {
+            display: false // This removes the x-axis grid lines
           }
+        },
+        y: {
+          grid: {
+            display: false // This removes the y-axis grid lines
+          }
+        }
       }
-  }
-});
+    }
+  });
   const [dronedataChart, setDronedataChart] = useState(
     {
       labels: [],
@@ -470,8 +260,8 @@ console.log(dronesData,'<=====dronesData')
             'Red',
             'Yellow',
             'Blue'
-        ],
-                data: [],
+          ],
+          data: [],
           fill: false,
           borderColor: 'rgba(75,192,192,1)',
           borderWidth: 2,
@@ -479,18 +269,18 @@ console.log(dronesData,'<=====dronesData')
       ],
       options: {
         scales: {
-            x: {
-                grid: {
-                    display: false // This removes the x-axis grid lines
-                }
-            },
-            y: {
-                grid: {
-                    display: false // This removes the y-axis grid lines
-                }
+          x: {
+            grid: {
+              display: false // This removes the x-axis grid lines
             }
+          },
+          y: {
+            grid: {
+              display: false // This removes the y-axis grid lines
+            }
+          }
         }
-    }
+      }
     }
   );
 
@@ -573,26 +363,26 @@ console.log(dronesData,'<=====dronesData')
     const chartData = monthsInTimeRange.map((monthData) => {
       const projectsForMonth = projectsData
         ? projectsData.filter(
-            (entry) =>
-              new Date(entry.datetime).toLocaleString("default", {
-                month: "long",
-              }) === monthData.name &&
-              new Date(entry.datetime).getFullYear() === monthData.year
-          )
+          (entry) =>
+            new Date(entry.datetime).toLocaleString("default", {
+              month: "long",
+            }) === monthData.name &&
+            new Date(entry.datetime).getFullYear() === monthData.year
+        )
         : [];
       // Only filter drones if data2 is provided
       const dronesForMonth =
         data2 && data2.length > 0
           ? data2.filter(
-              (entry) =>
-                new Date(entry.purchase_year).toLocaleString("default", {
-                  month: "long",
-                }) === monthData.name &&
-                new Date(entry.purchase_year).getFullYear() === monthData.year
-            )
+            (entry) =>
+              new Date(entry.purchase_year).toLocaleString("default", {
+                month: "long",
+              }) === monthData.name &&
+              new Date(entry.purchase_year).getFullYear() === monthData.year
+          )
           : [];
       const monthYear = `${monthData.name.slice(0, 3)} ${monthData.year}`;
-return {
+      return {
         ...monthData,
         name: monthYear,
         Projects_Added: projectsForMonth.length,
@@ -612,14 +402,13 @@ return {
   ];
   const GetRecentProjects = async () => {
     try {
-      // https://fibregrid.amxdrones.com/dronecount/projects/
       const response = await axios.get(
         "https://fibregrid.amxdrones.com/dronecount/v2/get-folders/",
         config2
       );
 
       const sortedData = response.data[0].folder_structure.sort((a, b) => {
-  
+
         return new Date(b.datetime) - new Date(a.datetime);
       });
 
@@ -654,23 +443,17 @@ return {
       console.log(error);
     }
   };
- 
+
   useEffect(() => {
     GetAllChartData();
   }, [selectedTimeRange]);
   const [isLoading, setIsLoading] = useState(true);
 
-  // useEffect(() => {
-  //   getDetails();
-  //   GetAllProjects();
-  //   GetRecentProjects();
-  //   GetAllDrone();
-  // }, []);
   useEffect(() => {
     const fetchData = async () => {
       try {
         setIsLoading(true);
-        await Promise.all([GetAllChartData(), getDetails(), GetAllProjects(), GetRecentProjects(), GetAllDrone()]);
+        await Promise.all([GetAllChartData(), GetAllProjects(), GetRecentProjects(), GetAllDrone()]);
         setIsLoading(false);
       } catch (error) {
         console.error(error);
@@ -680,84 +463,51 @@ return {
 
     fetchData();
   }, []);
- 
-  const monthNames = [
-    "January",
-    "February",
-    "March",
-    "April",
-    "May",
-    "June",
-    "July",
-    "August",
-    "September",
-    "October",
-    "November",
-    "December",
-  ];
 
-let totalMissions = droneData.length
-let activeMissions = droneData.filter((drone) => drone.Status === true).length
-let inactiveMissions = droneData.filter((drone) => drone.Status === false).length
-let remainSTorage = (remainingStorage - 10).toFixed(2)
+
+  let totalMissions = droneData.length
+  let activeMissions = droneData.filter((drone) => drone.Status === true).length
+  let inactiveMissions = droneData.filter((drone) => drone.Status === false).length
+  let remainSTorage = (remainingStorage - 10).toFixed(2)
   const datas = {
-    labels: ['Active Missions ' ,'Inactive Missions'],
+    labels: ['Active Missions ', 'Inactive Missions'],
     datasets: [
       {
-        data: [activeMissions,inactiveMissions], // values for each section
-        backgroundColor: [ '#208ef1','#5cd1df', '#FFCE56'], // colors for each section
-        // hoverBackgroundColor: ['#FF6384', '#36A2EB', '#FFCE56'], // hover colors
+        data: [activeMissions, inactiveMissions], // values for each section
+        backgroundColor: ['#208ef1', '#5cd1df', '#FFCE56'], // colors for each section
       },
     ],
   };
 
-  // Options for the pie chart
   const options = {
     responsive: true,
     maintainAspectRatio: false,
-    
   };
 
-
-  let usedStorage=Maxstorage-(remainingStorage - 10);
+  let usedStorage = Maxstorage - (remainingStorage - 10);
   const storagedata = {
-    labels: ["Used Storage","Remaining Storage"],
+    labels: ["Used Storage", "Remaining Storage"],
     datasets: [
       {
-        data: [usedStorage, remainingStorage - 10, ], // values for each section
-        backgroundColor: [ '#208ef1','#5cd1df', '#FFCE56'], // colors for each section
-        // hoverBackgroundColor: ['#FF6384', '#36A2EB', '#FFCE56'], // hover colors
+        data: [usedStorage, remainingStorage - 10,], // values for each section
+        backgroundColor: ['#208ef1', '#5cd1df', '#FFCE56'], // colors for each section
       },
     ],
   };
   const dougnutoptions = {
     responsive: true,
-    maintainAspectRatio: false, 
+    maintainAspectRatio: false,
   };
-//  useEffect(() => {
-//     // Separate active and inactive drones
-//     const active = droneData.filter((drone) => drone.Status === true);
-//     const inactive = droneData.filter((drone) => drone.Status === false);
-
-//   }, [droneData]);
-
   const [data, setData] = useState({
     name: "",
     user_id: userIdO,
   });
-  const [percentage1, setPercentage1] = useState(25);
-
-  const handleChangeEvent = (event) => {
-    setPercentage1(event.target.value);
-  };
   const handleChange = (e) =>
     setData((prevState) => ({ ...prevState, [e.target.name]: e.target.value }));
-
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     try {
-      let payload = data;
       let data1 = await axios
         .post(
           "https://fibregrid.amxdrones.com/dronecount/projects/",
@@ -765,7 +515,6 @@ let remainSTorage = (remainingStorage - 10).toFixed(2)
           config
         )
         .then((res) => {
-          const data2 = res.data;
           toast.success("New project added !", {
             position: "top-right",
             autoClose: 5000,
@@ -775,9 +524,8 @@ let remainSTorage = (remainingStorage - 10).toFixed(2)
             draggable: true,
             progress: undefined,
             theme: "light",
-            icon: <img src={drone} />,
+            icon: <img src={drone} alt="drone-img" />,
           });
-
           CloseProject();
           GetAllProjects();
           GetRecentProjects();
@@ -793,7 +541,7 @@ let remainSTorage = (remainingStorage - 10).toFixed(2)
               draggable: true,
               progress: undefined,
               theme: "light",
-              icon: <img src={drone} />,
+              icon: <img src={drone} alt="drone-img" />,
             });
             GetAllProjects();
             GetRecentProjects();
@@ -804,23 +552,61 @@ let remainSTorage = (remainingStorage - 10).toFixed(2)
       console.log(error);
     }
   };
-  const [dropdownOpen, setDropdownOpen] = useState(false);
-
-  const toggle = () => setDropdownOpen((prevState) => !prevState);
   const history = useHistory();
+  const lineChartOptions = {
+    scales: {
+      x: {
+        ticks: {
+          stepSize: 1, // ensures steps of 1 on the x-axis
+          callback: function (value) {
+            return Math.floor(value); // show whole numbers only
+          }
+        }
+      },
+      y: {
+        ticks: {
+          stepSize: 1, // ensures steps of 1 on the y-axis
+          callback: function (value) {
+            return Math.floor(value); // show whole numbers only
+          }
+        }
+      }
+    }
+  };
 
+  const barChartOptions = {
+    scales: {
+      x: {
+        ticks: {
+          stepSize: 1, // ensures steps of 1 on the x-axis
+          callback: function (value) {
+            return Math.floor(value); // show whole numbers only
+          }
+        }
+      },
+      y: {
+        ticks: {
+          stepSize: 1, // ensures steps of 1 on the y-axis
+          callback: function (value) {
+            return Math.floor(value); // show whole numbers only
+          }
+        }
+      }
+    }
+  };
 
   const overviewdata = [
     {
-      icon:      <FontAwesomeIcon icon={faFolder} style={{ color: "#1f8ef1", width: "20px", height: "20px" }} />      ,
-
+      icon: <FontAwesomeIcon icon={faFolder} style={{ color: "#1f8ef1", width: "20px", height: "20px" }} />,
       title: "total projects",
       count: project_list.length,
       item: "projects",
-      chart:  <Line
-      data={projectdataChart}
-      style={{minHeight:"150px",maxHeight:"220px"}}
-    />
+      chart:
+        <Line
+          data={projectdataChart}
+          options={lineChartOptions} // Apply options here
+          style={{ minHeight: "150px", maxHeight: "220px" }}
+        />
     },
     {
       icon: <img src={Droneimage} alt="" srcset="" width='30px' height='30px' />
@@ -828,62 +614,53 @@ let remainSTorage = (remainingStorage - 10).toFixed(2)
       title: "total Drones",
       count: droneData.length,
       item: "drones",
-      chart:<Bar        style={{minHeight:"150px",maxHeight:"220px"}}  data={dronedataChart} />  
+      chart:
+        <Bar
+          data={dronedataChart}
+          options={barChartOptions} // Apply options here
+          style={{ minHeight: "150px", maxHeight: "220px" }}
+        />
     },
-  
+
     {
-      icon:<img src={MissioIcon} alt="" srcset="" width='30px' height='30px' />
+      icon: <img src={MissioIcon} alt="" srcset="" width='30px' height='30px' />
       ,
       title: "Active Missions",
-      // count: droneData.filter((drone) => drone.Status === true).length,
       count: totalMissions,
       item: "missions",
-      chart:  
-      <Pie data={datas} options={options}       style={{minHeight:"150px",maxHeight:"220px"}} />
-     
+      chart:
+        <Pie data={datas} options={options} style={{ minHeight: "150px", maxHeight: "220px" }} />
+
     },
     {
-      icon:<FontAwesomeIcon icon={faDatabase} style={{ color: "#1f8ef1", width: "20px", height: "20px" }} />
+      icon: <FontAwesomeIcon icon={faDatabase} style={{ color: "#1f8ef1", width: "20px", height: "20px" }} />
       ,
       title: `Max Storage: ${Maxstorage} GB `,
       item: `Available:${remainSTorage} GB`,
-      chart:<Doughnut data={storagedata} options={dougnutoptions}       style={{minHeight:"150px",maxHeight:"220px"}}/>
+      chart: <Doughnut data={storagedata} options={dougnutoptions} style={{ minHeight: "150px", maxHeight: "220px" }} />
     }
   ];
 
-  // chart:<Doughnut data={storagedata} options={dougnutoptions}       style={{minHeight:"150px",maxHeight:"220px"}}/>
- 
-  console.log("Added Changes")
   return (
     <BackgroundColorContext.Consumer>
       {({ color }) => (
         <>
-          {/* <ToastContainer /> */}
-
           <div className="react-notification-alert-container">
             <NotificationAlert ref={notificationAlertRef} />
           </div>
-    
-  
-
-          <div className={addprojectopen == true ? "overlay show" : "overlay"}>
-            {/* <!-- popup box start --> */}
+          <div className={addprojectopen === true ? "overlay show" : "overlay"}>
             <div className="popup-outer">
               <div className="popup-box">
-                {/* <i id="close" className="bx bx-x close"></i> */}
                 <FontAwesomeIcon
                   onClick={CloseProject}
                   className="close"
                   icon={faClose}
                 />
                 <div className="profile-text">
-                  {/* <img src="profile.jpg" alt="" />  */}
                   <div className="text">
                     <span className="name">Create Projects</span>
-                    {/* <span className="profession">Web & Web Designer</span> */}
                   </div>
                 </div>
-
                 <input
                   type="text"
                   class="form-control"
@@ -910,177 +687,136 @@ let remainSTorage = (remainingStorage - 10).toFixed(2)
                     Create
                   </button>
                 </div>
-                {/* </form> */}
               </div>
             </div>
           </div>
 
-          {/* Dashboard */}
-
-          <div
-            className="content"
+          <div className="content"
             style={{
               backgroundColor:
-                color == "green"
+                color === "green"
                   ? "rgba(255,140,49,.05)"
-                  : color == "primary"
-                  ? "rgba(253,101,113,.05)"
-                  : "rgba(65, 195, 199,.03)",
+                  : color === "primary"
+                    ? "rgba(253,101,113,.05)"
+                    : "rgba(65, 195, 199,.03)",
             }}
           >
-            {isLoading? <>
-              <div style={{display:'flex',flexDirection:'column',alignItems:'center',height:'75vh',width:'100%',justifyContent:'center',overflow:'hidden'}}>
-
-<img src="https://cdnl.iconscout.com/lottie/premium/thumb/loading-5966360-4958661.gif" width='60px' alt="" />
- <span style={{ fontSize: "20px" }}>
-   {" "}
-   Fetching Data please wait...
- </span>
-</div>
-            </>:<>
-            <div className="container-fluid">
-              <div className="row">
-                {/* Left section */}
-
-                <div className="col-md-12 col-sm-12 left-section">
-                  {/* <h2>Left Section</h2> */}
-                  <>
-               
-
-                    <Row>
-
-                      <Col className="text-left" md="6">
-                        <CardTitle tag="h4" >
-                          Overview
-                        </CardTitle>
-                      </Col>
-                    </Row>
-                 
-                  <Row>
-   
-                  </Row>
-                  <Row>
-     
-{
-  overviewdata.map((v,index)=>{
-    return(
-          <Col lg="3" md='6' sm='12'>
-            <Card className="card-chart">
-              <CardHeader>
-                <h5 className="card-category">{v.title}</h5>
-
-      <CardTitle className="cartd_item" tag="h4">
-                  {v.icon}
-                 {v.count} {v.item}
-                </CardTitle>
-  
-
-              </CardHeader>
-              <CardBody>
-                <div className="chart-area" style={{display:'flex',justifyContent:'center',minHeight:"220px"}}>
-              
-                               {v.chart}
-
-          
-                </div>
-              </CardBody>
-            </Card>
-          </Col>
-    )
-  })
-}
-  
-        </Row>
-                   
-                    <Row>
-                      <Col md="3">
-                      <div>
-                        <FormGroup
-                          style={{
-                            display: "flex",
-                            justifyContent: "center",
-                            alignItems: "center",
-                            gap: ".5rem",
-                          }}
-                        >
-                          <Label htmlFor="timeRange" style={{ margin: 0 }}>
-                            Select Duration
-                          </Label>
-                          <Input
-                          style={{backgroundColor:'#ffff',padding:"4px"}}
-                            name="select"
-                            type="select"
-                            id="timeRange"
-                            onChange={(e) =>
-                              setSelectedTimeRange(e.target.value)
-                            }
-                            value={selectedTimeRange}
-                          >
-                            {timeRangeOptions.map((option) => (
-                              <option key={option.value} value={option.value}>
-                                {option.label}
-                              </option>
-                            ))}
-                          </Input>
-                        </FormGroup>
-                      </div>
-                      </Col>
-                   
-                    </Row>
-
-                    
-                    <Row>
-                      <Col className="text-left" md="6">
-                        <CardTitle tag="h4" style={{ marginTop: "10px" }}>
-                          Recent Projects
-                        </CardTitle>
-                      </Col>
-                    </Row>
-
-                    <Row>
-                      <Col md="6" style={{ marginTop: "20px" }}>
-                        {/* <Card>
-              <CardHeader>
-                <CardTitle tag="h4">Recent Projects</CardTitle>
-              </CardHeader> */}
-                        {/* <CardBody> */}
-
-                        {/* <UncontrolledAlert > */}
-                        {recent_project_list.map((item) => (
-                          <div
-                            className="card4"
-                            onClick={() =>
-                              history.push(
-                                "/amx/folders?project_id=" + item.name
-                              )
-                            }
-                          >
-                            <div
-                              className="icon-container1"
-                              style={{ backgroundColor: "rgb(239,185,93)" }}
-                            >
-                              <i className="fa-solid icon1 fa-sheet-plastic"></i>
-                            </div>
-
-                            {/* <p>{item.project_name}</p>
-                            <p>{item.numberoffile}</p>
-                            <p>{item.size}</p> */}
-
-                            <p>{item.name.split("(")[0].trim()}</p>
-                            {/* <p>-</p>
-                            <p>-</p> */}
-                          </div>
-                        ))}
-                      </Col>
-                    </Row>
-                  </>
-                </div>
-
-             
-             
+            {isLoading ? <>
+              <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', height: '75vh', width: '100%', justifyContent: 'center', overflow: 'hidden' }}>
+                <img src="https://cdnl.iconscout.com/lottie/premium/thumb/loading-5966360-4958661.gif" width='60px' alt="" />
+                <span style={{ fontSize: "20px" }}>
+                  {" "}
+                  Fetching Data please wait...
+                </span>
               </div>
-            </div>
-            </> }
+            </> : <>
+              <div className="container-fluid">
+                <div className="row">
+                  <div className="col-md-12 col-sm-12 left-section">
+                    <>
+                      <Row>
+                        <Col className="text-left" md="6">
+                          <CardTitle tag="h4" >
+                            Overview
+                          </CardTitle>
+                        </Col>
+                      </Row>
+                      <Row>
+                      </Row>
+                      <Row>
+
+                        {
+                          overviewdata.map((v, index) => {
+                            return (
+                              <Col lg="3" md='6' sm='12'>
+                                <Card className="card-chart">
+                                  <CardHeader>
+                                    <h5 className="card-category">{v.title}</h5>
+                                    <CardTitle className="cartd_item" tag="h4">
+                                      {v.icon}
+                                      {v.count} {v.item}
+                                    </CardTitle>
+                                  </CardHeader>
+                                  <CardBody>
+                                    <div className="chart-area" style={{ display: 'flex', justifyContent: 'center', minHeight: "220px" }}>
+                                      {v.chart}
+                                    </div>
+                                  </CardBody>
+                                </Card>
+                              </Col>
+                            )
+                          })
+                        }
+                      </Row>
+                      <Row>
+                        <Col md="3">
+                          <div>
+                            <FormGroup
+                              style={{
+                                display: "flex",
+                                justifyContent: "center",
+                                alignItems: "center",
+                                gap: ".5rem",
+                              }}
+                            >
+                              <Label htmlFor="timeRange" style={{ margin: 0 }}>
+                                Select Duration
+                              </Label>
+                              <Input
+                                style={{ backgroundColor: '#ffff', padding: "4px" }}
+                                name="select"
+                                type="select"
+                                id="timeRange"
+                                onChange={(e) =>
+                                  setSelectedTimeRange(e.target.value)
+                                }
+                                value={selectedTimeRange}
+                              >
+                                {timeRangeOptions.map((option) => (
+                                  <option key={option.value} value={option.value}>
+                                    {option.label}
+                                  </option>
+                                ))}
+                              </Input>
+                            </FormGroup>
+                          </div>
+                        </Col>
+
+                      </Row>
+                      <Row>
+                        <Col className="text-left" md="6">
+                          <CardTitle tag="h4" style={{ marginTop: "10px" }}>
+                            Recent Projects
+                          </CardTitle>
+                        </Col>
+                      </Row>
+                      <Row>
+                        <Col md="6" style={{ marginTop: "20px" }}>
+                          {recent_project_list.map((item) => (
+                            <div
+                              className="card4"
+                              onClick={() =>
+                                history.push(
+                                  "/amx/folders?project_id=" + item.name
+                                )
+                              }
+                            >
+                              <div
+                                className="icon-container1"
+                                style={{ backgroundColor: "rgb(239,185,93)" }}
+                              >
+                                <i className="fa-solid icon1 fa-sheet-plastic"></i>
+                              </div>
+                              <p>{item.name.split("(")[0].trim()}</p>
+                            </div>
+                          ))}
+                        </Col>
+                      </Row>
+                    </>
+                  </div>
+                </div>
+              </div>
+            </>}
           </div>
         </>
       )}
@@ -1089,121 +825,3 @@ let remainSTorage = (remainingStorage - 10).toFixed(2)
 }
 
 export default Dashboard;
-
- // useEffect(() => {
-  //   const labels = [
-  //     "January",
-  //     "February",
-  //     "March",
-  //     "April",
-  //     "May",
-  //     "June",
-  //     "July",
-  //   ];
-  //   const data123 = {
-  //     labels: ["Aug 2023", "Sep 2023", "Oct 2023"],
-  //     datasets: [
-  //       {
-  //         fill: true,
-  //         label: "Projects Added",
-  //         data: [1, 4, 5],
-  //         borderColor: "rgb(255, 99, 132)",
-  //         backgroundColor: "rgba(255, 99, 132, 0.5)",
-  //         height: 50,
-  //       },
-  //     ],
-  //   };
-
-
-  //   const dynamicData = [
-  //     { name: "Apr 2023", year: 2023, Projects_Added: 1, Drones_Added: 0 },
-  //     { name: "May 2023", year: 2023, Projects_Added: 3, Drones_Added: 0 },
-  //     { name: "Jun 2023", year: 2023, Projects_Added: 0, Drones_Added: 0 },
-  //     { name: "Jul 2023", year: 2023, Projects_Added: 0, Drones_Added: 0 },
-  //     { name: "Aug 2023", year: 2023, Projects_Added: 0, Drones_Added: 0 },
-  //     { name: "Sep 2023", year: 2023, Projects_Added: 0, Drones_Added: 3 },
-  //     { name: "Oct 2023", year: 2023, Projects_Added: 5, Drones_Added: 2 },
-  //   ];
-  // }, []);
- {/* function RoundProgressBar(props) {
-    const size = props.size;
-    const radius = (props.size - props.strokeWidth) / 2;
-    const viewBox = `0 0 ${size} ${size}`;
-    const dashArray = radius * Math.PI * 2;
-    const dashOffset = dashArray - (dashArray * props.value) / props.max;
-    const percentage = ((props.value / props.max) * 100).toFixed();
-    return (
-      <svg width={props.size} height={props.size} viewBox={viewBox}>
-        <circle
-          fill={"none"}
-          stroke={"#ddd"}
-          cx={props.size / 2}
-          cy={props.size / 2}
-          r={radius}
-          strokeWidth={`${props.strokeWidth}px`}
-        />
-        <circle
-          fill={"none"}
-          stroke={props.stroke}
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          strokeDasharray={dashArray}
-          strokeDashoffset={dashOffset}
-          cx={props.size / 2}
-          cy={props.size / 2}
-          r={radius}
-          strokeWidth={`${props.strokeWidth}px`}
-          transform={`rotate(-90 ${props.size / 2} ${props.size / 2})`}
-        />
-        <text
-          x="65%"
-          y="45%"
-          dy="0.4rem"
-          textAnchor="end"
-          fill={props.stroke}
-          style={{
-            fontSize: "1rem",
-          }}
-        >
-          {`${props.value.toFixed(2)}GB`}
-        </text>
-  
-        <text
-          x="50%"
-          y="45%"
-          dy="1.5rem"
-          textAnchor="middle"
-          fill={props.stroke}
-          style={{
-            fontSize: "0.55rem",
-            fontWeight: "bold",
-            color:'RGB(74 101 255)'
-          }}
-        >
-          {props.text}
-        </text>
-   <text
-          x="50%"
-          y="50%"
-          dy="2.7rem"
-          textAnchor="middle"
-          fill={props.stroke}
-          style={{
-            fontSize: '1rem',
-          }}
-        >
-          {`${percentage}%`}
-        </text> */}
-      {/* </svg>
-    );
-  }
-  RoundProgressBar.defaultProps = {
-    size: 160,
-    value: 25,
-    max: 100,
-    strokeWidth: 20,
-    stroke: "#3e98c7",
-    text: "",
-    fontSize:'10px',
-    color:'RGB(74 101 255)'
-  }; */}
