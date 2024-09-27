@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Webcam Object Detection</title>
+</head>
+
+<body>
+    <style>
+        h1 {
+            font-family: "Poppins", sans-serif;
+            font-size: 1.4rem;
+            color: #525f7f;
+            font-weight: 600;
+        }
+
+        canvas {
+            z-index: 100;
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+
+        .hero_button_secondary {
+            border: none !important;
+
+            font-family: "Poppins", sans-serif;
+            display: inline-block;
+            margin: 0 1rem 1rem auto;
+            padding: 16px 24px;
+            -webkit-align-self: center;
+            -ms-flex-item-align: center;
+            -ms-grid-row-align: center;
+            align-self: center;
+            border-radius: 4px;
+            /* background-color: #7733f4; */
+            background-color: #FA742B !important;
+            background-image: linear-gradient(to bottom left, #FD6585, #FA742B, #FD6585) !important;
+            background-image: -moz-linear-gradient(to bottom left, #FD6585, #FA742B, #FD6585) !important;
+            color: #ffffff;
+            box-shadow: 0 1px 1px 0 rgb(55 65 81 / 20%);
+
+            color: #fff;
+            font-size: 14px;
+            font-weight: 600;
+            text-align: center;
+            letter-spacing: 0.5px;
+            text-decoration: none;
+            margin-top: 15px;
+        }
+
+        .hero_button_secondary:hover {
+            box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.4);
+            transform: translateY(-1px);
+            -webkit-transform: translateY(-1px);
+        }
+        video{
+            width: 560px;
+            height: 420px;
+        }
+        canvas{
+            width: 580px;
+            height: 440px;
+        }
+      
+    </style>
+    <video muted autoplay loop id="video" playsinline></video>
+    <canvas id="outputCanvas" style="display:none;"></canvas>
+    <br>
+    <button id="startButton" class="hero_button_secondary">Predict Using Webcam</button>
+
+    <script>
+        const videoOutput = document.getElementById('video');
+        videoOutput.src = "https://res.cloudinary.com/dxjrvvjp1/video/upload/v1693803135/YOLO1_rrdmbb.mp4";
+      
+    </script>
+</body>
+
+</html>

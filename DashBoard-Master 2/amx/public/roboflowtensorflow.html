@@ -22,39 +22,50 @@
             top: 0;
             left: 0;
         }
+
         .hero_button_secondary {
             border: none !important;
-  
-  font-family: "Poppins", sans-serif;
-  display: inline-block;
-  margin: 0 1rem 1rem auto;
-  padding: 16px 24px;
-  -webkit-align-self: center;
-  -ms-flex-item-align: center;
-  -ms-grid-row-align: center;
-  align-self: center;
-  border-radius: 4px;
-  /* background-color: #7733f4; */
-  background-color: #FA742B !important;
-    background-image: linear-gradient(to bottom left, #FD6585, #FA742B, #FD6585) !important;
-    background-image: -moz-linear-gradient(to bottom left, #FD6585, #FA742B, #FD6585) !important;
-    color: #ffffff;
-  box-shadow: 0 1px 1px 0 rgb(55 65 81 / 20%);
 
-  color: #fff;
-  font-size: 14px;
-  font-weight: 600;
-  text-align: center;
-  letter-spacing: 0.5px;
-  text-decoration: none;
-  margin-top: 15px;
-}
+            font-family: "Poppins", sans-serif;
+            display: inline-block;
+            margin: 0 1rem 1rem auto;
+            padding: 16px 24px;
+            -webkit-align-self: center;
+            -ms-flex-item-align: center;
+            -ms-grid-row-align: center;
+            align-self: center;
+            border-radius: 4px;
+            /* background-color: #7733f4; */
+            background-color: #FA742B !important;
+            background-image: linear-gradient(to bottom left, #FD6585, #FA742B, #FD6585) !important;
+            background-image: -moz-linear-gradient(to bottom left, #FD6585, #FA742B, #FD6585) !important;
+            color: #ffffff;
+            box-shadow: 0 1px 1px 0 rgb(55 65 81 / 20%);
 
-.hero_button_secondary:hover{
-  box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.4);
-  transform: translateY(-1px);
-  -webkit-transform: translateY(-1px);
-}
+            color: #fff;
+            font-size: 14px;
+            font-weight: 600;
+            text-align: center;
+            letter-spacing: 0.5px;
+            text-decoration: none;
+            margin-top: 15px;
+        }
+
+        .hero_button_secondary:hover {
+            box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.4);
+            transform: translateY(-1px);
+            -webkit-transform: translateY(-1px);
+        }
+
+        video{
+            width: 560px;
+            height: 420px;
+        }
+        canvas{
+            width: 580px;
+            height: 440px;
+        }
+    
     </style>
     <video muted autoplay loop id="video" playsinline width="540" height="420"></video>
     <canvas id="outputCanvas" width="560" height="420" style="display:none;"></canvas>
@@ -66,7 +77,7 @@
 
     <script>
         const videoOutput = document.getElementById('video');
-        videoOutput.src = "https://uploads-ssl.webflow.com/5f6bc60e665f54545a1e52a5/63d15cb160518f7f9c59a892_Sequence 01-transcode.mp4";
+        videoOutput.src = "https://res.cloudinary.com/dxjrvvjp1/video/upload/v1693803135/YOLO1_rrdmbb.mp4";
         const canvas = document.getElementById('outputCanvas');
         const ctx = canvas.getContext('2d');
         const startButton = document.getElementById('startButton');
