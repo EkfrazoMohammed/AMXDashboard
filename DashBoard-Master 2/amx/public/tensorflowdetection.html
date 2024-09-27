@@ -5,20 +5,36 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Webcam Object Detection</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+        }
+
+        canvas {
+            border: 1px solid black;
+        }
+
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            margin-top: 20px;
+            cursor: pointer;
+        }
+    </style>
 </head>
 
 <body>
-    <video muted autoplay loop id="video" playsinline width="540" height="420"></video>
-    <canvas id="outputCanvas" width="540" height="420" style="display:none;"></canvas>
+    <h1>Live Webcam Object Detection</h1>
+    <video id="webcam" autoplay playsinline style="display:none;"></video>
+    <canvas id="outputCanvas" width="640" height="480"></canvas>
     <br>
     <button id="startButton">Start Detection</button>
 
     <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs"></script>
     <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/coco-ssd"></script>
-
     <script>
-        const videoOutput = document.getElementById('video');
-        videoOutput.src = "https://uploads-ssl.webflow.com/5f6bc60e665f54545a1e52a5/63d15cb160518f7f9c59a892_Sequence 01-transcode.mp4";
+        const video = document.getElementById('webcam');
         const canvas = document.getElementById('outputCanvas');
         const ctx = canvas.getContext('2d');
         const startButton = document.getElementById('startButton');
@@ -26,14 +42,14 @@
 
         // Array of color choices for bounding boxes and text background
         const color_choices = [
+            //   "#C7FC00", 
+            //   "#FF00FF",
+            // "#8622FF",
+            //  "#FE0056",
             "#00FFCE",
-            // "#FF0000",
-            // "#0000FF",
-            // "#FFFF00",
-            // "#FF00FF",
+            //   "#FF8000", "#00B7EB", "#FFFF00", "#0E7AFE", "#FFABAB",
+            //   "#0000FF", "#CCCCCC"
         ];
-
-        // Load the COCO-SSD model
         cocoSsd.load().then((loadedModel) => {
             model = loadedModel;
             console.log("Model loaded successfully");
@@ -42,17 +58,17 @@
         // Start the webcam stream when the button is clicked
         startButton.addEventListener('click', () => {
             startWebcam();
-            canvas.style.display = 'block';
+            startButton.style.display = 'none'; // Hide the button once clicked
         });
 
         function startWebcam() {
             if (navigator.mediaDevices.getUserMedia) {
                 navigator.mediaDevices.getUserMedia({ video: true })
                     .then((stream) => {
-                        videoOutput.srcObject = stream; // Set the webcam stream as the video source
-                        videoOutput.onloadedmetadata = () => {
-                            videoOutput.play();
-                            detectObjects(); // Start object detection only after video is playing
+                        video.srcObject = stream;
+                        video.onloadedmetadata = () => {
+                            video.play();
+                            detectObjects();
                         };
                     })
                     .catch((err) => {
@@ -65,9 +81,9 @@
 
         // Object detection loop
         function detectObjects() {
-            model.detect(videoOutput).then((predictions) => {
+            model.detect(video).then((predictions) => {
                 // Draw the video frame first
-                ctx.drawImage(videoOutput, 0, 0, canvas.width, canvas.height);
+                ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
 
                 // Draw the bounding boxes
                 predictions.forEach(prediction => {

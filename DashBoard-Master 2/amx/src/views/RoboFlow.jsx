@@ -1,128 +1,25 @@
 import React, { useState, useEffect, useRef } from "react";
 import './../views/styles/Login.css'
-import { Line, Pie, Doughnut, Bar, PolarArea, Bubble } from "react-chartjs-2"; // Import Line component
-import {
-  Chart as ChartJS,
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  Title,
-  Tooltip,
-  Legend,
-  Filler,
-  BarElement,
-  ArcElement,
-} from "chart.js";
-import Droneimage from "../../src/views/assets/images/drone-dashboardICON.png";
-import MissioIcon from "../../src/views/assets/images/png/missonLogo_dashboard.png";
 import "../../src/views/assets/css/style.css";
-import { faker } from "@faker-js/faker"; // Updated import
-// import {
-//   chartExample1,
-//   chartExample2,
-//   chartExample3,
-//   chartExample4,
-// } from "variables/charts.js";
-import NotificationAlert from "react-notification-alert";
-
-// nodejs library that concatenates classes
-import classNames from "classnames";
-// react plugin used to create charts
-import "./styles/dashboard.css";
-import { ToastContainer, toast } from "react-toastify";
-import {
-  CircularProgressbar,
-  buildStyles,
-  CircularProgressbarWithChildren,
-} from "react-circular-progressbar";
-import axios from "axios";
-import { useHistory } from "react-router-dom";
-
-import { Link } from "react-router-dom/cjs/react-router-dom.min";
 // reactstrap components
 import {
-  Button,
-  ButtonGroup,
   Card,
   CardHeader,
   CardBody,
   CardTitle,
-  DropdownToggle,
-  DropdownMenu,
-  DropdownItem,
-  UncontrolledDropdown,
   Label,
   FormGroup,
   Input,
   Table,
   Row,
   Col,
-  UncontrolledTooltip,
-  Alert,
-  UncontrolledAlert,
-  UncontrolledPopover,
-  Dropdown,
 } from "reactstrap";
-
-// import { faCheckSquare, faCoffee } from '@fortawesome/fontawesome-free-solid'
-
-import {
-  faBoxArchive,
-  faBriefcase,
-  faCamera,
-  faClose,
-  faDrum,
-  faDrumstickBite,
-  faEllipsis,
-  faFileAudio,
-  faFileInvoice,
-  faGraduationCap,
-  faMicrophone,
-  faPlug,
-  faPlus,
-  faShareNodes,
-  faUser,
-  faVideo,
-  faFolder,
-  faDroneAlt,
-  faDatabase,
-  faDrone,
-} from "@fortawesome/free-solid-svg-icons";
-
-// import dronelogo from "/Users/apple/Documents/DashBoard-Master/black-dashboard-react-master/src/views/assets/images/drone-icon.png"
 import "./assets/images/drone-icon.png";
-// import projectfolder from "/Users/apple/Documents/DashBoard-Master/black-dashboard-react-master/src/views/assets/images/project-folder-black.png"
 import "./assets/images/project-folder-black.png";
-// import projectblue from "/Users/apple/Documents/DashBoard-Master/black-dashboard-react-master/src/views/assets/images/project-folder-blue.png"
-import projectblue from "./assets/images/project-folder-blue.png";
 
-import drone from "../assets/drone.png";
-import dronecamera from "../assets/camera-drone.png";
-
-// core components
-import {
-  chartExample1,
-  chartExample2,
-  chartExample3,
-  chartExample4,
-} from "variables/charts.js";
-
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  BackgroundColorContext,
-  backgroundColors,
-} from "contexts/BackgroundColorContext";
-import ProgressBar from "components/ProgressBar/progress_bar";
-import DropFileInput from "./DropFileInput/DropFileInput";
-import { PieChart } from "recharts";
-// import {icon1} from "../../src/assets/img/anime3.png"
-import Yulu from "./Yulu";
-import LiveStreaming from "./LiveStreaming"
-
-import Frame from "react-frame-component";
 function RoboFlow() {
   const myurl = process.env.PUBLIC_URL + "/roboflow.html";
+  const mytensorflowurl = process.env.PUBLIC_URL + "/roboflowtensorflow.html";
 
   const [toggleSection, setTogglesection] = useState(true)
   const videoRef = useRef(null);
@@ -157,31 +54,17 @@ function RoboFlow() {
       setIsLoading(false);
     }
   };
-  console.log(video, '<<<')
   return (
     <>
 
       <div className="content">
         <Row style={{ justifyContent: 'center' }}>
 
-          <Col lg="6" md="12" style={{ height: '100%' }}>
+          <Col lg="6" md="12">
             {
               toggleSection ?
                 <>
-                  <iframe
-                    className="my-roboflow-iframe"
-                    title="iframe"
-                    // style={{
-                    //   width: "100%",
-                    //   height: "100%",
-                    //   border: "none",
-                    //   outline: "none",
-                    //   overflow: 'hidden',
-                    //   minHeight: "460px"
-                    // }}
-                    src={myurl}
-                    id="iframeId"
-                  ></iframe>
+                  <h1>Video Analytics</h1>
                   <div className="file-input">
                     <input
                       type="file"
@@ -197,6 +80,13 @@ function RoboFlow() {
                       <span>Upload file</span>
                     </label>
                   </div>
+                  <iframe
+                    className="my-roboflow-iframe"
+                    title="iframe"
+                    src={mytensorflowurl}
+                    id="iframeId"
+                  ></iframe>
+
                 </>
                 :
                 <>
