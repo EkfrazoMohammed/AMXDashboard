@@ -64,7 +64,13 @@ function RoboFlow() {
             {
               toggleSection ?
                 <>
-                  <h1>Video Analytics</h1>
+                  <h1 style={{
+                    
+                      "fontSize": "1.4rem",
+                      "color": "#525f7f",
+                      "fontWeight": "600"
+                    
+                  }}>Video Analytics</h1>
                   <div className="file-input">
                     <input
                       type="file"

@@ -8,8 +8,23 @@
 </head>
 
 <body>
+    <style>
+        h1 {
+            font-family: "Poppins", sans-serif;
+            font-size: 1.4rem;
+            color: #525f7f;
+            font-weight: 600;
+        }
+
+        canvas {
+            z-index: 100;
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+    </style>
     <video muted autoplay loop id="video" playsinline width="540" height="420"></video>
-    <canvas id="outputCanvas" width="540" height="420" style="display:none;"></canvas>
+    <canvas id="outputCanvas" width="560" height="420" style="display:none;"></canvas>
     <br>
     <button id="startButton">Start Detection</button>
 
