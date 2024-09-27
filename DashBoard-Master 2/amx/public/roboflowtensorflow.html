@@ -22,11 +22,44 @@
             top: 0;
             left: 0;
         }
+        .hero_button_secondary {
+            border: none !important;
+  
+  font-family: "Poppins", sans-serif;
+  display: inline-block;
+  margin: 0 1rem 1rem auto;
+  padding: 16px 24px;
+  -webkit-align-self: center;
+  -ms-flex-item-align: center;
+  -ms-grid-row-align: center;
+  align-self: center;
+  border-radius: 4px;
+  /* background-color: #7733f4; */
+  background-color: #FA742B !important;
+    background-image: linear-gradient(to bottom left, #FD6585, #FA742B, #FD6585) !important;
+    background-image: -moz-linear-gradient(to bottom left, #FD6585, #FA742B, #FD6585) !important;
+    color: #ffffff;
+  box-shadow: 0 1px 1px 0 rgb(55 65 81 / 20%);
+
+  color: #fff;
+  font-size: 14px;
+  font-weight: 600;
+  text-align: center;
+  letter-spacing: 0.5px;
+  text-decoration: none;
+  margin-top: 15px;
+}
+
+.hero_button_secondary:hover{
+  box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.4);
+  transform: translateY(-1px);
+  -webkit-transform: translateY(-1px);
+}
     </style>
     <video muted autoplay loop id="video" playsinline width="540" height="420"></video>
     <canvas id="outputCanvas" width="560" height="420" style="display:none;"></canvas>
     <br>
-    <button id="startButton">Start Detection</button>
+    <button id="startButton" class="hero_button_secondary">Predict Using Webcam</button>
 
     <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs"></script>
     <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/coco-ssd"></script>
