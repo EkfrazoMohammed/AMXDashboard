@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Webcam Object Detection</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+        }
+
+        canvas {
+            border: 1px solid black;
+        }
+
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            margin-top: 20px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Live Webcam Object Detection</h1>
+    <video id="webcam" autoplay playsinline style="display:none;"></video>
+    <canvas id="outputCanvas" width="640" height="480"></canvas>
+    <br>
+    <button id="startButton">Start Detection</button>
+
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/coco-ssd"></script>
+    <script>
+        const video = document.getElementById('webcam');
+        const canvas = document.getElementById('outputCanvas');
+        const ctx = canvas.getContext('2d');
+        const startButton = document.getElementById('startButton');
+        let model;
+
+        // Array of color choices for bounding boxes and text background
+        const color_choices = [
+            //   "#C7FC00", 
+            //   "#FF00FF",
+            // "#8622FF",
+            //  "#FE0056",
+            "#00FFCE",
+            //   "#FF8000", "#00B7EB", "#FFFF00", "#0E7AFE", "#FFABAB",
+            //   "#0000FF", "#CCCCCC"
+        ];
+
+        // Load the COCO-SSD model
+        cocoSsd.load().then((loadedModel) => {
+            model = loadedModel;
+        });
+
+        // Start the webcam stream when the button is clicked
+        startButton.addEventListener('click', () => {
+            startWebcam();
+            startButton.style.display = 'none'; // Hide the button once clicked
+        });
+
+        function startWebcam() {
+            if (navigator.mediaDevices.getUserMedia) {
+                navigator.mediaDevices.getUserMedia({ video: true })
+                    .then((stream) => {
+                        video.srcObject = stream;
+                        video.onloadedmetadata = () => {
+                            video.play();
+                            detectObjects();
+                        };
+                    })
+                    .catch((err) => {
+                        console.error("Error accessing the webcam: ", err);
+                    });
+            } else {
+                console.error("getUserMedia not supported in this browser.");
+            }
+        }
+
+        // Object detection loop
+        function detectObjects() {
+            model.detect(video).then((predictions) => {
+                // Draw the video frame first
+                ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+                // Draw the bounding boxes
+                predictions.forEach(prediction => {
+                    const [x, y, width, height] = prediction.bbox;
+                    const color = color_choices[Math.floor(Math.random() * color_choices.length)];
+
+                    // Draw bounding box
+                    ctx.beginPath();
+                    ctx.rect(x, y, width, height);
+                    ctx.lineWidth = 4;  // Thicker box
+                    ctx.strokeStyle = color;
+                    ctx.stroke();
+
+                    // Draw filled background for text
+                    ctx.fillStyle = color;
+                    const text = `${prediction.class} (${Math.round(prediction.score * 100)}%)`;
+                    const textWidth = ctx.measureText(text).width;
+                    ctx.fillRect(x, y > 10 ? y - 20 : y + 5, textWidth + 10, 20);
+
+                    // Draw text
+                    ctx.font = "18px Arial";
+                    ctx.fillStyle = "white";  // Text color
+                    ctx.fillText(text, x + 5, y > 10 ? y - 5 : y + 20);
+                });
+
+                // Continue to detect objects on the next frame
+                requestAnimationFrame(detectObjects);
+            });
+        }
+    </script>
+</body>
+
+</html>

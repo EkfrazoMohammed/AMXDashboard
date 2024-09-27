@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-
+import './../views/styles/Login.css'
 import { Line, Pie, Doughnut, Bar, PolarArea, Bubble } from "react-chartjs-2"; // Import Line component
 import {
   Chart as ChartJS,
@@ -139,27 +139,7 @@ function RoboFlow() {
     };
   }, [socket]);
 
-  const handlePost = async () => {
-    try {
-      const url = "https://your-api-url";
-      const post = await axios.post(url, { video });
-      console.log(post);
-    } catch (error) {
-      alert(error);
-    }
-  };
 
-  const initializeWebSocket = () => {
-    const newSocket = new WebSocket('ws://your-websocket-url');
-    newSocket.onmessage = (event) => {
-      const frameData = event.data;
-      const imageUrl = 'data:image/jpeg;base64,' + frameData;
-      if (videoRef.current) {
-        videoRef.current.src = imageUrl;
-      }
-    };
-    setSocket(newSocket);
-  };
 
   const handleFileChange = async (e) => {
     setIsLoading(true);
@@ -170,8 +150,6 @@ function RoboFlow() {
       setVideo(videoURL)
       if (videoRef.current) {
         videoRef.current.src = videoURL;
-        await handlePost();
-        await initializeWebSocket();
       }
     } catch (error) {
       alert(error);
@@ -186,19 +164,21 @@ function RoboFlow() {
       <div className="content">
         <Row style={{ justifyContent: 'center' }}>
 
-          <Col lg="6" md="12" style={{ height: '90vh' }}>
+          <Col lg="6" md="12" style={{ height: '100%' }}>
             {
               toggleSection ?
                 <>
                   <iframe
+                    className="my-roboflow-iframe"
                     title="iframe"
-                    style={{
-                      width: "100%",
-                      height: "87%",
-                      border: "none",
-                      outline: "none",
-                      overflow: 'hidden'
-                    }}
+                    // style={{
+                    //   width: "100%",
+                    //   height: "100%",
+                    //   border: "none",
+                    //   outline: "none",
+                    //   overflow: 'hidden',
+                    //   minHeight: "460px"
+                    // }}
                     src={myurl}
                     id="iframeId"
                   ></iframe>
@@ -235,8 +215,9 @@ function RoboFlow() {
           <Col lg="6" md="12">
             <Card className="card-tasks" style={{ height: "auto" }}>
               <CardHeader>
-                <h6 className="title d-inline">Plugins (4)</h6>
-                <p className="card-category d-inline"> </p>
+                <h6 className="title d-inline">Plugins (1)</h6>
+
+                {/*                <p className="card-category d-inline"> </p>
                 <UncontrolledDropdown>
                   <DropdownToggle
                     caret
@@ -268,6 +249,9 @@ function RoboFlow() {
                     </DropdownItem>
                   </DropdownMenu>
                 </UncontrolledDropdown>
+                */}
+
+
               </CardHeader>
               <CardBody>
                 <div className="table-full-width table-responsive">
@@ -285,9 +269,9 @@ function RoboFlow() {
                           </FormGroup>
                         </td>
                         <td>
-                          <p className="title">Plugin 1</p>
+                          <p className="title">Person</p>
                         </td>
-                        <td className="td-actions text-right">
+                        {/* <td className="td-actions text-right">
                           <Button
                             color="link"
                             id="tooltip636901683"
@@ -303,9 +287,9 @@ function RoboFlow() {
                           >
                             Edit Task
                           </UncontrolledTooltip>
-                        </td>
+                        </td> */}
                       </tr>
-                      <tr>
+                      {/* <tr>
                         <td>
                           <FormGroup check>
                             <Label check>
@@ -408,7 +392,7 @@ function RoboFlow() {
                             Edit Task
                           </UncontrolledTooltip>
                         </td>
-                      </tr>
+                      </tr> */}
 
                     </tbody>
                   </Table>
@@ -432,22 +416,14 @@ function RoboFlow() {
                     <tr>
                       <td>Monuments</td>
 
-                      <td className="text-center">2</td>
+                      <td className="text-center">0</td>
                     </tr>
                     <tr>
                       <td>Trees/Plants</td>
 
-                      <td className="text-center">78</td>
+                      <td className="text-center">0</td>
                     </tr>
-                    <tr>
-                      <td>Red objects</td>
 
-                      <td className="text-center">3</td>
-                    </tr>    <tr>
-                      <td>Blue Objects</td>
-
-                      <td className="text-center">5</td>
-                    </tr>
 
                     <tr> <td></td></tr>
                   </tbody>

@@ -477,7 +477,7 @@ const handleMapClick = (event) => {
               color="primary"
               onClick={handleSearch}
             >
-              Search Location
+              Set Location
             </Button>
           </div>
         </div>
