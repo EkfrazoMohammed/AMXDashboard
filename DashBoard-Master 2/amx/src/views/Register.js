@@ -238,7 +238,6 @@ const Register = () => {
         mail: data.mail,
         password: data.password,
         amtoken: data.amtoken,
-
         first_name:data.first_name,
     last_name:data.last_name,
     company_name:data.company_name,
