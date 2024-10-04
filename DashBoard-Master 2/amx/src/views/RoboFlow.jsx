@@ -219,7 +219,7 @@ const handleFileUpload = () => {
 
         newSocket.addEventListener('open', () => {
             console.log("websocket connected");
-            handlePost(file)
+            // handlePost(file)
             newSocket.send(JSON.stringify({ file: base64File }));
         });
 
