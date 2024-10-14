@@ -27,6 +27,7 @@ import VideoParentProject from "views/VideoViewer/VideoParentProject";
 import RoboFlow from "views/RoboFlow";
 import Yulu from "./views/Yulu"
 import NewMapWithArea from "./views/NewMapWithArea"
+import AshikRoboFlow from "views/AshikRoboFlow";
 var routes = [
   {
     path: "/dashboard",
@@ -71,6 +72,14 @@ var routes = [
     component: RoboFlow,
     layout: "/amx",
   },
+  // {
+  //   path: "/roboflow",
+  //   name: "Analytics",
+  //   // rtlName: "إخطارات",
+  //   icon: "tim-icons icon-support-17",
+  //   component: AshikRoboFlow,
+  //   layout: "/amx",
+  // },
   {
     path: "/mission",
     name: "Mission",

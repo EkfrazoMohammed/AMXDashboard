@@ -133,8 +133,8 @@
 .file{
 	-webkit-perspective: 500px;
 	perspective: 500px;
-	width: 91px;
-	height: 60px;
+	/* width: 91px;
+	height: 60px; */
 	/* position: absolute; */
 	/* top: 210px; */
     /* left: 390px; */

@@ -1,16 +1,13 @@
 import React from "react";
 import { useLocation } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { Link, useHistory } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import "../projects/Project.css";
-import { backgroundColors } from "contexts/BackgroundColorContext";
 import { BackgroundColorContext } from "contexts/BackgroundColorContext";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import JSZip from "jszip";
 import { Tooltip, Spinner } from "reactstrap";
-import { faClapperboard, faClose } from "@fortawesome/free-solid-svg-icons";
+import { faClose } from "@fortawesome/free-solid-svg-icons";
 import {
-  Dropdown,
   DropdownToggle,
   DropdownMenu,
   DropdownItem,
@@ -20,19 +17,13 @@ import pdfImage from "../../../src/views/assets/images/fileimagesLogo/pdf.png";
 import mp4Logo from "../../../src/views/assets/images/fileimagesLogo/mp4logo.png";
 import fileImageLogo from "../../../src/views/assets/images/fileimagesLogo/textlogo.png";
 import imageLogo from "../../../src/views/assets/images/fileimagesLogo/imgeLogo.png";
-import backImage from "../../../src/views/assets/images/fileimagesLogo/backImage.png";
 import DropFileInput from "views/DropFileInput/DropFileInput";
 import folderimage from "../../../src/views/assets/images/folder-png-3d.png"
 import axios from "axios";
 
 import { ToastContainer, toast } from "react-toastify";
-
 import drone from "../../assets/drone.png";
 import "../projects/Project.css";
-
-import storage from "../../../src/firebaseConfig.js";
-import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
-import { saveAs } from "file-saver";
 
 import { CircularProgressbar } from "react-circular-progressbar";
 
@@ -52,15 +43,31 @@ function Folders() {
   let userId = localStorage.getItem("user_id");
   const [folderList, setFolderList] = useState([]);
   let folderIdo = localStorage.getItem("folder_id");
-
-  const [folderData, setFolderData] = useState({
-    upload_to_folder: folderIdo,
-    user_id: userId,
-    folder_name: "",
-  });
-  const [errors, setErrors] = useState({
-    folder_name: false,
-  });
+    // Split the fullPath into its components
+    const pathParts = folderIdo.split('/');
+    
+    // Extract user_id, project_id, and folder_path
+    const user_id1 = pathParts[0];      // 38
+    const project_id1 = pathParts[1];   // P1
+    const folder_name1 = pathParts.slice(2).join('/'); // VIDEO or VIDEO/subfolder
+    const [folderData, setFolderData] = useState({
+        "user_id":38,
+        "project_name":project_id1,
+        "parent_folder":folder_name1,
+        "new_folder_name":"D2"
+    
+    });
+    const [errors, setErrors] = useState({
+      new_folder_name: false,
+    });
+    // const [folderData, setFolderData] = useState({
+  //   upload_to_folder: folderIdo,
+  //   user_id: userId,
+  //   folder_name: "",
+  // });
+  // const [errors, setErrors] = useState({
+  //   folder_name: false,
+  // });
   const [addfolderopen, setaddfolderopen] = React.useState(false);
   const AddFolder = (name) => {
     console.log("AddFolder======");
@@ -87,9 +94,9 @@ function Folders() {
   };
   const handleSubmit2 = async (e) => {
     e.preventDefault();
-    if (!folderData.folder_name) {
+    if (!folderData.new_folder_name) {
       setErrors({
-        folder_name: !folderData.folder_name,
+        new_folder_name: !folderData.new_folder_name,
       });
       return;
     }
@@ -100,7 +107,7 @@ function Folders() {
 
       let data1 = await axios
         .post(
-          "https://fibregrid.amxdrones.com/dronecount/v2/create-folder/",
+          "https://fibregrid.amxdrones.com/dronecount/create_folder/",
           payload,
           config2
         )
@@ -199,41 +206,6 @@ function Folders() {
   const [displayFileButton, setDisplayFileButton] = useState(true);
   const [displayFolderButton, setDisplayFolderButton] = useState(true);
 
-  // const onFileChange = (files) => {
-  //   console.log(files.length);
-  //   if (files.length === 1 && files[0].type === "") {
-
-  //     setSelectedFolder(files[0]);
-
-  //     setSelectedFiles(null);
-
-  //     setDisplayFolderButton(true);
-  //   } else {
-
-  //     setSelectedFolder(null);
-  //     setSelectedFiles(files);
-  //     setDisplayFolderButton(false);
-  //   }
-  // };
-
-  console.log(selectedFile);
-  console.log(selectedFolder);
-
-  // const onFolderChange = (folder) => {
-  //   // Check if a single folder is selected
-  //   console.log(folder);
-  //   if (folder.length === 1 && folder[0].type === "") {
-  //     // Handle folder selection
-  //     setSelectedFolder(folder[0]);
-
-  //     setSelectedFiles(null); // Clear previously selected files
-  //   } else {
-  //     // Handle individual file selection
-  //     setSelectedFolder(null); // Clear selected folder
-  //     setSelectedFiles(folder); // Store the array of files
-  //   }
-  // };
-
   const onFileChange = (files) => {
     // Check if files contain at least one file (not a folder)
     const hasFiles = files.some((file) => file.type !== "");
@@ -278,18 +250,26 @@ function Folders() {
       return;
     }
 
+    const formData = new FormData();
+    let folderIdo = localStorage.getItem("folder_id");
+    // Split the fullPath into its components
+    const pathParts = folderIdo.split('/');
+    
+    // Extract user_id, project_id, and folder_path
+    const user_id1 = pathParts[0];      // 38
+    const project_id1 = pathParts[1];   // P1
+    const folder_name1 = pathParts.slice(2).join('/'); // VIDEO or VIDEO/subfolder
     let completedUploads = 0; // Counter for completed uploads
     for (let index = 0; index < selectedFile.length; index++) {
       const singleFile = selectedFile[index];
       console.log(singleFile);
       const new_api_url =
-        "https://fibregrid.amxdrones.com/dronecount/v2/upload-file/";
-      const formData = new FormData();
-
+        "https://fibregrid.amxdrones.com/dronecount/create_folder/";
       // Append the fields to the FormData object
-      formData.append("user_id", userId);
-      formData.append("folder_name", folderIdo);
-      formData.append("upload_file", singleFile);
+      formData.append("user_id", user_id1);
+      formData.append("project_name", project_id1);
+      formData.append("parent_folder", folder_name1);
+      formData.append("file",  singleFile);
 
       console.log(formData);
       setUploading(false);
@@ -320,9 +300,9 @@ function Folders() {
             toast.success("New File added !", {
               // ... (your toast options)
             });
-            setTimeout(() => {
-              window.location.reload();
-            }, 3000);
+            // setTimeout(() => {
+            //   window.location.reload();
+            // }, 3000);
           }
         } else {
           throw new Error("Error occurred during file upload.");
@@ -438,9 +418,9 @@ function Folders() {
         toast.success("New Folder added !", {
           // ... (your toast options)
         });
-        setTimeout(() => {
-          window.location.reload();
-        }, 3000);
+        // setTimeout(() => {
+        //   window.location.reload();
+        // }, 3000);
       } else {
         setUploadingfolder(false);
         setSelectedFolder(null);
@@ -475,9 +455,9 @@ function Folders() {
         theme: "light",
         icon: <img src={drone} />,
       });
-      setTimeout(() => {
-        window.location.reload();
-      }, 3000);
+      // setTimeout(() => {
+      //   window.location.reload();
+      // }, 3000);
     }
   };
 
@@ -506,7 +486,7 @@ function Folders() {
       setShowfolderButton(false);
       setShowfileButton(false);
       const myurl =
-        "https://fibregrid.amxdrones.com/dronecount/v2/get-folders" +
+        "https://fibregrid.amxdrones.com/dronecount/create_project" +
         "/?user_id=" +
         userId +
         "&project_name=" +
@@ -522,7 +502,7 @@ function Folders() {
 
         const jsonData = await response.json();
         console.log("json data", jsonData);
-        setData(jsonData);
+        setData(jsonData.folders);
 
         // dataArr = jsonData
         // setLoading(false);
@@ -535,6 +515,14 @@ function Folders() {
     }
 
     if (paramValue_folder_id) {
+      
+    // Split the fullPath into its components
+    const pathParts = paramValue_folder_id.split('/');
+    
+    // Extract user_id, project_id, and folder_path
+    const user_id = pathParts[0];      // 38
+    const project_id = pathParts[1];   // P1
+    const folder_name = pathParts.slice(2).join('/'); // VIDEO or VIDEO/subfolder
       setFolderID(paramValue_folder_id);
       console.log(paramValue_folder_id);
       localStorage.setItem("folder_id", paramValue_folder_id);
@@ -547,72 +535,21 @@ function Folders() {
       }
 
       try {
-        const response = await fetch(
-          "https://fibregrid.amxdrones.com/dronecount/v2/get-folders/?user_id=" +
-            userId +
-            "&folder_name=" +
-            paramValue_folder_id,
-
+        const response = await fetch(`https://fibregrid.amxdrones.com/dronecount/create_project/?user_id=${user_id}&project_name=${project_id}&folder_name=${folder_name}`
+         ,
           {
             headers: {
               Authorization: localStorage.getItem("amxtoken").replace(/"/g, ""),
             },
           }
         );
-        console.log("response====>", response);
-
         const jsonData = await response.json();
-
-        console.log("json data", jsonData);
-
-        // Matches patterns like "(49cb3faf-f3...)"
-        const excludedPatterns = [/\(\w+-\w+\)/];
-
-        const allowedExtensions = [
-          "html",
-          "css",
-          "csv",
-          "pdf",
-          "jpg",
-          "png",
-          "jpeg",
-          "mp3",
-          "mp4",
-          "zip",
-          "laz",
-          "js",
-          "md",
-          "kml",
-          "kmz",
-          "xml",
-          "svg",
-          "json",
-          "bin",
-          "txt"
-        ];
-
-        const files11 = jsonData.filter((item) => {
-          const match = item.name.match(/^(.*?)\s*\([^)]*\)\s*$/);
-          const filename = match ? match[1] : item.name;
-          // console.log("files11=>", filename);
-          const extensionMatch = filename.match(/\.([^.]+)$/);
-          const extension = extensionMatch ? extensionMatch[1] : "";
-          // console.log(extension)
-          // Exclude items with empty or only a dot (.) in the name
-          if (!filename || filename.trim() === ".") {
-            return false;
-          }
-
-          return allowedExtensions.includes(extension.toLowerCase()); // Convert to lowercase for case-insensitive comparison
-        });
-
-        const folders11 = jsonData.filter((item) => {
-          // Check if JSON data of folders is not just a dot (.) and not in the files11 array
-          return item.name !== "." && !files11.includes(item);
-        });
-
+ const folders11 = jsonData.folders
+        console.log(folders11)
+        const files11 = jsonData.files
+      
         setData(folders11);
-        // console.log(folders11);
+        console.log(folders11);
         setFileList(files11);
         // console.log(files11);
       } catch (error) {
@@ -657,10 +594,34 @@ function Folders() {
 
   const reloadAndGetData = (item) => {
     console.log("=========...", item);
-    history.push("/amx/folders?folder_id=" + item.name);
-    localStorage.setItem("folder_id", item.name);
+    
+    // Example URL: "https://fibregridstorage.blr1.digitaloceanspaces.com/38/P1/VIDEO/"
+    const url = item.url;
+    
+    // Extract the path after the base URL
+    const baseUrl = "https://fibregridstorage.blr1.digitaloceanspaces.com/";
+    const fullPath = url.replace(baseUrl, '').replace(/\/$/, ''); // Removes the base URL and trailing slash
+  
+    console.log("Full path segment:", fullPath);
+  
+    // Split the fullPath into its components
+    const pathParts = fullPath.split('/');
+    
+    // Extract user_id, project_id, and folder_path
+    const user_id = pathParts[0];      // 38
+    const project_id = pathParts[1];   // P1
+    const folder_name = pathParts.slice(2).join('/'); // VIDEO or VIDEO/subfolder
+  
+    console.log("User ID:", user_id);
+    console.log("Project ID:", project_id);
+    console.log("Folder Name:", folder_name);
+  
+    // Update the URL and localStorage with the extracted values
+    history.push(`/amx/folders?folder_id=${fullPath}`);
+    localStorage.setItem("folder_id", fullPath);
     window.location.reload();
   };
+  
 
   const getFileExtension = (fileName) => {
     if (fileName) {
@@ -680,15 +641,15 @@ function Folders() {
     // const filename = "(a79c0cbf)mysore.kml";
 
     // Extract text between parentheses
-    const extractedName = item.name.match(/\((.*?)\)/)[1]; // Extracts the text inside parentheses
+    const extractedName = item.file_name; // Extracts the text inside parentheses
     
     // Remove text within parentheses and the extension
-    const nameWithoutExtension = item.name.replace(/\([^)]*\)|\.[^.]+$/, '');
+    const nameWithoutExtension = item.file_name;
     
     console.log(nameWithoutExtension); // Output: mysore
     
 
-    const extension = getFileExtension(item.name.replace(/\s\([^)]*\)/, ""));
+    const extension = getFileExtension(item.file_name);
 console.log("extension",extension)
     const downloadFile = (name, url) => {
       axios({
@@ -763,9 +724,9 @@ console.log("extension",extension)
             icon: <img src={drone} />,
           }
         );
-        setTimeout(() => {
-          window.location.reload();
-        }, 1000);
+        // setTimeout(() => {
+        //   window.location.reload();
+        // }, 1000);
       } catch (err) {
         console.error("Error deleting file:", err);
         if (err.response.data.message) {
@@ -801,7 +762,7 @@ console.log("extension",extension)
         <>
           <UncontrolledDropdown className="myCustomDropdown" direction="down">
             <DropdownToggle data-toggle="dropdown" tag="span">
-              <img src={pdfImage} alt="PDF" />
+              <img src={pdfImage} alt="PDF" style={{width:'100px',height:'100px'}} />
             </DropdownToggle>
             <DropdownMenu style={{ width: "auto" }}>
               <DropdownItem onClick={handleView}>View</DropdownItem>
@@ -911,12 +872,12 @@ console.log("extension",extension)
                   <input
                     type="text"
                     class="form-control"
-                    id="folder_name"
-                    name="folder_name"
+                    id="new_folder_name"
+                    name="new_folder_name"
                     placeholder="Enter Folder Name"
                     onChange={handleChange2}
                   />
-                  {errors.folder_name && (
+                  {errors.new_folder_name && (
                     <span className="error-message">
                       Folder Name is required
                     </span>
@@ -1073,15 +1034,17 @@ console.log("extension",extension)
                         </div>
                       </div>
                     </>
-                  ) : (
+                  ) :
+                  // <>
+                  // {JSON.stringify(data, null, 2)}
+                  // </>
+                  (
                     <>
-                      {/* data.length > 0 && ( */}
                       <div style={{}} className="row mt-4">
                         {data.length === 0 ? (
                           <p></p>
                         ) : (
                           data.map((item) => (
-                            //  <div  className="row">
                             <>
                               {/* <Link to={item.link}> */}
 
@@ -1115,7 +1078,8 @@ console.log("extension",extension)
                                     paddingTop: "10px",
                                   }}
                                 >
-                                  {item.name.split("(")[0].trim()}
+                                 {item.folder_name}
+                                  {/* {item.name.split("(")[0].trim()} */}
                                 </h4>
                               </div>
                             </>
@@ -1123,19 +1087,17 @@ console.log("extension",extension)
                         )}
 
                         {fileList.map((item) => (
-                          <div key={item.id}>
+                          <div className="flex justify-center items-center"  style={{width:'130px',display:'flex',flexDirection:'column',alignItems:'center',justifyContent:'center',cursor:'pointer'}}>
                             {" "}
-                            {/* Assuming item has a unique ID */}
-                            <div className="file-cards">
-                              <div className="col-lg-1 col-sm-2 col-md-2 mb-5 mt-5 w-100">
+                            <div key={item.id} className="file-cards">
+                             
                                 <div className="file">
-                                  {item.name &&
+                                  {item.file_name &&
                                     renderFileElement(
-                                      getFileExtension(item.name),
+                                      getFileExtension(item.file_name),
                                       item
                                     )}
                                 </div>
-                              </div>
                             </div>
                             <h4
                               style={{
@@ -1144,21 +1106,13 @@ console.log("extension",extension)
                                 paddingTop: "10px",
                               }}
                             >
-                              {/* {item.name.replace(/\s\([^)]*\)/, '') && item.name.replace(/\s\([^)]*\)/, '').length > 15
-                                  ? `${item.name.replace(/\s\([^)]*\)/, '').slice(0, 15)}...`
-                                  : item.name.replace(/\s\([^)]*\)/, '')} */}
-                              {/* {item.name.replace(/\s\([^)]*\)/g, "").length > 15
-                                ? `${item.name
-                                    .replace(/\s\([^)]*\)/g, "")
-                                    .slice(0, 15)}...`
-                                : item.name.replace(/\s\([^)]*\)/g, "")} */}
+                        {/* {item.file_name} */}
+                        {item.file_name.length > 15 ? `${item.file_name.slice(0, 15)}...` : item.file_name}
 
-{item.name.replace(/\s*\([^)]*\)/g, '').length > 15
-    ? `${item.name.replace(/\s*\([^)]*\)/g, '').slice(0, 15)}...`
-    : item.name.replace(/\s*\([^)]*\)/g, '')}
                             </h4>
                           </div>
                         ))}
+
 
                         {showfileButton ? (
                           <div className="p-4">
@@ -1188,7 +1142,8 @@ console.log("extension",extension)
                       </div>
                       {/* ) */}
                     </>
-                  )}
+                  )
+                  }
                   {/* <FolderUploadComponent /> */}
                   <div
                     className={

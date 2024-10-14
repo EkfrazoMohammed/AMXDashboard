@@ -46,6 +46,13 @@ function generateKML(polygonCoordinates) {
   function toRadians(deg) {
     return deg * (Math.PI / 180);
 }
+const noFlyZoneCoordinates = [
+  { lat: 12.971598, lng: 77.594566 }, // Example coordinates
+  { lat: 12.973598, lng: 77.596566 },
+  { lat: 12.972598, lng: 77.598566 },
+  { lat: 12.970598, lng: 77.596566 },
+  { lat: 12.971598, lng: 77.594566 } // Ensure the last point is the same as the first to close the polygon
+];
 
  const DroneMap = () => {
     const [userCenter, setUserCenter] = useState({ lat: 12.979631, lng: 77.590687 });
@@ -488,6 +495,7 @@ const handleMapClick = (event) => {
       )} */}
         <GoogleMap
           // center={mapCenter}
+          
           center={userCenter}
           zoom={16}
           onClick={handlePolygonClick}

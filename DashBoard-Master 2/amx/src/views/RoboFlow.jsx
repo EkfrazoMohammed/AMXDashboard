@@ -19,73 +19,79 @@ function RoboFlow() {
   const sampleVideoUrl = process.env.PUBLIC_URL + "/sampleVideo.html";
   const tensorflowUrl = process.env.PUBLIC_URL + "/roboflowtensorflow.html";
   const [toggleSection, setToggleSection] = useState(true);
-  const [isLoading, setIsLoading] = useState(false);
   const [isPersonChecked, setIsPersonChecked] = useState(false); 
   const [iframeUrl, setIframeUrl] = useState(sampleVideoUrl); 
-  const [annotatedFrame, setAnnotatedFrame] = useState(null);
-  const [file, setFile] = useState(null);
-  const [loader, setLoader] = useState(false);
+
   const [socket, setSocket] = useState(null);
   const videoRef = useRef(null);
+  
 
+  const [annotatedFrame, setAnnotatedFrame] = useState(null);
+  const [file, setFile] = useState(null);
+  const [loader,setLoader] = useState(false)
+  
   useEffect(() => {
-    if (socket) {
-      return () => socket.close();
-    }
+      return () => {
+          if (socket) {
+              socket.close();
+          }
+      };
   }, [socket]);
-
+  
   useEffect(() => {
     if (file) {
-      handleFileUpload();
+        handleFileUpload();
     }
   }, [file]);
-
+  
   const handleFileUpload = () => {
-    if (!file) return alert("No file selected");
-
-    setLoader(true);
-    const reader = new FileReader();
-    reader.onload = () => {
-      const base64File = reader.result.split(',')[1];
-      const newSocket = new WebSocket('wss://fibregrid.amxdrones.com/ws/videos/');
-      setSocket(newSocket);
-
-      newSocket.onopen = () => {
-        console.log("WebSocket connected");
-        newSocket.send(JSON.stringify({ file: base64File }));
+      if (!file)  return alert("NO file");
+  setLoader(true)
+      const reader = new FileReader();
+      reader.onload = () => {
+          const base64File = reader.result.split(',')[1];
+  
+          const newSocket = new WebSocket('wss://fibregrid.amxdrones.com/ws/videos/');
+          setSocket(newSocket);
+  
+          newSocket.addEventListener('open', () => {
+              console.log("websocket connected");
+              newSocket.send(JSON.stringify({ file: base64File }));
+          });
+  
+          newSocket.addEventListener('message', (event) => {
+              const data = JSON.parse(event.data);
+              console.log(data);
+              if (data.annotated_frame) {
+                setLoader(false)
+                  setAnnotatedFrame(`data:image/jpeg;base64,${data.annotated_frame}`);
+              } else if (data.message === 'Video processing completed') {
+                  console.log('Video processing completed');
+                  newSocket.close();
+                  setSocket(null);
+              }
+          });
+  
+          newSocket.addEventListener('close', () => {
+              console.log('websocket disconnected');
+          });
       };
-
-      newSocket.onmessage = (event) => {
-        const data = JSON.parse(event.data);
-        if (data.annotated_frame) {
-          setLoader(false);
-          setAnnotatedFrame(`data:image/jpeg;base64,${data.annotated_frame}`);
-        } else if (data.message === 'Video processing completed') {
-          console.log('Video processing completed');
-          newSocket.close();
-          setSocket(null);
-        }
-      };
-
-      newSocket.onclose = () => {
-        console.log('WebSocket disconnected');
-      };
-    };
-    reader.readAsDataURL(file);
+      reader.readAsDataURL(file);
   };
-
-  const handleFileChange = (event) => setFile(event.target.files[0]);
-
+  const handleFileChange = async(event) => {
+      setFile(event.target.files[0]);
+  };
   const handleStop = () => {
-    if (socket) {
-      socket.close();
-      setSocket(null);
-      console.log('WebSocket manually closed');
-      setAnnotatedFrame(null);
-      setLoader(false);
-    }
+      if (socket) {
+          socket.close();
+          setSocket(null);
+          console.log('websocket manually closed');
+          setAnnotatedFrame(false)
+          setLoader(false)
+      }
+  
   };
-
+  
   useEffect(() => {
     setIframeUrl(isPersonChecked ? tensorflowUrl : sampleVideoUrl);
   }, [isPersonChecked]);
@@ -94,15 +100,19 @@ function RoboFlow() {
     <div className="content">
       <Row>
           {loader ? (
+                <Col lg="6" md="12" style={{ height: '72vh' }}>
+                  
             <div style={{ display: "flex", justifyContent: 'center', alignItems: 'center' }}>
               <Circles height="80" width="80" color="#5a5ce5" ariaLabel="circles-loading" visible />
             </div>
+            </Col>
           ) : (
             <>
-              {!annotatedFrame ? (
-                <>
+              
                   {toggleSection ? (
                     <>
+                    {!annotatedFrame ? (
+                <>
                       <Col lg="6" md="12" style={{ height: '72vh' }}>
                         <h1 style={{
                           fontSize: "1.4rem",
@@ -133,7 +143,27 @@ function RoboFlow() {
                         ></iframe>
                       </Col>
                     </>
-                  ) : (
+                  )
+                  :    <>
+                      <Col lg="6" md="12" style={{ height: '72vh' }}>
+                  
+                  <div onClick={handleStop} className="" style={{backgroundImage: 'linear-gradient(to bottom left, #FD6585, #FA742B, #FD6585)',
+        boxShadow: '0px 0px 2px rgba(0, 0, 0, 0.25)',color:'#fff',textAlign:'center',padding:'0.5rem',width:'80px',borderRadius:'5px',cursor:'pointer',fontWeight:'600'}}>BACK</div>
+        <div className="" style={{marginTop:"2rem"}}>
+                          <img
+                              id="annotatedImage"
+                              src={annotatedFrame}
+                              alt="Annotated Frame"
+                              style={{ width: '100%', height: '400px' }}
+                          />
+                      </div>
+                      </Col>
+
+                </>
+                }
+                </>
+                  )
+                  : (
                     <>
                       <div onClick={() => setToggleSection(true)} style={{
                         backgroundImage: 'linear-gradient(to bottom left, #FD6585, #FA742B, #FD6585)',
@@ -150,7 +180,7 @@ function RoboFlow() {
                     </>
                   )}
                 </>
-              ) : null}
+              )}
               <Col lg="6" md="12">
                 <Card className="card-tasks" style={{ height: "auto" }}>
                   <CardHeader>
@@ -213,8 +243,7 @@ function RoboFlow() {
                   </CardBody>
                 </Card>
               </Col>
-            </>
-          )}
+        
       </Row>
     </div>
   );
