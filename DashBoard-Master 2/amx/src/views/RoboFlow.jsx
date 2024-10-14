@@ -45,32 +45,63 @@ function RoboFlow() {
   }, [file]);
   
   const handleFileUpload = () => {
+    const videoUrl='https://fibregridstorage.blr1.digitaloceanspaces.com/38/P1/1721277-hd_1920_1080_25fps.mp4'
       if (!file)  return alert("NO file");
   setLoader(true)
       const reader = new FileReader();
       reader.onload = () => {
           const base64File = reader.result.split(',')[1];
   
-          const newSocket = new WebSocket('wss://fibregrid.amxdrones.com/ws/videos/');
+          // const newSocket = new WebSocket('wss://fibregrid.amxdrones.com/ws/videos/');
+          const newSocket = new WebSocket('ws://127.0.0.1:8000/ws/video/');
           setSocket(newSocket);
   
+          // newSocket.addEventListener('open', () => {
+          //     console.log("websocket connected");
+          //     newSocket.send(JSON.stringify({ file: base64File }));
+          // });
           newSocket.addEventListener('open', () => {
-              console.log("websocket connected");
-              newSocket.send(JSON.stringify({ file: base64File }));
-          });
-  
+            console.log("WebSocket connected");
+            newSocket.send(JSON.stringify({ video_url: videoUrl })); // Send the video URL
+        });
           newSocket.addEventListener('message', (event) => {
-              const data = JSON.parse(event.data);
-              console.log(data);
-              if (data.annotated_frame) {
+            const data = JSON.parse(event.data);
+            console.log(data); // Log the entire data received
+
+            // Log the frame if it exists and update the current frame
+            if (data.frame) {
+                console.log('Received frame:', data.frame);
                 setLoader(false)
-                  setAnnotatedFrame(`data:image/jpeg;base64,${data.annotated_frame}`);
-              } else if (data.message === 'Video processing completed') {
-                  console.log('Video processing completed');
-                  newSocket.close();
-                  setSocket(null);
-              }
-          });
+                setAnnotatedFrame((prevFrame) => {
+                    // Only update if the new frame is different
+                    if (prevFrame !== data.frame) {
+                        return 'data:image/jpeg;base64,' + data.frame; // Update the state with the frame
+                    }
+                    return prevFrame; // Keep the previous frame
+                });
+            }
+
+            // Check if processing is complete
+            if (data.processing_complete) {
+                console.log(data.message); // Log the completion message
+                alert('Video processing completed!'); // Notify the user
+                newSocket.close(); // Close the socket after processing is complete
+                setSocket(null);
+                setLoader(false); // Hide the loader when done
+            }
+        });
+          // newSocket.addEventListener('message', (event) => {
+          //     const data = JSON.parse(event.data);
+          //     console.log(data);
+          //     if (data.annotated_frame) {
+          //       setLoader(false)
+          //         setAnnotatedFrame(`data:image/jpeg;base64,${data.annotated_frame}`);
+          //     } else if (data.message === 'Video processing completed') {
+          //         console.log('Video processing completed');
+          //         newSocket.close();
+          //         setSocket(null);
+          //     }
+          // });
   
           newSocket.addEventListener('close', () => {
               console.log('websocket disconnected');
@@ -78,19 +109,20 @@ function RoboFlow() {
       };
       reader.readAsDataURL(file);
   };
+  const handleStop = () => {
+    if (socket) {
+        socket.close();
+        setSocket(null);
+        console.log('WebSocket manually closed');
+        setAnnotatedFrame(null);
+        setLoader(false);
+    }
+};
+
   const handleFileChange = async(event) => {
       setFile(event.target.files[0]);
   };
-  const handleStop = () => {
-      if (socket) {
-          socket.close();
-          setSocket(null);
-          console.log('websocket manually closed');
-          setAnnotatedFrame(false)
-          setLoader(false)
-      }
-  
-  };
+
   
   useEffect(() => {
     setIframeUrl(isPersonChecked ? tensorflowUrl : sampleVideoUrl);
@@ -250,3 +282,6 @@ function RoboFlow() {
 }
 
 export default RoboFlow;
+
+
+
