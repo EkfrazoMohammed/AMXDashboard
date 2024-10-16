@@ -159,20 +159,23 @@ if (pathOfPhoto !== undefined && pathOfPhoto !== null) {
             <span className="r"></span>
           </div> */}
           <div className="">
-            <div className="card card-body text-center">
-              <div className="mb-4">
+            {/* <div className="card card-body text-center"> */}
+<div>            
+            
+
+              {/* <div className="mb-4">
                 <img style={{ maxWidth: "66px" }} src={amxlogin} alt="" />
               </div>
-              <h3 className="mb-4">Login</h3>
+              <h3 className="mb-4">Login</h3> */}
               <div className="mb-3">
-              <span className="form-labels"><span className="asterisk-symbol">*</span>  Username </span>
+              <span className="mylogin-form-labels"><span className="asterisk-symbol">*</span>  Username </span>
             
         <input
           onChange={changeHandler}
           name="username"
           value={data.username}
           type="text"
-          className="form-control"
+          className="mylogin-form-control"
           placeholder="Enter Username"
           required
         />
@@ -180,8 +183,8 @@ if (pathOfPhoto !== undefined && pathOfPhoto !== null) {
           <span className="error-message">Username is required</span>
         )}
       </div>
-      <div className="mb-3">
-        <span className="form-labels"><span className="asterisk-symbol">*</span>  Password </span>
+      <div className="mb-4">
+        <span className="mylogin-form-labels"><span className="asterisk-symbol">*</span>  Password </span>
       
         {/* <input
           type={showPassword ? "text" : "password"}
@@ -198,7 +201,7 @@ if (pathOfPhoto !== undefined && pathOfPhoto !== null) {
             onChange={changeHandler}
             name="password"
             value={data.password}
-            className="form-control mb-1 password-input"
+            className="mylogin-form-control mb-2 password-input"
             placeholder="Enter Password"
             required
             style={{paddingRight:'1.8rem'}}
@@ -214,6 +217,16 @@ if (pathOfPhoto !== undefined && pathOfPhoto !== null) {
         {errors.password && (
           <span className="error-message">Password is required</span>
         )}
+         </div>
+                     <button
+                onClick={LoginClick}
+                className="my-login-button shadow-2 mb-2"
+              >
+                Login
+              </button>
+              <p className="mylogin-form-text-footer">
+                Forgot password? <Link to="/forgotpassword"><span className="mylogin-form-text-footer">Reset</span></Link>
+              </p>
         {/* <label
       className={`password-toggle ${showPassword ? 'show' : ''}`}
       onClick={togglePasswordVisibility}
@@ -237,7 +250,7 @@ if (pathOfPhoto !== undefined && pathOfPhoto !== null) {
                   &nbsp; Show Password
                   </label>
                 </div> */}
-      </div>
+     
 
              
 
@@ -270,21 +283,22 @@ if (pathOfPhoto !== undefined && pathOfPhoto !== null) {
                 
               </div> */}
 
-              <button
+              {/* <button
                 onClick={LoginClick}
-                className="btn btn-primary shadow-2 mb-4"
+                className="btn btn-primary shadow-2 mb-2"
               >
                 Login
-              </button>
-              <p className="mb-2 text-muted">
+              </button> */}
+               
+              {/* <p className="mb-2 text-muted">
                 Forgot password? <Link to="/forgotpassword">Reset</Link>
-              </p>
+              </p> */}
               {/* <p className="mb-2 text-muted">
                 Forgot password? <a href="auth-reset-password.html">Reset</a>
               </p> */}
-              <p className="mb-0 text-muted">
+              {/* <p className="mb-0 text-muted">
                 Don't have an account? <b onClick={SignUpClick}>Signup</b>
-              </p>
+              </p> */}
             </div>
           </div>
         </div>

@@ -9003,23 +9003,38 @@ background: url("https://firebasestorage.googleapis.com/v0/b/amxdrones-70b8a.app
   min-height: 100vh;
 } */
 
-.auth-wrapper {
-  background: url("https://aactxg.stripocdn.email/content/guids/CABINET_d2c61cd4fa579e3609ac1dce15feb3311d67f9975b3b433315a90ea0a424bac3/images/amxbglogo_sZz.jpg");
+/* .auth-wrapper {
+  background: url("https://aactxg.stripocdn.email/content/guids/CABINET_f37167ea2322984dfeb6a0a05e92d2480b49356b15fb055bb2ce2e84131a12e4/images/login_page_final_02_2.jpg");
+  
+  /* background: url("https://aactxg.stripocdn.email/content/guids/CABINET_d2c61cd4fa579e3609ac1dce15feb3311d67f9975b3b433315a90ea0a424bac3/images/amxbglogo_sZz.jpg"); */
   /* background: url("https://aactxg.stripocdn.email/content/guids/CABINET_d2c61cd4fa579e3609ac1dce15feb3311d67f9975b3b433315a90ea0a424bac3/images/amxbglogo.jpg"); */
   /* background: url("https://firebasestorage.googleapis.com/v0/b/amxdrones-70b8a.appspot.com/o/99%2F1%20(e97bfa9e-189c-41e4-a13b-0bb58e0512af)%2FVIDEO%20(0f7b2705-3cc7-4700-a765-ba9ba1519826)%2Fnew%2Floginbg.jpg?alt=media"); */
-  position: relative;
+  /* position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
   overflow: hidden;
-  min-width: 100%;
-  min-height: 100vh;
-  background-position: center;
-  background-origin: border-box;
-  background-size: cover;
+  /* min-height: 100vh; */
+  /* background-position: center;
+  background-origin: border-box; */
+  /* min-width: 100%; 
+  width: 100%;
+  background-size: fill;
   background-repeat: no-repeat;
-}
+} */
 
+.auth-wrapper {
+  background: url("https://aactxg.stripocdn.email/content/guids/CABINET_f37167ea2322984dfeb6a0a05e92d2480b49356b15fb055bb2ce2e84131a12e4/images/login_page_final_02_2.jpg");
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-end;
+  overflow: hidden;
+  min-width: 100%;
+  
+  background-size: cover;
+  min-height: 100vh;
+}
 .auth-wrapper a,
 .auth-wrapper p>a {
 
@@ -9073,9 +9088,8 @@ background: url("https://firebasestorage.googleapis.com/v0/b/amxdrones-70b8a.app
 .auth-wrapper .auth-content {
   position: relative;
   width: 390px;
-  padding: 15px;
+  padding: 3rem;
   z-index: 5;
-
 }
 
 .auth-wrapper .auth-content.multyform,

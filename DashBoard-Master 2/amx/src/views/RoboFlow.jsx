@@ -52,8 +52,8 @@ function RoboFlow() {
       reader.onload = () => {
           const base64File = reader.result.split(',')[1];
   
-          // const newSocket = new WebSocket('wss://fibregrid.amxdrones.com/ws/videos/');
-          const newSocket = new WebSocket('ws://127.0.0.1:8000/ws/video/');
+          const newSocket = new WebSocket('wss://fibregrid.amxdrones.com/ws/videos/');
+          // const newSocket = new WebSocket('ws://127.0.0.1:8000/ws/video/');
           setSocket(newSocket);
   
           // newSocket.addEventListener('open', () => {
@@ -105,6 +105,9 @@ function RoboFlow() {
   
           newSocket.addEventListener('close', () => {
               console.log('websocket disconnected');
+              newSocket.close();
+                  setSocket(null);
+          setLoader(false)
           });
       };
       reader.readAsDataURL(file);
